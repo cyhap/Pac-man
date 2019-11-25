@@ -1,4 +1,5 @@
-/* Copyright (c) 2019, Ari Kupferberg, Ethan Quist, Corbyn Yhap
+/* 
+ * Copyright (c) 2019, Ari Kupferberg, Ethan Quist, Corbyn Yhap
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,12 +24,23 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
+ /**
+  * @file ObjectList.cpp
+  * @copyright 2019 Ari Kupferberg
+  * @author Ari Kupfeberg
+  * @date 11/24/2019
+  * @brief This Class is for storing and listing the collected objects
+  */
+
 #include "ObjectList.hpp"
 #include <vector>
 
 ObjectList::ObjectList() {
   numberOfObjects = 0;
 }
+
+ObjectList::~ObjectList() {}
 
 int ObjectList::addObjectFound(std::shared_ptr<Object> obj) {
   objectsFound.append(obj);

@@ -1,4 +1,5 @@
-/* Copyright (c) 2019, Ari Kupferberg, Ethan Quist, Corbyn Yhap
+/* 
+ * Copyright (c) 2019, Ari Kupferberg, Ethan Quist, Corbyn Yhap
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,16 +24,16 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
  /**
   * @file ObjectList.hpp
+  * @copyright 2019 Ari Kupferberg
   * @author Ari Kupfeberg
   * @date 11/24/2019
   * @brief This Class is for storing and listing the collected objects
   */
 
-#ifndef INCLUDE_OBJECTLIST_HPP_
-#define INCLUDE_OBJECTLIST_HPP_
+#pragma once
 
 #include <vector>
 
@@ -48,6 +49,13 @@ Class ObjectList{
     *  @return	None
     */
     ObjectList();
+
+    /**
+    *  @brief   This is the destructor for the ObjectList Class
+    *  @param	  None
+    *  @return	None
+    */
+    ~ObjectList();
 
     /**
     *  @brief   This is a function for adding an object to the list
