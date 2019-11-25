@@ -35,6 +35,7 @@
 
 #include "ObjectList.hpp"
 #include <ros/ros.h>
+#include <memory>
 #include <vector>
 
 /**
@@ -43,14 +44,14 @@
 *  @param	  argv for ROS
 *  @return	0 Exit status
 */
-int main(int argc, char* argv) {
+int main(int argc, char **argv) {
   // Create a node handle
   ros::NodeHandle nh;
 
   // Initialize the ROS node
   ros::init(argc, argv, "objectlist");
 
-  // Create an object of the TurtleBa Class
+  // Create an object of the ObjectList Class
   ObjectList objList;
 
   return 0;
