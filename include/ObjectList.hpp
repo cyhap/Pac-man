@@ -35,11 +35,13 @@
 
 #pragma once
 
+#include "Object.hpp"
+#include <memory>
 #include <vector>
 
-Class ObjectList{
+class ObjectList {
   private:
-    std::vector<std::shared_ptr>> objectsFound;  ///< Vector of collected objects
+    std::vector<std::shared_ptr<Object>> objectsFound;  ///< Vector of collected objects
     int numberOfObjects;  ///< Number of objects in found list
 
   public:
@@ -63,5 +65,5 @@ Class ObjectList{
     *  @return	The number of objects in the list
     */
     int addObjectFound(std::shared_ptr<Object>);
-}
+};
 

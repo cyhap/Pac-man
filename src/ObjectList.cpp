@@ -34,6 +34,8 @@
   */
 
 #include "ObjectList.hpp"
+#include "Object.hpp"
+#include <memory>
 #include <vector>
 
 ObjectList::ObjectList() {
@@ -43,7 +45,7 @@ ObjectList::ObjectList() {
 ObjectList::~ObjectList() {}
 
 int ObjectList::addObjectFound(std::shared_ptr<Object> obj) {
-  objectsFound.append(obj);
+  objectsFound.push_back(obj);
   numberOfObjects = objectsFound.size();
   return numberOfObjects;
 }
