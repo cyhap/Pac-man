@@ -39,6 +39,8 @@ include_directories( include ${catkin_INCLUDE_DIRS} )
 
 add_executable(movement src/MovementNode.cpp src/Movement.cpp)
 target_link_libraries(movement ${catkin_LIBRARIES})
+add_executable(objectlist src/ObjectListNode.cpp src/ObjectList.cpp)
+target_link_libraries(objectlist ${catkin_LIBRARIES})
 
 #############
 ## Testing ##
