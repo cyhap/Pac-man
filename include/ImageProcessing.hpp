@@ -37,10 +37,7 @@
 #pragma once
 
 #include "Object.hpp"
-//#include <opencv2/imgproc/imgproc.hpp>
-//#include <opencv2/highgui/highgui.hpp>
-//#include "opencv-3.3.1-dev/opencv2/core/mat.hpp"
-#include <opencv-3.3.1-dev/opencv2/core.hpp>
+#include <opencv2/core.hpp>
 
 #include <memory>
 #include <utility>
