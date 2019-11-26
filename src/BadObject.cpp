@@ -36,7 +36,7 @@
 #include "Object.hpp"
 #include "BadObject.hpp"
 
-BadObject::BadObject() {
+BadObject::BadObject(int ind, Object::Pose loc) {
 
 }
 
@@ -48,4 +48,11 @@ void BadObject::setFound(bool status_) {
 
 }
 
+Object::Pose BadObject::getLocation() {
+
+}
+
+bool BadObject::checkCollect() {
+
+}
 

@@ -26,52 +26,31 @@
  */
 
  /**
-  * @file BadObject.hpp
+  * @file ObjectListTest.cpp
   * @copyright 2019 Ari Kupferberg
   * @author Ari Kupfeberg
-  * @date 11/24/2019
-  * @brief This Class is a Derived Class from Object and defines the objects that should be considered obstacles and avoided.
+  * @date 11/26/2019
+  * @brief This TEST file is for testing the ObjectList methods.
   */
 
-#pragma once
-
+#include <gtest/gtest.h>
 #include "Object.hpp"
+#include "ObjectList.hpp"
 
-class BadObject: public Object {
-  public:
-    /**
-    *  @brief   This is the constructor for the BadObject Class
-    *  @param	  None
-    *  @return	None
-    */
-    BadObject(int, Object::Pose);
 
-    /**
-    *  @brief   This is the destructor for the BadObject Class
-    *  @param	  None
-    *  @return	None
-    */
-    ~BadObject();
+TEST(ObjectList, addObject) {
+  ObjectList objList;
 
-    /**
-    *  @brief   This is an override function to add the BadObject to the obstacle list
-    *  @param	  status_ boolean of found status
-    *  @return	None
-    */
-    virtual void setFound(bool);
+  Object::Pose locData;
+  locData.x = 1.00;
+  locData.y = 1.00;
+  locData.z = 1.00;
+  locData.roll = 1.00;
+  locData.pitch = 1.00;
+  locData.yaw = 1.00;
+  GoodObject obj1(1,locData);
 
-    /**
-    *  @brief   This is an override function to get the location of the BadObject
-    *  @param	  None
-    *  @return	None
-    */
-    virtual Object::Pose getLocation();
+  std::shared_ptr<Object> obj1Pointer = &obj1;
 
-    /**
-    *  @brief   This is an override function to check the collect status of the BadObject
-    *  @param	  None
-    *  @return	None
-    */
-    virtual bool checkCollect();
-};
-
+  ASSERT_EQ(objList.addObjectFound(obj1Pointer),1);
+}

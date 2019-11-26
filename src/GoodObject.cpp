@@ -36,7 +36,7 @@
 #include "Object.hpp"
 #include "GoodObject.hpp"
 
-GoodObject::GoodObject() {
+GoodObject::GoodObject(int ind, Object::Pose loc) {
 
 }
 
@@ -48,4 +48,11 @@ void GoodObject::setFound(bool status_) {
 
 }
 
+Object::Pose GoodObject::getLocation() {
+
+}
+
+bool GoodObject::checkCollect() {
+
+}
 
