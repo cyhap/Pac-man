@@ -38,25 +38,13 @@
 #include "Object.hpp"
 
 class BadObject: public Object {
-  struct Pose {
-      double x;
-      double y;
-      double z;
-  };
-
-  protected:
-    int index;
-    Pose location;
-    bool collect;
-    bool found;
-
   public:
     /**
     *  @brief   This is the constructor for the BadObject Class
     *  @param	  None
     *  @return	None
     */
-    BadObject();
+    BadObject(int, Object::Pose);
 
     /**
     *  @brief   This is the destructor for the BadObject Class
@@ -66,10 +54,24 @@ class BadObject: public Object {
     ~BadObject();
 
     /**
-    *  @brief   This is a function to add the BadObject to the obstacle list
+    *  @brief   This is an override function to add the BadObject to the obstacle list
     *  @param	  status_ boolean of found status
     *  @return	None
     */
     virtual void setFound(bool);
+
+    /**
+    *  @brief   This is an override function to get the location of the BadObject
+    *  @param	  None
+    *  @return	None
+    */
+    virtual Object::Pose getLocation();
+
+    /**
+    *  @brief   This is an override function to check the collect status of the BadObject
+    *  @param	  None
+    *  @return	None
+    */
+    virtual bool checkCollect();
 };
 

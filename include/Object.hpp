@@ -36,12 +36,6 @@
 #pragma once
 
 class Object {
-  struct Pose {
-      double x;
-      double y;
-      double z;
-  };
-
   protected:
     int index;
     Pose location;
@@ -49,11 +43,34 @@ class Object {
     bool found;
 
   public:
+    struct Pose {
+        double x;
+        double y;
+        double z;
+        double roll;
+        double pitch;
+        double yaw;
+    };
+
     /**
     *  @brief   This is a pure virtual function to set the found status of the Object
     *  @param	  status_ boolean of found status
     *  @return	None
     */
     virtual void setFound(bool) = 0;
+
+    /**
+    *  @brief   This is a pure virtual function to get the location of the Object
+    *  @param	  status_ boolean of found status
+    *  @return	None
+    */
+    virtual Pose getLocation() = 0;
+
+    /**
+    *  @brief   This is a pure virtual function to check the collect status of the Object
+    *  @param	  status_ boolean of found status
+    *  @return	None
+    */
+    virtual bool checkCollect() = 0;
 };
 
