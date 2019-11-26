@@ -36,12 +36,6 @@
 #pragma once
 
 class Object {
-  protected:
-    int index;
-    Pose location;
-    bool collect;
-    bool found;
-
   public:
     struct Pose {
         double x;
@@ -72,5 +66,11 @@ class Object {
     *  @return	None
     */
     virtual bool checkCollect() = 0;
+
+  protected:
+    int index;
+    Pose location;
+    bool collect;
+    bool found;
 };
 
