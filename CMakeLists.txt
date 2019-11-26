@@ -33,9 +33,13 @@ find_package(catkin REQUIRED COMPONENTS
 #   geometry_msgs#   kobuki_msgs#   sensor_msgs#   std_msgs
 # )
 
+find_package(OpenCV REQUIRED)
+
 catkin_package()
 
-include_directories( include ${catkin_INCLUDE_DIRS} )
+include_directories( include 
+                     ${catkin_INCLUDE_DIRS}
+                     ${OpenCV_INCLUDE_DIRS} )
 
 add_executable(movement src/MovementNode.cpp src/Movement.cpp)
 target_link_libraries(movement ${catkin_LIBRARIES})
