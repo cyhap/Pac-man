@@ -48,15 +48,16 @@ target_link_libraries(objectlist ${catkin_LIBRARIES})
 add_executable(object src/ObjectNode.cpp src/Object.cpp src/GoodObject.cpp src/BadObject.cpp)
 target_link_libraries(object ${catkin_LIBRARIES})
 
+
 #############
 ## Testing ##
 #############
+add_library(objectlibrary src/ObjectList.cpp src/GoodObject.cpp)
 
+find_package(rostest REQUIRED)
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_pac-man.cpp)
-# if(TARGET ${PROJECT_NAME}-test)
-#   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
-# endif()
+catkin_add_gtest(objectlist_test test/ObjectListTest.cpp)
+if(TARGET objectlist_test)
+  target_link_libraries(objectlist_test objectlibrary ${catkin_LIBRARIES})
+endif()
 
-## Add folders to be run by python nosetests
-# catkin_add_nosetests(test)
