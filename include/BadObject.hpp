@@ -54,13 +54,6 @@ class BadObject: public Object {
     ~BadObject();
 
     /**
-    *  @brief   This is an override function to add the BadObject to the obstacle list
-    *  @param	  status_ boolean of found status
-    *  @return	None
-    */
-    virtual void setFound(bool);
-
-    /**
     *  @brief   This is an override function to get the location of the BadObject
     *  @param	  None
     *  @return	None

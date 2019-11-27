@@ -47,13 +47,6 @@ class Object {
     };
 
     /**
-    *  @brief   This is a pure virtual function to set the found status of the Object
-    *  @param	  status_ boolean of found status
-    *  @return	None
-    */
-    virtual void setFound(bool) = 0;
-
-    /**
     *  @brief   This is a pure virtual function to get the location of the Object
     *  @param	  status_ boolean of found status
     *  @return	None
@@ -71,6 +64,5 @@ class Object {
     int index;
     Pose location;
     bool collect;
-    bool found;
 };
 

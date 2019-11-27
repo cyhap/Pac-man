@@ -54,13 +54,6 @@ class GoodObject: public Object {
     ~GoodObject();
 
     /**
-    *  @brief   This is an override function to set the found status of the GoodObject
-    *  @param	  status_ boolean of found status
-    *  @return	None
-    */
-    virtual void setFound(bool);
-
-    /**
     *  @brief   This is an override function to get the location of the GoodObject
     *  @param	  None
     *  @return	None
