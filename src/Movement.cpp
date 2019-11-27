@@ -35,33 +35,38 @@
 #include "Movement.hpp"
 
 Movement::Movement() {
-
+  linearVelocity = 0.0;
+  angularVelocity = 0.0;
+  objectSeen = false;
 }
 
 Movement::~Movement() {
 
 }
 
-void Movement::setLinearVelocity(float) {
+void Movement::setLinearVelocity(float lv) {
+  linearVelocity = lv;  // Setting the linear velocity to the input
   return;
 }
 
-void Movement::setAngluarVelocity(float) {
+void Movement::setAngluarVelocity(float av) {
+  angularVelocity = av;  // Setting the angular velocity to the input
   return;
 }
 
-void Movement::setObjectSeen(bool) {
+void Movement::setObjectSeen(bool os) {
+  objectSeen = os;  // Setting the object seen to the input
   return;
 }
 
 float Movement::getLinearVelocity() {
-  return linearVelocity;
+  return linearVelocity;  // Returning linear velocity
 }
 
 float Movement::getAngularVelocity() {
-  return angularVelocity;
+  return angularVelocity;  // Returning angular velocity
 }
 
 bool Movement::checkVisuals() {
-  return objectSeen;
+  return objectSeen;  // Returning object seen
 }
