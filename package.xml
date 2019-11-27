@@ -1,13 +1,14 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>pac-man</name>
+  <name>pacman</name>
   <version>0.0.0</version>
-  <description>The pac-man package</description>
+  <description>The pacman package</description>
   <maintainer email="corbyn@todo.todo">corbyn</maintainer>
 
   <license>BSD</license>
 
   <buildtool_depend>catkin</buildtool_depend>
+  
   <build_depend>cv_bridge</build_depend>
   <build_depend>geometry_msgs</build_depend>
   <build_depend>image_transport</build_depend>
