@@ -32,8 +32,8 @@
  *
  */
 
+#include <ros/ros.h>
 #include <gtest/gtest.h>
-
 #include "Movement.hpp"
 
 TEST(Movement, GetAndSet) {
