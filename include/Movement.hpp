@@ -69,7 +69,7 @@ class Movement {
    * @return none
    *
    */
-  void setAngluarVelocity(float);
+  void setAngularVelocity(float);
 
   /**
    * @brief Sets the linear velocity of the turtlebot

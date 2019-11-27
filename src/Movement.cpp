@@ -49,7 +49,7 @@ void Movement::setLinearVelocity(float lv) {
   return;
 }
 
-void Movement::setAngluarVelocity(float av) {
+void Movement::setAngularVelocity(float av) {
   angularVelocity = av;  // Setting the angular velocity to the input
   return;
 }
