@@ -33,9 +33,11 @@
   * @brief This TEST file is for testing the ObjectList methods.
   */
 
-#include <gtest/gtest.h>
-#include "Object.hpp"
 #include "ObjectList.hpp"
+#include "Object.hpp"
+#include "GoodObject.hpp"
+#include <ros/ros.h>
+#include <gtest/gtest.h>
 
 
 TEST(ObjectList, addObject) {
@@ -48,9 +50,16 @@ TEST(ObjectList, addObject) {
   locData.roll = 1.00;
   locData.pitch = 1.00;
   locData.yaw = 1.00;
-  GoodObject obj1(1,locData);
 
-  std::shared_ptr<Object> obj1Pointer = &obj1;
+  std::shared_ptr<Object> objpoint(new GoodObject(1,locData));
 
-  ASSERT_EQ(objList.addObjectFound(obj1Pointer),1);
+  ASSERT_EQ(objList.addObjectFound(objpoint),1);
+}
+
+// Run all the tests that were declared with TEST()
+int main(int argc, char **argv){
+  testing::InitGoogleTest(&argc, argv);
+  ros::init(argc, argv, "objectlist_test");
+  ros::NodeHandle nh;
+  return RUN_ALL_TESTS();
 }
