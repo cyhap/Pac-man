@@ -1,7 +1,6 @@
-# Pac-man
-[![Build Status](https://travis-ci.org/cyhap/pac-man.svg?branch=master)](https://travis-ci.org/cyhap/pac-man)
-[![Coverage Status](https://coveralls.io/repos/github/cyhap/pac-man/badge.svg?branch=master)](https://coveralls.io/github/cyhap/pac-man?branch=master)
-
+# pacman
+[![Build Status](https://travis-ci.org/cyhap/pacman.svg?branch=master)](https://travis-ci.org/cyhap/pacman)
+[![Coverage Status](https://coveralls.io/repos/github/cyhap/pacman/badge.svg?branch=master)](https://coveralls.io/github/cyhap/pacman?branch=master)
 Codename: Pac-man 
 
 ## Project Overview
