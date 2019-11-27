@@ -38,7 +38,7 @@
 #include <ros/ros.h>
 #include <gtest/gtest.h>
 
-TEST(GoodObject, setandcheck) {
+TEST(GoodObject, construct_check) {
 
   Object::Pose locData;
   locData.x = 1.00;
@@ -49,9 +49,7 @@ TEST(GoodObject, setandcheck) {
   locData.yaw = 1.00;
 
   GoodObject obj1(1,locData);
-  obj1.setFound(true);
-  Object::Pose objLoc = obj1.getLocation();
-  
+
   ASSERT_EQ(obj1.checkCollect(),true);
 }
 
