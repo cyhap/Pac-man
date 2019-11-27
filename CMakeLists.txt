@@ -54,20 +54,23 @@ target_link_libraries(object ${catkin_LIBRARIES})
 #############
 
 add_library(movementlibrary src/Movement.cpp)
-
+add_library(goodobjectlibrary src/GoodObject.cpp)
 add_library(objectlibrary src/ObjectList.cpp src/GoodObject.cpp)
 
 find_package(rostest REQUIRED)
 ## Add gtest based cpp test target and link libraries
 
 catkin_add_gtest(movement_test test/MovementTest.cpp)
-
 if(TARGET movement_test)
   target_link_libraries(movement_test movementlibrary ${catkin_LIBRARIES})
 endif()
 
-catkin_add_gtest(objectlist_test test/ObjectListTest.cpp)
+catkin_add_gtest(goodobject_test test/GoodObjectTest.cpp)
+if(TARGET goodobject_test)
+  target_link_libraries(goodobject_test goodobjectlibrary ${catkin_LIBRARIES})
+endif()
 
+catkin_add_gtest(objectlist_test test/ObjectListTest.cpp)
 if(TARGET objectlist_test)
   target_link_libraries(objectlist_test objectlibrary ${catkin_LIBRARIES})
 endif()
