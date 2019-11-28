@@ -41,13 +41,6 @@
 TEST(GoodObject, construct_check) {
 
   Object::Pose locData;
-  locData.x = 1.00;
-  locData.y = 1.00;
-  locData.z = 1.00;
-  locData.roll = 1.00;
-  locData.pitch = 1.00;
-  locData.yaw = 1.00;
-
   GoodObject obj1(1,locData);
 
   ASSERT_EQ(obj1.checkCollect(),true);
@@ -57,21 +50,21 @@ TEST(GoodObject, objlocation) {
 
   Object::Pose locData;
   locData.x = 1.00;
-  locData.y = 1.00;
-  locData.z = 1.00;
-  locData.roll = 1.00;
-  locData.pitch = 1.00;
-  locData.yaw = 1.00;
+  locData.y = 4.00;
+  locData.z = 3.00;
+  locData.roll = 2.00;
+  locData.pitch = 1.50;
+  locData.yaw = 0.77;
 
   GoodObject obj1(1,locData);
   Object::Pose objLoc = obj1.getLocation();
 
   EXPECT_EQ(objLoc.x,1.00);
-  EXPECT_EQ(objLoc.y,1.00);
-  EXPECT_EQ(objLoc.z,1.00);
-  EXPECT_EQ(objLoc.roll,1.00);
-  EXPECT_EQ(objLoc.pitch,1.00);
-  EXPECT_EQ(objLoc.yaw,1.00);
+  EXPECT_EQ(objLoc.y,4.00);
+  EXPECT_EQ(objLoc.z,3.00);
+  EXPECT_EQ(objLoc.roll,2.00);
+  EXPECT_EQ(objLoc.pitch,1.50);
+  EXPECT_EQ(objLoc.yaw,0.77);
 }
 
 
