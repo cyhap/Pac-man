@@ -38,13 +38,19 @@
 #include "Object.hpp"
 
 class BadObject: public Object {
+  private:
+    bool collect;
+
   public:
     /**
-    *  @brief   This is the constructor for the BadObject Class
-    *  @param	  None
+    *  @brief   This is the constructor for the BadObject Class, with initializer list
+    *  @param	  ind index of Object
+    *  @param	  loc Pose location of Object
     *  @return	None
     */
-    BadObject(int, Object::Pose);
+    BadObject(int ind, Object::Pose loc) 
+    : Object{ ind, loc }, collect{ false } {
+    }
 
     /**
     *  @brief   This is the destructor for the BadObject Class
@@ -52,13 +58,6 @@ class BadObject: public Object {
     *  @return	None
     */
     ~BadObject();
-
-    /**
-    *  @brief   This is an override function to get the location of the BadObject
-    *  @param	  None
-    *  @return	None
-    */
-    virtual Object::Pose getLocation();
 
     /**
     *  @brief   This is an override function to check the collect status of the BadObject

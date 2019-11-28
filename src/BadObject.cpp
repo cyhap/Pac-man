@@ -36,19 +36,7 @@
 #include "Object.hpp"
 #include "BadObject.hpp"
 
-BadObject::BadObject(int ind, Object::Pose loc) {
-  index = ind;
-  location = loc;
-  collect = false;
-
-}
-
 BadObject::~BadObject() {}
-
-
-Object::Pose BadObject::getLocation() {
-  return location;
-}
 
 bool BadObject::checkCollect() {
   return collect;
