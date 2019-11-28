@@ -38,31 +38,31 @@
 class Object {
   public:
     struct Pose {
-        double x;
-        double y;
-        double z;
-        double roll;
-        double pitch;
-        double yaw;
+        double x = 0.00;
+        double y = 0.00;
+        double z = 0.00;
+        double roll = 0.00;
+        double pitch = 0.00;
+        double yaw = 0.00;
     };
+    
+    /**
+    *  @brief   This is the Constructor for the Object Class, with initializer list
+    *  @param	  ind index of Object
+    *  @param	  loc Pose location of Object
+    *  @return	None
+    */
+    Object(int ind, Object::Pose loc) : index{ ind }, location{ loc } {}
 
     /**
     *  @brief   This is a pure virtual function to get the location of the Object
     *  @param	  status_ boolean of found status
     *  @return	None
     */
-    virtual Pose getLocation() = 0;
+    Pose getLocation() { return location; }
 
-    /**
-    *  @brief   This is a pure virtual function to check the collect status of the Object
-    *  @param	  status_ boolean of found status
-    *  @return	None
-    */
-    virtual bool checkCollect() = 0;
-
-  protected:
+  private:
     int index;
     Pose location;
-    bool collect;
 };
 

@@ -38,13 +38,19 @@
 #include "Object.hpp"
 
 class GoodObject: public Object {
+  private:
+    bool collect;
+
   public:
     /**
-    *  @brief   This is the constructor for the GoodObject Class
-    *  @param	  None
+    *  @brief   This is the constructor for the GoodObject Class, with initializer list
+    *  @param	  ind index of Object
+    *  @param	  loc Pose location of Object
     *  @return	None
     */
-    GoodObject(int, Object::Pose);
+    GoodObject(int ind, Object::Pose loc) 
+    : Object{ ind, loc }, collect{ true } {
+    }
 
     /**
     *  @brief   This is the destructor for the GoodObject Class
@@ -52,13 +58,6 @@ class GoodObject: public Object {
     *  @return	None
     */
     ~GoodObject();
-
-    /**
-    *  @brief   This is an override function to get the location of the GoodObject
-    *  @param	  None
-    *  @return	None
-    */
-    virtual Object::Pose getLocation();
 
     /**
     *  @brief   This is an override function to check the collect status of the GoodObject

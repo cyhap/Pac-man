@@ -36,18 +36,7 @@
 #include "Object.hpp"
 #include "GoodObject.hpp"
 
-GoodObject::GoodObject(int ind, Object::Pose loc) {
-  index = ind;
-  location = loc;
-  collect = true;
-}
-
 GoodObject::~GoodObject() {}
-
-
-Object::Pose GoodObject::getLocation() {
-  return location;
-}
 
 bool GoodObject::checkCollect() {
   return collect;
