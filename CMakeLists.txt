@@ -45,7 +45,7 @@ add_executable(movement src/MovementNode.cpp src/Movement.cpp)
 target_link_libraries(movement ${catkin_LIBRARIES})
 add_executable(objectlist src/ObjectListNode.cpp src/ObjectList.cpp)
 target_link_libraries(objectlist ${catkin_LIBRARIES})
-add_executable(object src/ObjectNode.cpp src/Object.cpp src/GoodObject.cpp src/BadObject.cpp)
+add_executable(object src/ObjectNode.cpp src/Object.cpp src/GoodObject.cpp src/BadObject.cpp src/ImageProcessing.cpp)
 target_link_libraries(object ${catkin_LIBRARIES})
 
 

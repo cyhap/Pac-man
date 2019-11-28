@@ -47,7 +47,7 @@ class ImageProcessing {
   ImageProcessing();
   ~ImageProcessing();
   std::shared_ptr<Object> identifyObject(const cv::Mat&);
-  std::pair<const cv::Mat&, std::shared_ptr<Object> > applyMask(const cv::Mat&);
+  std::pair<cv::Mat, std::shared_ptr<Object> > applyMask(const cv::Mat&);
   std::pair<size_t, size_t> computeCentroid(const cv::Mat&);
   void computePose(const cv::Mat&, std::pair<size_t, size_t>,
                    std::shared_ptr<Object>);

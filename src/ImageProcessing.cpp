@@ -48,15 +48,15 @@ ImageProcessing::~ImageProcessing() {
 std::shared_ptr<Object> ImageProcessing::identifyObject(const cv::Mat &aImage) {
   // Fixme[Yhap] Fill in this function;
   (void) aImage;
-  std::shared_ptr<Object> tReturn(new GoodObject);
+  std::shared_ptr<Object> tReturn(new GoodObject(0, Object::Pose()));
   return tReturn;
 }
 
-std::pair<const cv::Mat&, std::shared_ptr<Object> > ImageProcessing::applyMask(
+std::pair<cv::Mat, std::shared_ptr<Object> > ImageProcessing::applyMask(
     const cv::Mat &aImage) {
   // Fixme[Yhap] Fill in this function;
   (void) aImage;
-  std::pair<const cv::Mat&, std::shared_ptr<Object> > tReturn;
+  std::pair<cv::Mat, std::shared_ptr<Object> > tReturn;
   return tReturn;
 }
 
