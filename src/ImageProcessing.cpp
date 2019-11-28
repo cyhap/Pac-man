@@ -45,9 +45,12 @@ ImageProcessing::ImageProcessing() {
 ImageProcessing::~ImageProcessing() {
 }
 
-std::shared_ptr<Object> ImageProcessing::identifyObject(const cv::Mat &aImage) {
+std::shared_ptr<Object> ImageProcessing::identifyObject(
+    const cv::Mat &aImage, const cv::Mat &aDepthImg) {
   // Fixme[Yhap] Fill in this function;
   (void) aImage;
+  (void) aDepthImg;
+
   std::shared_ptr<Object> tReturn(new GoodObject(0, Object::Pose()));
   return tReturn;
 }
