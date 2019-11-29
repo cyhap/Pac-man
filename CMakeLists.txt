@@ -45,7 +45,7 @@ add_executable(movement src/MovementNode.cpp src/Movement.cpp)
 target_link_libraries(movement ${catkin_LIBRARIES})
 add_executable(objectlist src/ObjectListNode.cpp src/ObjectList.cpp)
 target_link_libraries(objectlist ${catkin_LIBRARIES})
-add_executable(object src/ObjectNode.cpp src/GoodObject.cpp src/BadObject.cpp src/ImageProcessing.cpp)
+add_executable(object src/ObjectNode.cpp src/Object.cpp src/GoodObject.cpp src/BadObject.cpp src/ImageProcessing.cpp)
 target_link_libraries(object ${catkin_LIBRARIES})
 
 
@@ -54,8 +54,8 @@ target_link_libraries(object ${catkin_LIBRARIES})
 #############
 
 add_library(movementlibrary src/Movement.cpp)
-add_library(goodobjectlibrary src/GoodObject.cpp)
-add_library(objectlibrary src/ObjectList.cpp src/GoodObject.cpp)
+add_library(objectlibrary src/GoodObject.cpp src/Object.cpp)
+add_library(objectlistlibrary src/ObjectList.cpp src/GoodObject.cpp)
 
 find_package(rostest REQUIRED)
 ## Add gtest based cpp test target and link libraries
@@ -65,13 +65,13 @@ if(TARGET movement_test)
   target_link_libraries(movement_test movementlibrary ${catkin_LIBRARIES})
 endif()
 
-catkin_add_gtest(goodobject_test test/GoodObjectTest.cpp)
-if(TARGET goodobject_test)
-  target_link_libraries(goodobject_test goodobjectlibrary ${catkin_LIBRARIES})
+catkin_add_gtest(objects_test test/ObjectTest.cpp)
+if(TARGET objects_test)
+  target_link_libraries(objects_test objectlibrary ${catkin_LIBRARIES})
 endif()
 
 catkin_add_gtest(objectlist_test test/ObjectListTest.cpp)
 if(TARGET objectlist_test)
-  target_link_libraries(objectlist_test objectlibrary ${catkin_LIBRARIES})
+  target_link_libraries(objectlist_test objectlistlibrary ${catkin_LIBRARIES})
 endif()
 
