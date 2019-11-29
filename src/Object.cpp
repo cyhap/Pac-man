@@ -26,51 +26,30 @@
  */
 
  /**
-  * @file Object.hpp
+  * @file Object.cpp
   * @copyright 2019 Ari Kupferberg
   * @author Ari Kupfeberg
-  * @date 11/24/2019
+  * @date 11/29/2019
   * @brief This Class is the Base Class for the Object Classes
   */
 
-#pragma once
+#include "Object.hpp"
 #include <vector>
 
-class Object {
-  public:
-    struct Pose {
-        double x = 0.00;
-        double y = 0.00;
-        double z = 0.00;
-        double roll = 0.00;
-        double pitch = 0.00;
-        double yaw = 0.00;
-    };
-    
-    /**
-    *  @brief   This is the Constructor for the Object Class, with initializer list
-    *  @param	  ind index of Object
-    *  @param	  loc Pose location of Object
-    *  @return	None
-    */
-    Object(int ind, Object::Pose loc) : index{ ind }, location{ loc } {}
 
-    /**
-    *  @brief   This is a function to get the Pose of the Object
-    *  @param	  None
-    *  @return	None
-    */
-    Pose getPose();
+Object::Pose Object::getPose() {
+  return location; 
+}
 
-    /**
-    *  @brief   This is a function to get the XYZ location of the Object
-    *  @param	  None
-    *  @return	None
-    */
-    std::vector<double> getXYZ();
 
-  private:
-    int index;
-    Pose location;
-};
+std::vector<double> Object::getXYZ() {
+  // Initialize vector
+  std::vector<double> xyz;
+  // Place x y z coordinates in vector
+  xyz.emplace_back(location.x);
+  xyz.emplace_back(location.y);
+  xyz.emplace_back(location.z);
+  // return xyz vector
+  return xyz;
+}
 
