@@ -45,7 +45,7 @@ ObjectList::ObjectList() {
 ObjectList::~ObjectList() {}
 
 int ObjectList::addObjectFound(std::shared_ptr<Object> obj) {
-  objectsFound.push_back(obj);
+  objectsFound.emplace_back(obj);
   numberOfObjects = objectsFound.size();
   return numberOfObjects;
 }
