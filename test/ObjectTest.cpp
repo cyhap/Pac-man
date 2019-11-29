@@ -26,7 +26,7 @@
  */
 
  /**
-  * @file GoodObjectTest.cpp
+  * @file ObjectTest.cpp
   * @copyright 2019 Ari Kupferberg
   * @author Ari Kupfeberg
   * @date 11/27/2019
@@ -46,7 +46,21 @@ TEST(GoodObject, construct_check) {
   ASSERT_EQ(obj1.checkCollect(),true);
 }
 
-TEST(GoodObject, objlocation) {
+TEST(GoodObject, objxyz) {
+
+  Object::Pose locData;
+  locData.x = 1.00;
+  locData.y = 2.00;
+  locData.z = 3.00;
+
+  GoodObject obj1(1,locData);
+  std::vector<double> objXYZ = obj1.getXYZ();
+  std::vector<double> testXYZ{1.00, 2.00, 3.00};
+
+  ASSERT_EQ(objXYZ,testXYZ);
+}
+
+TEST(GoodObject, objpose) {
 
   Object::Pose locData;
   locData.x = 1.00;
@@ -57,7 +71,7 @@ TEST(GoodObject, objlocation) {
   locData.yaw = 0.77;
 
   GoodObject obj1(1,locData);
-  Object::Pose objLoc = obj1.getLocation();
+  Object::Pose objLoc = obj1.getPose();
 
   EXPECT_EQ(objLoc.x,1.00);
   EXPECT_EQ(objLoc.y,4.00);
