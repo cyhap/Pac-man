@@ -35,6 +35,7 @@
   */
 
 #include "ImageProcessing.hpp"
+#include "GoodObject.hpp"
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 
@@ -76,18 +77,17 @@ TEST(ImageProcessing, CenteredGreenBlock) {
   // Pass this information to the Image Processing Function.
   std::shared_ptr<Object> tObj = imageProc.identifyObject(slate, depth);
 
-  // Should be a good block;
-  ASSERT_TRUE(tObj->checkCollect());
   // Should have a pose tBlockDepth away along the X direction. (0 Otherwise)
   Object::Pose tExpected;
   tExpected.x = tBlockDepth;
 
-  ASSERT_EQ(tObj->location.x, tExpected.x);
-  ASSERT_EQ(tObj->location.y, tExpected.y);
-  ASSERT_EQ(tObj->location.z, tExpected.z);
-  ASSERT_EQ(tObj->location.roll, tExpected.roll);
-  ASSERT_EQ(tObj->location.pitch, tExpected.pitch);
-  ASSERT_EQ(tObj->location.yaw, tExpected.yaw);
+  Object::Pose tCompare = tObj->getPose();
+  ASSERT_EQ(tCompare.x, tExpected.x);
+  ASSERT_EQ(tCompare.y, tExpected.y);
+  ASSERT_EQ(tCompare.z, tExpected.z);
+  ASSERT_EQ(tCompare.roll, tExpected.roll);
+  ASSERT_EQ(tCompare.pitch, tExpected.pitch);
+  ASSERT_EQ(tCompare.yaw, tExpected.yaw);
 }
 
 

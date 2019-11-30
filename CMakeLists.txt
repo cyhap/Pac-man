@@ -56,6 +56,7 @@ target_link_libraries(object ${catkin_LIBRARIES})
 add_library(movementlibrary src/Movement.cpp)
 add_library(objectlibrary src/GoodObject.cpp src/Object.cpp)
 add_library(objectlistlibrary src/ObjectList.cpp src/GoodObject.cpp)
+add_library(imageProcesinglibrary src/ImageProcessing.cpp)
 
 find_package(rostest REQUIRED)
 ## Add gtest based cpp test target and link libraries
@@ -73,5 +74,9 @@ endif()
 catkin_add_gtest(objectlist_test test/ObjectListTest.cpp)
 if(TARGET objectlist_test)
   target_link_libraries(objectlist_test objectlistlibrary ${catkin_LIBRARIES})
+endif()
+catkin_add_gtest(imageProcessing_test test/ImageProcessingTest.cpp)
+if(TARGET imageProcessing_test)
+  target_link_libraries(imageProcessing_test imageProcesinglibrary objectlibrary ${catkin_LIBRARIES})
 endif()
 
