@@ -69,9 +69,10 @@ int main(int argc, char **argv) {
   image_transport::Subscriber rgbImgSub;
 
   // Subscribe to the rectified depth image.
-  imTrans.subscribe("/depth_registered/image_rect", 1, &depthImgCallback);
+  depthImgSub = imTrans.subscribe("/depth_registered/image_rect", 1,
+                                  &depthImgCallback);
   // Subscribe to the raw rgb image.
-  imTrans.subscribe("/camera/rgb/image_raw", 1, &rgbImgCallback);
+  rgbImgSub = imTrans.subscribe("/camera/rgb/image_raw", 1, &rgbImgCallback);
 
   // Note the default resolution is 640 x 480 as of Indigo. Further research
   // required
