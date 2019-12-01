@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 2019, Ari Kupferberg, Ethan Quist, Corbyn Yhap
  * All rights reserved.
  *
@@ -36,7 +36,21 @@
 #include "Object.hpp"
 #include "GoodObject.hpp"
 #include "BadObject.hpp"
+#include "ImageProcessing.hpp"
 #include <ros/ros.h>
+
+#include "image_transport/image_transport.h"
+#include "sensor_msgs/Image.h"
+
+void depthImgCallback(const sensor_msgs::ImageConstPtr &aImg) {
+  // Determine what to do here.
+  ROS_INFO_STREAM("Depth Image Call back Successful.");
+}
+
+void rgbImgCallback(const sensor_msgs::ImageConstPtr &aImg) {
+  // Determine what to do here.
+  ROS_INFO_STREAM("RGB Image Call back Successful.");
+}
 
 /**
 *  @brief   This is the main function
@@ -45,11 +59,24 @@
 *  @return	0 Exit status
 */
 int main(int argc, char **argv) {
-  // Create a node handle
-  ros::NodeHandle nh;
-
   // Initialize the ROS node
   ros::init(argc, argv, "object");
+
+  // Create a node handle
+  ros::NodeHandle nh;
+  image_transport::ImageTransport imTrans(nh);
+  image_transport::Subscriber depthImgSub;
+  image_transport::Subscriber rgbImgSub;
+
+  // Subscribe to the rectified depth image.
+  imTrans.subscribe("/depth_registered/image_rect", 1, &depthImgCallback);
+  // Subscribe to the raw rgb image.
+  imTrans.subscribe("/camera/rgb/image_raw", 1, &rgbImgCallback);
+
+  // Note the default resolution is 640 x 480 as of Indigo. Further research
+  // required
+
+  ros::spin();
 
   return 0;
 }
