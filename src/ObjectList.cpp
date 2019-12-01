@@ -35,8 +35,11 @@
 
 #include "ObjectList.hpp"
 #include "Object.hpp"
-#include <memory>
+//#include "GoodObject.hpp"
+//#include <memory>
 #include <vector>
+#include <ros/ros.h>
+#include <geometry_msgs/Point.h>
 
 ObjectList::ObjectList() {
   numberOfObjects = 0;
@@ -44,10 +47,27 @@ ObjectList::ObjectList() {
 
 ObjectList::~ObjectList() {}
 
-int ObjectList::addObjectFound(std::shared_ptr<Object> obj) {
-  objectsFound.emplace_back(obj);
+int ObjectList::addObjectFound(Object::Pose objpose) {
+//  int objNumber = numberOfObjects+1;
+//  std::shared_ptr<Object> obj(new GoodObject(objNumber, objpose));
+
+  objectsFound.emplace_back(objpose);
   numberOfObjects = objectsFound.size();
   return numberOfObjects;
 }
 
+void ObjectList::objsCallback(const geometry_msgs::Point::ConstPtr& msg) {
+  Object::Pose pose;
+  pose.x = msg->x;
+  pose.y = msg->y;
+  pose.z = msg->z;
+  int count_ = addObjectFound(pose);
+  ROS_INFO_STREAM("An Object Pose has been added to list of collected objects!");
+  ROS_INFO_STREAM("There are " << count_ << " objects collected");
+  if (count_ == 5) {
+    ROS_WARN_STREAM("Collected All Objects!");
+    for (auto element : objectsFound)
+      ROS_INFO_STREAM("[" << element.x << "," << element.y << "," << element.z << "]");
+  }
+}
 
