@@ -52,6 +52,7 @@ void rgbImgCallback(const sensor_msgs::ImageConstPtr &aImg) {
   ROS_INFO_STREAM("RGB Image Call back Successful.");
 
   // Convert ROS Message into a cv::Mat for ImageProcessing Class.
+ /*
   cv_bridge::CvImagePtr cv_ptr;
   try {
     cv_ptr = cv_bridge::toCvShare(aImg, sensor_msgs::image_encodings::BGR8);
@@ -59,6 +60,7 @@ void rgbImgCallback(const sensor_msgs::ImageConstPtr &aImg) {
     ROS_ERROR("cv_bridge exception: %s", e.what());
     return;
   }
+  */
 
   //Use cv_ptr->image as input for the image processing class.
 }
