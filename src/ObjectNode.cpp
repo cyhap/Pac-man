@@ -41,6 +41,7 @@
 
 #include "image_transport/image_transport.h"
 #include "sensor_msgs/Image.h"
+#include "cv_bridge/cv_bridge.h"
 
 void depthImgCallback(const sensor_msgs::ImageConstPtr &aImg) {
   // Determine what to do here.
@@ -48,8 +49,18 @@ void depthImgCallback(const sensor_msgs::ImageConstPtr &aImg) {
 }
 
 void rgbImgCallback(const sensor_msgs::ImageConstPtr &aImg) {
-  // Determine what to do here.
   ROS_INFO_STREAM("RGB Image Call back Successful.");
+
+  // Convert ROS Message into a cv::Mat for ImageProcessing Class.
+  cv_bridge::CvImagePtr cv_ptr;
+  try {
+    cv_ptr = cv_bridge::toCvShare(aImg, sensor_msgs::image_encodings::BGR8);
+  } catch (cv_bridge::Exception &e) {
+    ROS_ERROR("cv_bridge exception: %s", e.what());
+    return;
+  }
+
+  //Use cv_ptr->image as input for the image processing class.
 }
 
 /**
