@@ -33,9 +33,9 @@
   * @brief This ROS Node is for wrapping the ObjectList Class
   */
 
-#include "ObjectList.hpp"
+#include "Object.hpp"
 #include <ros/ros.h>
-#include <memory>
+#include <geometry_msgs/Point.h>
 #include <vector>
 
 /**
@@ -44,21 +44,39 @@
 *  @param	  argv for ROS
 *  @return	0 Exit status
 */
+
 int main(int argc, char **argv) {
-  // Initialize the ROS node
-  ros::init(argc, argv, "objectlist");
-
-  // Create a node handle
+  ros::init(argc, argv, "pubpose");
   ros::NodeHandle nh;
-  
-  // Create a list for the Objects found
-  ObjectList objList;
-  
-  // Create a Subscriber object
-  ros::Subscriber sub = nh.subscribe("listobjects", 1000, &ObjectList::objsCallback, &objList);
+  ros::Publisher pub = nh.advertise<geometry_msgs::Point>("listobjects",1000);
 
-  // Give control to ROS
-  ros::spin();
+  // Set random Poses
+  std::vector<double> xs{0, 1, 2, 3, 4, 5};
+  std::vector<double> ys{0, 9, 7, 5, 3, 1};
+  std::vector<double> zs{0, 2, 4, 6, 4, 2};
+  
+  // Loop at 2Hz until the node is shut down
+  ros::Rate rate(2);
+  int counter = 0;
 
-  return 0;
+  while(ros::ok()) {
+    while(counter < 6) {
+      geometry_msgs::Point msg;
+      msg.x = xs[counter];
+      msg.y = ys[counter];
+      msg.z = zs[counter];
+
+      pub.publish(msg);
+      counter++;
+
+      // Send a message to rosout with the details.
+      ROS_INFO_STREAM("Sent Pose");
+
+      // Give one-time control to ROS
+      ros::spinOnce();
+
+      // Wait until next iteration
+      rate.sleep();
+    }
+  }
 }
