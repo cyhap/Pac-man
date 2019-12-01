@@ -42,6 +42,40 @@
 #include <ros/ros.h>
 #include <gtest/gtest.h>
 
+TEST(ImageProcessing, setRgbImgFunction) {
+  // Create an all White Image
+  cv::Scalar tWhite(255, 255, 255);
+  int tImgSize = 401;
+  cv::Mat slate(tImgSize, tImgSize, CV_8UC3, tWhite);
+
+  // Create a "Depth" Image where everything but the block is 10m away
+  float tDefaultDepth = 10;  // Meters
+  cv::Mat depth(tImgSize, tImgSize, CV_32FC1, tDefaultDepth);
+
+  // Create an Image Processing instance.
+  ImageProcessing imageProc;
+
+  ASSERT_TRUE(imageProc.setRgbImg(slate));
+  ASSERT_FALSE(imageProc.setRgbImg(depth));
+}
+
+TEST(ImageProcessing, setDptImgFunction) {
+  // Create an all White Image
+  cv::Scalar tWhite(255, 255, 255);
+  int tImgSize = 401;
+  cv::Mat slate(tImgSize, tImgSize, CV_8UC3, tWhite);
+
+  // Create a "Depth" Image where everything but the block is 10m away
+  float tDefaultDepth = 10;  // Meters
+  cv::Mat depth(tImgSize, tImgSize, CV_32FC1, tDefaultDepth);
+
+  // Create an Image Processing instance.
+  ImageProcessing imageProc;
+
+  ASSERT_TRUE(imageProc.setDptImg(depth));
+  ASSERT_FALSE(imageProc.setDptImg(slate));
+}
+
 TEST(ImageProcessing, CenteredGreenBlock) {
   // Create an all White Image
   cv::Scalar tWhite(255, 255, 255);
@@ -75,8 +109,11 @@ TEST(ImageProcessing, CenteredGreenBlock) {
   // Create an Image Processing instance.
   ImageProcessing imageProc;
   // Pass this information to the Image Processing Function.
-  std::shared_ptr<Object> tObj = imageProc.identifyObject(slate, depth);
-
+  imageProc.setDptImg(depth);
+  imageProc.setRgbImg(slate);
+  std::vector<std::shared_ptr<Object> > tObjects = imageProc.process();
+  ASSERT_EQ(tObjects.size(), 1);
+  std::shared_ptr<Object> tObj = *tObjects.begin();
   // Should have a pose tBlockDepth away along the X direction. (0 Otherwise)
   Object::Pose tExpected;
   tExpected.x = tBlockDepth;
@@ -90,6 +127,92 @@ TEST(ImageProcessing, CenteredGreenBlock) {
   ASSERT_EQ(tCompare.yaw, tExpected.yaw);
 }
 
+TEST(ImageProcessing, MultipleGreenBlocks) {
+  // Create an all White Image
+  cv::Scalar tWhite(255, 255, 255);
+  int tImgSize = 401;
+  cv::Mat slate(tImgSize, tImgSize, CV_8UC3, tWhite);
+  // Center of the Image is 200,200
+  // Create a Rectangle Object to put at the center of our blank slate.
+  int tHeight = 20;
+  int tWidth = 20;
+  // Subtract half the height and width from the image center to find the top
+  // left corner of the rectangle.
+  int tX = tImgSize / 2 - tWidth / 2;
+  int tY = tImgSize / 2 - tHeight / 2;
+
+  // Create the rectangle that will be placed in the image.
+  cv::Rect2i block(tX, tY, tWidth, tHeight);
+
+  // Place the Rectangle in the image.
+  cv::Scalar tGreen(0, 255, 0);
+  cv::rectangle(slate, block, tGreen, CV_FILLED);
+  // Slate will now have a centered green rectangle.
+
+  // Add an additional Rectangle in theimage.
+  cv::Rect2i block2(0, 0, tWidth, tHeight);
+  cv::rectangle(slate, block2, tGreen, CV_FILLED);
+
+  // Create a "Depth" Image where everything but the block is 10m away
+  // Note Depth is less relevant for this test.
+  float tDefaultDepth = 10;  // Meters
+  cv::Mat depth(tImgSize, tImgSize, CV_32FC1, tDefaultDepth);
+
+  // Create an Image Processing instance.
+  ImageProcessing imageProc;
+  // Pass this information to the Image Processing Function.
+  imageProc.setDptImg(depth);
+  imageProc.setRgbImg(slate);
+  std::vector<std::shared_ptr<Object> > tObjects = imageProc.process();
+  ASSERT_EQ(tObjects.size(), 2);
+
+}
+
+TEST(ImageProcessing, MultipleMultiColoredBlocks) {
+  // Create an all White Image
+  cv::Scalar tWhite(255, 255, 255);
+  int tImgSize = 401;
+  cv::Mat slate(tImgSize, tImgSize, CV_8UC3, tWhite);
+  // Center of the Image is 200,200
+  // Create a Rectangle Object to put at the center of our blank slate.
+  int tHeight = 20;
+  int tWidth = 20;
+  // Subtract half the height and width from the image center to find the top
+  // left corner of the rectangle.
+  int tX = tImgSize / 2 - tWidth / 2;
+  int tY = tImgSize / 2 - tHeight / 2;
+
+  // Create the rectangle that will be placed in the image.
+  cv::Rect2i block(tX, tY, tWidth, tHeight);
+
+  // Place the Rectangle in the image.
+  cv::Scalar tGreen(0, 255, 0);
+  cv::rectangle(slate, block, tGreen, CV_FILLED);
+  // Slate will now have a centered green rectangle.
+
+  // Add an additional Rectangle in the image.
+  cv::Rect2i block2(0, 0, tWidth, tHeight);
+  cv::rectangle(slate, block2, tGreen, CV_FILLED);
+
+  // Add an addition Red rectangle in the image
+  cv::Rect2i block3(100, 0, tWidth, tHeight);
+  cv::Scalar tRed(0, 0, 255);
+  cv::rectangle(slate, block3, tRed, CV_FILLED);
+
+  // Create a "Depth" Image where everything but the block is 10m away
+  // Note Depth is less relevant for this test.
+  float tDefaultDepth = 10;  // Meters
+  cv::Mat depth(tImgSize, tImgSize, CV_32FC1, tDefaultDepth);
+
+  // Create an Image Processing instance.
+  ImageProcessing imageProc;
+  // Pass this information to the Image Processing Function.
+  imageProc.setDptImg(depth);
+  imageProc.setRgbImg(slate);
+  std::vector<std::shared_ptr<Object> > tObjects = imageProc.process();
+  ASSERT_EQ(tObjects.size(), 3);
+
+}
 
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv){

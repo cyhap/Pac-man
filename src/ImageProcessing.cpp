@@ -78,3 +78,14 @@ std::vector<Object::Pose> ImageProcessing::processMask(
   std::vector<Object::Pose> tReturn;
   return tReturn;
 }
+
+bool ImageProcessing::setRgbImg(const cv::Mat &aRgbImg) {
+  (void) aRgbImg;
+  return false;
+  //rgbImg = aRgbImg;
+}
+bool ImageProcessing::setDptImg(const cv::Mat &aDepthImg) {
+  (void) aDepthImg;
+  //rectDepthImg = aDepthImg;
+  return false;
+}
