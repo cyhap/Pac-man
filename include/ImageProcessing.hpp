@@ -40,17 +40,18 @@
 #include <opencv2/core.hpp>
 
 #include <memory>
-#include <utility>
+#include <vector>
 
 class ImageProcessing {
  public:
   ImageProcessing();
   ~ImageProcessing();
-  std::shared_ptr<Object> identifyObject(const cv::Mat&, const cv::Mat&);
+  std::vector<std::shared_ptr<Object> > process();
+  bool setRgbImg(const cv::Mat&);
+  bool setDptImg(const cv::Mat&);
  private:
-  std::pair<cv::Mat, std::shared_ptr<Object> > applyMask(const cv::Mat&);
-  std::pair<size_t, size_t> computeCentroid(const cv::Mat&);
-  void computePose(const cv::Mat&, std::pair<size_t, size_t>,
-                   std::shared_ptr<Object>);
+  cv::Mat rgbImg;
+  cv::Mat rectDepthImg;
+  std::vector<Object::Pose> processMask(const cv::Mat&);
 };
 

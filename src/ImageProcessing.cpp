@@ -39,24 +39,19 @@
 
 #include "GoodObject.hpp"
 
-ImageProcessing::ImageProcessing() {
+ImageProcessing::ImageProcessing()
+    :
+    rgbImg(),
+    rectDepthImg() {
+  // Fixme [Yhap] Consider what default images should be used if any at all.
 }
 
 ImageProcessing::~ImageProcessing() {
 }
 
-std::shared_ptr<Object> ImageProcessing::identifyObject(
-    const cv::Mat &aImage, const cv::Mat &aDepthImg) {
+std::vector<std::shared_ptr<Object> > ImageProcessing::process() {
   // Fixme[Yhap] Fill in this function;
-  (void) aImage;
-  (void) aDepthImg;
-
-  std::shared_ptr<Object> tReturn(new GoodObject(0, Object::Pose()));
-  return tReturn;
-}
-
-std::pair<cv::Mat, std::shared_ptr<Object> > ImageProcessing::applyMask(
-    const cv::Mat &aImage) {
+  /*
   // Define the  BGR Masks used to detect blocks
   // Green Block
   cv::Scalar lowGreen(0, 200, 0);
@@ -67,28 +62,19 @@ std::pair<cv::Mat, std::shared_ptr<Object> > ImageProcessing::applyMask(
 
   cv::Mat greenThresh, redThresh;
 
-  cv::inRange(aImage, lowGreen, highGreen, greenThresh);
-  cv::inRange(aImage, lowRed, highRed, redThresh);
+  cv::inRange(rgbImg, lowGreen, highGreen, greenThresh);
+  cv::inRange(rgbImg, lowRed, highRed, redThresh);
+   */
+  std::vector<std::shared_ptr<Object> > tReturn;
+  return tReturn;
+}
 
+std::vector<Object::Pose> ImageProcessing::processMask(
+    const cv::Mat &aImage) {
   // Image Processing taking two different inputs since images updated separately
   // updating the object creating code portion.
 
-  std::pair<cv::Mat, std::shared_ptr<Object> > tReturn;
-  return tReturn;
-}
-
-std::pair<size_t, size_t> ImageProcessing::computeCentroid(
-    const cv::Mat &aImage) {
-  // Fixme[Yhap] Fill in this function;
   (void) aImage;
-  std::pair<size_t, size_t> tReturn;
+  std::vector<Object::Pose> tReturn;
   return tReturn;
-}
-void ImageProcessing::computePose(const cv::Mat &aImage,
-                                  std::pair<size_t, size_t> aPixelLoc,
-                                  std::shared_ptr<Object> aObject) {
-  // Fixme[Yhap] Fill in this function;
-  (void) aImage;
-  (void) aPixelLoc;
-  (void) aObject;
 }
