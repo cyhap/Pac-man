@@ -36,12 +36,14 @@
 #pragma once
 
 #include "Object.hpp"
+#include "GoodObject.hpp"
 #include <memory>
 #include <vector>
+#include <geometry_msgs/Point.h>
 
 class ObjectList {
   private:
-    std::vector<std::shared_ptr<Object>> objectsFound;  ///< Vector of collected objects
+    std::vector<Object::Pose> objectsFound;  ///< Vector of collected objects
     int numberOfObjects;  ///< Number of objects in found list
 
   public:
@@ -64,6 +66,13 @@ class ObjectList {
     *  @param	  obj Pointer to an object found
     *  @return	The number of objects in the list
     */
-    int addObjectFound(std::shared_ptr<Object>);
+    int addObjectFound(Object::Pose);
+
+    /**
+    *  @brief   This is the callback function for updating the object list
+    *  @param	  obj Pointer to the object found
+    *  @return	None
+    */
+    void objsCallback(const geometry_msgs::Point::ConstPtr&);
 };
 

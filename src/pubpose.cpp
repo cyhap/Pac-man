@@ -26,48 +26,57 @@
  */
 
  /**
-  * @file ObjectList.cpp
+  * @file ObjectListNode.cpp
   * @copyright 2019 Ari Kupferberg
   * @author Ari Kupfeberg
   * @date 11/24/2019
-  * @brief This Class is for storing and listing the collected objects
+  * @brief This ROS Node is for wrapping the ObjectList Class
   */
 
-#include "ObjectList.hpp"
 #include "Object.hpp"
-//#include "GoodObject.hpp"
-//#include <memory>
-#include <vector>
 #include <ros/ros.h>
 #include <geometry_msgs/Point.h>
+#include <vector>
 
-ObjectList::ObjectList() {
-  numberOfObjects = 0;
-}
+/**
+*  @brief   This is the main function
+*  @param	  argc for ROS
+*  @param	  argv for ROS
+*  @return	0 Exit status
+*/
 
-ObjectList::~ObjectList() {}
+int main(int argc, char **argv) {
+  ros::init(argc, argv, "pubpose");
+  ros::NodeHandle nh;
+  ros::Publisher pub = nh.advertise<geometry_msgs::Point>("listobjects",1000);
 
-int ObjectList::addObjectFound(Object::Pose objpose) {
-//  int objNumber = numberOfObjects+1;
-//  std::shared_ptr<Object> obj(new GoodObject(objNumber, objpose));
+  // Set random Poses
+  std::vector<double> xs{0, 1, 2, 3, 4, 5};
+  std::vector<double> ys{0, 9, 7, 5, 3, 1};
+  std::vector<double> zs{0, 2, 4, 6, 4, 2};
+  
+  // Loop at 2Hz until the node is shut down
+  ros::Rate rate(2);
+  int counter = 0;
 
-  objectsFound.emplace_back(objpose);
-  numberOfObjects = objectsFound.size();
-  return numberOfObjects;
-}
+  while(ros::ok()) {
+    while(counter < 6) {
+      geometry_msgs::Point msg;
+      msg.x = xs[counter];
+      msg.y = ys[counter];
+      msg.z = zs[counter];
 
-void ObjectList::objsCallback(const geometry_msgs::Point::ConstPtr& msg) {
-  Object::Pose pose;
-  pose.x = msg->x;
-  pose.y = msg->y;
-  pose.z = msg->z;
-  int count_ = addObjectFound(pose);
-  ROS_INFO_STREAM("An Object Pose has been added to list of collected objects!");
-  ROS_INFO_STREAM("There are " << count_ << " objects collected");
-  if (count_ == 5) {
-    ROS_WARN_STREAM("Collected All Objects!");
-    for (auto element : objectsFound)
-      ROS_INFO_STREAM("[" << element.x << "," << element.y << "," << element.z << "]");
+      pub.publish(msg);
+      counter++;
+
+      // Send a message to rosout with the details.
+      ROS_INFO_STREAM("Sent Pose");
+
+      // Give one-time control to ROS
+      ros::spinOnce();
+
+      // Wait until next iteration
+      rate.sleep();
+    }
   }
 }
-

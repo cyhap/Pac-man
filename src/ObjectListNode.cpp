@@ -45,14 +45,20 @@
 *  @return	0 Exit status
 */
 int main(int argc, char **argv) {
-  // Create a node handle
-  ros::NodeHandle nh;
-
   // Initialize the ROS node
   ros::init(argc, argv, "objectlist");
 
-  // Create an object of the ObjectList Class
+  // Create a node handle
+  ros::NodeHandle nh;
+  
+  // Create a list for the Objects found
   ObjectList objList;
+  
+  // Create a Subscriber object
+  ros::Subscriber sub = nh.subscribe("listobjects", 1000, &ObjectList::objsCallback, &objList);
+
+  // Give control to ROS
+  ros::spin();
 
   return 0;
 }

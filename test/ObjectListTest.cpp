@@ -51,9 +51,7 @@ TEST(ObjectList, addObject) {
   locData.pitch = 1.00;
   locData.yaw = 1.00;
 
-  std::shared_ptr<Object> objpoint(new GoodObject(1,locData));
-
-  ASSERT_EQ(objList.addObjectFound(objpoint),1);
+  ASSERT_EQ(objList.addObjectFound(locData),1);
 }
 
 // Run all the tests that were declared with TEST()
