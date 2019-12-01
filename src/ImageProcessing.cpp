@@ -57,8 +57,22 @@ std::shared_ptr<Object> ImageProcessing::identifyObject(
 
 std::pair<cv::Mat, std::shared_ptr<Object> > ImageProcessing::applyMask(
     const cv::Mat &aImage) {
-  // Fixme[Yhap] Fill in this function;
-  (void) aImage;
+  // Define the  BGR Masks used to detect blocks
+  // Green Block
+  cv::Scalar lowGreen(0, 200, 0);
+  cv::Scalar highGreen(0, 255, 0);
+  // Red Block
+  cv::Scalar lowRed(0, 0, 200);
+  cv::Scalar highRed(0, 0, 255);
+
+  cv::Mat greenThresh, redThresh;
+
+  cv::inRange(aImage, lowGreen, highGreen, greenThresh);
+  cv::inRange(aImage, lowRed, highRed, redThresh);
+
+  // Image Processing taking two different inputs since images updated separately
+  // updating the object creating code portion.
+
   std::pair<cv::Mat, std::shared_ptr<Object> > tReturn;
   return tReturn;
 }
