@@ -119,7 +119,7 @@ std::vector<Object::Pose> ImageProcessing::processMask(
   // Obtain the corresponding depth at these points
   for (const auto &tPixel : pixels) {
     Object::Pose tPose;
-    tPose.z = rectDepthImg.at(tPixel.x, tPixel.y);
+    tPose.z = rectDepthImg.at<float>(tPixel.x, tPixel.y);
     // Add that Pose to the list of poses.
     tReturn.push_back(tPose);
   }
