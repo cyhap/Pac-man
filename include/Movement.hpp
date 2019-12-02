@@ -1,5 +1,5 @@
-/*
- * @copyright Copyright 2019 <Ethan Quist>
+/* 
+ * Copyright (c) 2019, Ari Kupferberg, Ethan Quist, Corbyn Yhap
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,96 +23,78 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Ethan Quist
- *
- * @file Movement.hpp
- *
- * @brief This is header filef for the movmenet class to control the turtlebot.
- *
  */
+ /**
+  * @file Movement.hpp
+  * @copyright 2019 Ethan Quist
+  * @author Ethan Quist
+  * @date 11/26/2019
+  * @brief This Class provides functionality to control the turtlebot's movements.
+  */
 
 #pragma once
 
 class Movement {
- public:
+  private:
+    float linearVelocity;  ///< Turtlebot's linear velocity
+    float angularVelocity;  ///< Turtlebot's angular velocity
+    bool objectSeen;  ///< boolean flag for object detection
 
-  /**
-   * @brief constructor for Movment Class
-   *
-   * @param none
-   * @return none
-   */
-  Movement();
+  public:
+    /**
+    *  @brief   This is the constructor for the Movement Class
+    *  @param	  None
+    *  @return	None
+    */
+    Movement();
 
-  /**
-   * @brief constructor for Movment Class
-   *
-   * @param none
-   * @return none
-   */
-  virtual ~Movement();
+    /**
+    *  @brief   This is the destructor for the Movement Class
+    *  @param	  None
+    *  @return	None
+    */
+    virtual ~Movement();
 
-  /**
-   * @brief Sets the linear velocity of the turtlebot
-   *
-   * @param float for linear velocity
-   * @return none
-   *
-   */
-  void setLinearVelocity(float);
+    /**
+    *  @brief   This function sets the linear velocity of the turtlebot
+    *  @param	  lv linear velocity as float
+    *  @return	None
+    */
+    void setLinearVelocity(float);
 
-  /**
-   * @brief Sets the linear velocity of the turtlebot
-   *
-   * @param float for linear velocity
-   * @return none
-   *
-   */
-  void setAngularVelocity(float);
+    /**
+    *  @brief   This function sets the angular velocity of the turtlebot
+    *  @param	  av angular velocity as float
+    *  @return	None
+    */
+    void setAngularVelocity(float);
 
-  /**
-   * @brief Sets the linear velocity of the turtlebot
-   *
-   * @param float for linear velocity
-   * @return none
-   *
-   */
-  void setObjectSeen(bool);
+    /**
+    *  @brief   This function sets the objectSeen member
+    *  @param	  os boolean
+    *  @return	None
+    */
+    void setObjectSeen(bool);
 
-  /**
-   * @brief retrieve the linear velocity
-   *
-   * @param none
-   * @return float of the linear velocity
-   */
-  float getLinearVelocity();
+    /**
+    *  @brief   This function retrieves the linear velocity
+    *  @param	  None
+    *  @return	float of linear velocity
+    */
+    float getLinearVelocity();
 
-  /**
-   * @brief retrieve the angular velocity
-   *
-   * @param none
-   * @return float of the angular velocity
-   */
-  float getAngularVelocity();
+    /**
+    *  @brief   This function retrieves the angular velocity
+    *  @param	  None
+    *  @return	float of angular velocity
+    */
+    float getAngularVelocity();
 
-  /**
-   * @brief checks the seen object flag
-   *
-   * @param none
-   * @return bool if objectSeen is true
-   */
-  bool checkVisuals();
-
- private:
-  // This is the value for turtlebot's linear velocity
-  float linearVelocity;
-  // This is the value for the turtlebot's angular velocity
-  float angularVelocity;
-  // This flags if an object has been detected or not
-  bool objectSeen;
-
+    /**
+    *  @brief   This function checks the objectSeen member flag
+    *  @param	  None
+    *  @return	boolean for objectSeen
+    */
+    bool checkVisuals();
 };
-
-
 

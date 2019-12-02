@@ -24,13 +24,12 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
  /**
   * @file Object.hpp
   * @copyright 2019 Ari Kupferberg
   * @author Ari Kupfeberg
   * @date 11/24/2019
-  * @brief This Class is the Base Class for the Object Classes
+  * @brief This Class is the Base Class for the Object Classes.
   */
 
 #pragma once
@@ -70,7 +69,7 @@ class Object {
     std::vector<double> getXYZ();
 
   private:
-    int index;
-    Pose location;
+    int index;  ///< index value of Object
+    Pose location;  ///< 6-DOF location of Object as Pose
 };
 

@@ -24,15 +24,14 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
  /**
- * @file ImageProcessing.hpp
- * @copyright 2019 Corbyn Yhap
- * @author Corbyn Yhap
- * @date 11/26/2019
- * @brief This Class Provides functions to handle rgb and depth image sensor
- *  data.
- */
+  * @file ImageProcessing.hpp
+  * @copyright 2019 Corbyn Yhap
+  * @author Corbyn Yhap
+  * @date 11/26/2019
+  * @brief This Class Provides functions to handle rgb and depth image sensor
+  *  data.
+  */
 
 #pragma once
 
@@ -43,15 +42,45 @@
 #include <vector>
 
 class ImageProcessing {
- public:
-  ImageProcessing();
-  ~ImageProcessing();
-  std::vector<std::shared_ptr<Object> > process();
-  bool setRgbImg(const cv::Mat&);
-  bool setDptImg(const cv::Mat&);
- private:
-  cv::Mat rgbImg;
-  cv::Mat rectDepthImg;
-  std::vector<Object::Pose> processMask(const cv::Mat&);
+  private:
+    cv::Mat rgbImg;  ///< COMPLETE ME, CORBYN!
+    cv::Mat rectDepthImg;  ///<  COMPLETE ME, CORBYN!
+    std::vector<Object::Pose> processMask(const cv::Mat&);  ///<  COMPLETE ME, CORBYN!
+
+  public:
+    /**
+    *  @brief    COMPLETE ME, CORBYN!
+    *  @param	  
+    *  @return	
+    */
+    ImageProcessing();
+
+    /**
+    *  @brief    COMPLETE ME, CORBYN!
+    *  @param	  
+    *  @return	
+    */
+    ~ImageProcessing();
+
+    /**
+    *  @brief    COMPLETE ME, CORBYN!
+    *  @param	  
+    *  @return	
+    */
+    std::vector<std::shared_ptr<Object>> process();
+
+    /**
+    *  @brief    COMPLETE ME, CORBYN!
+    *  @param	  
+    *  @return	
+    */
+    bool setRgbImg(const cv::Mat&);
+
+    /**
+    *  @brief    COMPLETE ME, CORBYN!
+    *  @param	  
+    *  @return	
+    */
+    bool setDptImg(const cv::Mat&);
 };
 

@@ -24,13 +24,12 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
  /**
   * @file ObjectList.hpp
   * @copyright 2019 Ari Kupferberg
   * @author Ari Kupfeberg
   * @date 11/24/2019
-  * @brief This Class is for storing and listing the collected objects
+  * @brief This Class is for storing and listing the collected objects.
   */
 
 #pragma once

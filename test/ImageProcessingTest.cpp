@@ -24,14 +24,13 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
  /**
- * @file ImageProcessingTest.cpp
- * @copyright 2019 Corbyn Yhap
- * @author Corbyn Yhap
+  * @file ImageProcessingTest.cpp
+  * @copyright 2019 Corbyn Yhap
+  * @author Corbyn Yhap
   * @date 11/27/2019
- * @brief This TEST file is for testing the methods in the Image Processing
- *        class
+  * @brief This TEST file is for testing the methods in the Image Processing
+  *        class
   */
 
 #include "ImageProcessing.hpp"

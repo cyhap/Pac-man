@@ -1,5 +1,5 @@
-/*
- * @copyright Copyright 2019 <Ethan Quist>
+/* 
+ * Copyright (c) 2019, Ari Kupferberg, Ethan Quist, Corbyn Yhap
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,14 +23,14 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Ethan Quist
- *
- * @file Movement.cpp
- *
- * @brief This file contains the class to handle movement for the turtlebot
- *
  */
+ /**
+  * @file Movement.cpp
+  * @copyright 2019 Ethan Quist
+  * @author Ethan Quist
+  * @date 11/26/2019
+  * @brief This Class provides functionality to control the turtlebot's movements.
+  */
 
 #include "Movement.hpp"
 

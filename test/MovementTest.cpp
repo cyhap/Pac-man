@@ -1,5 +1,5 @@
-/*
- * @copyright Copyright 2019 <Ethan Quist>
+/* 
+ * Copyright (c) 2019, Ari Kupferberg, Ethan Quist, Corbyn Yhap
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,14 +23,14 @@
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * @author Ethan Quist
- *
- * @file movement.hpp
- *
- * @brief This is header file for testing the movement class to control the turtlebot.
- *
  */
+ /**
+  * @file MovementTest.cpp
+  * @copyright 2019 Ethan Quist
+  * @author Ethan Quist
+  * @date 11/27/2019
+  * @brief This TEST file is for testing the Movement methods.
+  */
 
 #include <ros/ros.h>
 #include <gtest/gtest.h>

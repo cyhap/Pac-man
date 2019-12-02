@@ -24,13 +24,12 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
  /**
-  * @file ObjectListNode.cpp
+  * @file pubpose.cpp
   * @copyright 2019 Ari Kupferberg
   * @author Ari Kupfeberg
-  * @date 11/24/2019
-  * @brief This ROS Node is for wrapping the ObjectList Class
+  * @date 11/30/2019
+  * @brief This ROS Publisher node is temporary for testing the ObjectList Subscriber.
   */
 
 #include "Object.hpp"

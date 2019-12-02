@@ -24,16 +24,14 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
  /**
- * @file ImageProcessing.cpp
- * @copyright 2019 Corbyn Yhap
- * @author Corbyn Yhap
- * @date 11/27/2019
- * @brief This Class defines the functions that process RGB and Depth sensor
- *        data together.
+  * @file ImageProcessing.cpp
+  * @copyright 2019 Corbyn Yhap
+  * @author Corbyn Yhap
+  * @date 11/27/2019
+  * @brief This Class defines the functions that process RGB and Depth sensor
+  *        data together.
  */
-
 
 #include "ImageProcessing.hpp"
 

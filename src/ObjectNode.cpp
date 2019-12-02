@@ -24,13 +24,12 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
  /**
   * @file ObjectNode.cpp
   * @copyright 2019 Ari Kupferberg
-  * @author Ari Kupfeberg
+  * @author Ari Kupfeberg, Corbyn Yhap
   * @date 11/25/2019
-  * @brief This ROS Node is for wrapping the Object Classes
+  * @brief This ROS Node is for running the object identification.
   */
 
 #include "Object.hpp"
@@ -43,11 +42,21 @@
 #include "sensor_msgs/Image.h"
 #include "cv_bridge/cv_bridge.h"
 
+/**
+*  @brief   This Callback function ... DOES SOMETHING
+*  @param	  aImg An image with depth data
+*  @return	None
+*/
 void depthImgCallback(const sensor_msgs::ImageConstPtr &aImg) {
   // Determine what to do here.
   ROS_INFO_STREAM("Depth Image Call back Successful.");
 }
 
+/**
+*  @brief   This Callback function ... DOES SOMETHING
+*  @param	  aImg An image with depth data
+*  @return	None
+*/
 void rgbImgCallback(const sensor_msgs::ImageConstPtr &aImg) {
   ROS_INFO_STREAM("RGB Image Call back Successful.");
 

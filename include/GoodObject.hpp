@@ -24,7 +24,6 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
  /**
   * @file GoodObject.hpp
   * @copyright 2019 Ari Kupferberg
@@ -39,7 +38,7 @@
 
 class GoodObject: public Object {
   private:
-    bool collect;
+    bool collect;  ///< Boolean to identify if Object should be collected
 
   public:
     /**
