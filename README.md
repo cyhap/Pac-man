@@ -47,6 +47,14 @@ source devel/setup.bash
 ```
 
 ## Test
+At this point, launch files have not yet been implemented. Thus, 'roscore' must be used to initiate the ROS master.</br>
+Open two terminals:
+
+Terminal 1:
+```
+roscore
+```
+Terminal 2:
 ```
 cd <your catkin workspace>
 catkin_make run_tests
