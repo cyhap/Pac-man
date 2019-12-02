@@ -1,0 +1,82 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <world name="default">
+    <!-- A global light source -->
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    <!-- A ground plane -->
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+
+    <include>
+      <uri>model://grey_wall</uri>
+      <name>wall1</name>
+      <pose>10 0 0 0 0 1.57</pose>
+    </include>
+    <include>
+      <uri>model://grey_wall</uri>
+      <name>wall2</name>
+      <pose>10 6.25 0 0 0 1.57</pose>
+    </include>
+    <include>
+      <uri>model://grey_wall</uri>
+      <name>wall3</name>
+      <pose>10 -6.25 0 0 0 1.57</pose>
+    </include>
+
+    <include>
+      <uri>model://grey_wall</uri>
+      <name>wall4</name>
+      <pose>-10 0 0 0 0 1.57</pose>
+    </include>
+    <include>
+      <uri>model://grey_wall</uri>
+      <name>wall5</name>
+      <pose>-10 6.25 0 0 0 1.57</pose>
+    </include>
+    <include>
+      <uri>model://grey_wall</uri>
+      <name>wall6</name>
+      <pose>-10 -6.25 0 0 0 1.57</pose>
+    </include>
+
+    <include>
+      <uri>model://grey_wall</uri>
+      <name>wall7</name>
+      <pose>0 10 0 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://grey_wall</uri>
+      <name>wall8</name>
+      <pose>6 10 0 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://grey_wall</uri>
+      <name>wall9</name>
+      <pose>-6 10 0 0 0 0</pose>
+    </include>
+
+    <include>
+      <uri>model://grey_wall</uri>
+      <name>wall10</name>
+      <pose>0 -10 0 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://grey_wall</uri>
+      <name>wall11</name>
+      <pose>6 -10 0 0 0 0</pose>
+    </include>
+    <include>
+      <uri>model://grey_wall</uri>
+      <name>wall12</name>
+      <pose>-6 -10 0 0 0 0</pose>
+    </include>
+
+
+
+
+  </world>
+</sdf>
+
