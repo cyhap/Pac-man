@@ -34,8 +34,11 @@
  */
 
 #include "ImageProcessing.hpp"
+#include "opencv2/imgcodecs.hpp"
+#include "opencv2/imgproc.hpp"
 
 #include "GoodObject.hpp"
+#include "BadObject.hpp"
 
 ImageProcessing::ImageProcessing()
     :
@@ -48,8 +51,9 @@ ImageProcessing::~ImageProcessing() {
 }
 
 std::vector<std::shared_ptr<Object> > ImageProcessing::process() {
-  // Fixme[Yhap] Fill in this function;
-  /*
+  // Create the return variable.
+  std::vector<std::shared_ptr<Object> > tReturn;
+
   // Define the  BGR Masks used to detect blocks
   // Green Block
   cv::Scalar lowGreen(0, 200, 0);
@@ -58,32 +62,83 @@ std::vector<std::shared_ptr<Object> > ImageProcessing::process() {
   cv::Scalar lowRed(0, 0, 200);
   cv::Scalar highRed(0, 0, 255);
 
-  cv::Mat greenThresh, redThresh;
+  cv::Mat blurImg, greenThresh, redThresh;
 
-  cv::inRange(rgbImg, lowGreen, highGreen, greenThresh);
-  cv::inRange(rgbImg, lowRed, highRed, redThresh);
-   */
-  std::vector<std::shared_ptr<Object> > tReturn;
+  // Blur the Image
+  int kernelSize = 3;
+  cv::blur(rgbImg, blurImg, cv::Size(kernelSize, kernelSize));
+
+  cv::inRange(blurImg, lowGreen, highGreen, greenThresh);
+  cv::inRange(blurImg, lowRed, highRed, redThresh);
+
+  // Retrieve Poses for Good Objects
+  std::vector<Object::Pose> goodPoses = processMask(greenThresh);
+  // Retrieve Poses for Bad Objects
+  std::vector<Object::Pose> badPoses = processMask(redThresh);
+
+  // Create Good Objects with the goodPoses
+  for (const auto &tPose : goodPoses) {
+    std::shared_ptr<Object> tAdd(new GoodObject(0, tPose));
+    tReturn.push_back(tAdd);
+  }
+  // Create Bad Objects with the badPoses
+  for (const auto &tPose : badPoses) {
+    std::shared_ptr<Object> tAdd(new BadObject(0, tPose));
+    tReturn.push_back(tAdd);
+  }
+
   return tReturn;
 }
 
 std::vector<Object::Pose> ImageProcessing::processMask(
     const cv::Mat &aImage) {
-  // Image Processing taking two different inputs since images updated separately
-  // updating the object creating code portion.
-
-  (void) aImage;
+  // Declare the return type
   std::vector<Object::Pose> tReturn;
+  // Find the contours in the image
+  std::vector<std::vector<cv::Point> > contours;
+  std::vector<cv::Vec4i> hierarchy;
+  cv::findContours(aImage, contours, hierarchy, cv::RETR_TREE,
+                   cv::CHAIN_APPROX_SIMPLE);
+  // Extract the moments from the contours
+  std::vector<cv::Moments> mu(contours.size());
+  auto momentIter = mu.begin();
+  for (const auto &tContour : contours) {
+    *momentIter = cv::moments(tContour, false);
+    momentIter++;
+  }
+
+  std::vector<cv::Point2i> pixels(mu.size());
+  auto pixelIter = pixels.begin();
+  // Extract the Centroid from the Moments
+  for (const auto &tMoment : mu) {
+    *pixelIter = cv::Point2i(tMoment.m10 / tMoment.m00,
+                             tMoment.m01 / tMoment.m00);
+    pixelIter++;
+  }
+
+  // Obtain the corresponding depth at these points
+  for (const auto &tPixel : pixels) {
+    Object::Pose tPose;
+    tPose.z = rectDepthImg.at(tPixel.x, tPixel.y);
+    // Add that Pose to the list of poses.
+    tReturn.push_back(tPose);
+  }
   return tReturn;
 }
 
 bool ImageProcessing::setRgbImg(const cv::Mat &aRgbImg) {
-  (void) aRgbImg;
-  return false;
-  //rgbImg = aRgbImg;
+  bool validRGB = false;
+  if (aRgbImg.depth() == CV_8UC3) {
+    validRGB = true;
+    rgbImg = aRgbImg;
+  }
+  return validRGB;
 }
 bool ImageProcessing::setDptImg(const cv::Mat &aDepthImg) {
-  (void) aDepthImg;
-  //rectDepthImg = aDepthImg;
-  return false;
+  bool validDpt = false;
+  if (aDepthImg.depth() == CV_32FC1) {
+    validDpt = true;
+    rectDepthImg = aDepthImg;
+  }
+  return validDpt;
 }
