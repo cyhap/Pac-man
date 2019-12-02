@@ -32,7 +32,9 @@
   * @brief This Class is the Base Class for the Object Classes.
   */
 
-#pragma once
+#ifndef INCLUDE_OBJECT_HPP_
+#define INCLUDE_OBJECT_HPP_
+
 #include <vector>
 
 class Object {
@@ -73,3 +75,4 @@ class Object {
     Pose location;  ///< 6-DOF location of Object as Pose
 };
 
+#endif  // INCLUDE_OBJECT_HPP_

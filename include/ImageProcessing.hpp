@@ -33,7 +33,8 @@
   *  data.
   */
 
-#pragma once
+#ifndef INCLUDE_IMAGEPROCESSING_HPP_
+#define INCLUDE_IMAGEPROCESSING_HPP_
 
 #include "Object.hpp"
 #include <opencv2/core.hpp>
@@ -84,3 +85,4 @@ class ImageProcessing {
     bool setDptImg(const cv::Mat&);
 };
 
+#endif  // INCLUDE_IMAGEPROCESSING_HPP_

@@ -32,7 +32,8 @@
   * @brief This Class provides functionality to control the turtlebot's movements.
   */
 
-#pragma once
+#ifndef INCLUDE_MOVEMENT_HPP_
+#define INCLUDE_MOVEMENT_HPP_
 
 class Movement {
   private:
@@ -98,3 +99,4 @@ class Movement {
     bool checkVisuals();
 };
 
+#endif  // INCLUDE_MOVEMENT_HPP_

@@ -32,7 +32,8 @@
   * @brief This Class is a Derived Class from Object and defines the objects that should be considered obstacles and avoided.
   */
 
-#pragma once
+#ifndef INCLUDE_BADOBJECT_HPP_
+#define INCLUDE_BADOBJECT_HPP_
 
 #include "Object.hpp"
 
@@ -66,3 +67,4 @@ class BadObject: public Object {
     virtual bool checkCollect();
 };
 
+#endif  // INCLUDE_BADOBJECT_HPP_

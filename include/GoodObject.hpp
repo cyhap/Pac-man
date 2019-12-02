@@ -32,7 +32,8 @@
   * @brief This Class is a Derived Class from Object and defines the objects that should be collected.
   */
 
-#pragma once
+#ifndef INCLUDE_GOODOBJECT_HPP_
+#define INCLUDE_GOODOBJECT_HPP_
 
 #include "Object.hpp"
 
@@ -66,3 +67,4 @@ class GoodObject: public Object {
     virtual bool checkCollect();
 };
 
+#endif  // INCLUDE_GOODOBJECT_HPP_

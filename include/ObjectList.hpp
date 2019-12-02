@@ -32,7 +32,8 @@
   * @brief This Class is for storing and listing the collected objects.
   */
 
-#pragma once
+#ifndef INCLUDE_OBJECTLIST_HPP_
+#define INCLUDE_OBJECTLIST_HPP_
 
 #include "Object.hpp"
 #include "GoodObject.hpp"
@@ -75,3 +76,4 @@ class ObjectList {
     void objsCallback(const geometry_msgs::Point::ConstPtr&);
 };
 
+#endif  // INCLUDE_OBJECTLIST_HPP_
