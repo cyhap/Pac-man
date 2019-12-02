@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 2019, Ari Kupferberg, Ethan Quist, Corbyn Yhap
  * All rights reserved.
  *
@@ -37,7 +37,7 @@
 
 
 Object::Pose Object::getPose() {
-  return location; 
+  return location;
 }
 
 

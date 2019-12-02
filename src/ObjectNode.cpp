@@ -32,11 +32,12 @@
   * @brief This ROS Node is for running the object identification.
   */
 
+#include <ros/ros.h>
+
 #include "Object.hpp"
 #include "GoodObject.hpp"
 #include "BadObject.hpp"
 #include "ImageProcessing.hpp"
-#include <ros/ros.h>
 
 #include "image_transport/image_transport.h"
 #include "sensor_msgs/Image.h"
@@ -71,7 +72,7 @@ void rgbImgCallback(const sensor_msgs::ImageConstPtr &aImg) {
   }
 
 
-  //Use cv_ptr->image as input for the image processing class.
+  // Use cv_ptr->image as input for the image processing class.
 }
 
 /**

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 2019, Ari Kupferberg, Ethan Quist, Corbyn Yhap
  * All rights reserved.
  *
@@ -32,10 +32,12 @@
   * @brief This ROS Node is for wrapping the ObjectList Class.
   */
 
-#include "ObjectList.hpp"
-#include <ros/ros.h>
 #include <memory>
 #include <vector>
+
+#include "ObjectList.hpp"
+#include "ros/ros.h"
+
 
 /**
 *  @brief   This is the main function
@@ -49,12 +51,13 @@ int main(int argc, char **argv) {
 
   // Create a node handle
   ros::NodeHandle nh;
-  
+
   // Create a list for the Objects found
   ObjectList objList;
-  
+
   // Create a Subscriber object
-  ros::Subscriber sub = nh.subscribe("listobjects", 1000, &ObjectList::objsCallback, &objList);
+  ros::Subscriber sub = nh.subscribe("listobjects", 1000,
+                                     &ObjectList::objsCallback, &objList);
 
   // Give control to ROS
   ros::spin();

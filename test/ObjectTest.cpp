@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 2019, Ari Kupferberg, Ethan Quist, Corbyn Yhap
  * All rights reserved.
  *
@@ -34,33 +34,30 @@
 
 #include "Object.hpp"
 #include "GoodObject.hpp"
-#include <ros/ros.h>
-#include <gtest/gtest.h>
+#include "ros/ros.h"
+#include "gtest/gtest.h"
 
 TEST(GoodObject, construct_check) {
-
   Object::Pose locData;
-  GoodObject obj1(1,locData);
+  GoodObject obj1(1, locData);
 
-  ASSERT_EQ(obj1.checkCollect(),true);
+  ASSERT_EQ(obj1.checkCollect(), true);
 }
 
 TEST(GoodObject, objxyz) {
-
   Object::Pose locData;
   locData.x = 1.00;
   locData.y = 2.00;
   locData.z = 3.00;
 
-  GoodObject obj1(1,locData);
+  GoodObject obj1(1, locData);
   std::vector<double> objXYZ = obj1.getXYZ();
   std::vector<double> testXYZ{1.00, 2.00, 3.00};
 
-  ASSERT_EQ(objXYZ,testXYZ);
+  ASSERT_EQ(objXYZ, testXYZ);
 }
 
 TEST(GoodObject, objpose) {
-
   Object::Pose locData;
   locData.x = 1.00;
   locData.y = 4.00;
@@ -69,20 +66,20 @@ TEST(GoodObject, objpose) {
   locData.pitch = 1.50;
   locData.yaw = 0.77;
 
-  GoodObject obj1(1,locData);
+  GoodObject obj1(1, locData);
   Object::Pose objLoc = obj1.getPose();
 
-  EXPECT_EQ(objLoc.x,1.00);
-  EXPECT_EQ(objLoc.y,4.00);
-  EXPECT_EQ(objLoc.z,3.00);
-  EXPECT_EQ(objLoc.roll,2.00);
-  EXPECT_EQ(objLoc.pitch,1.50);
-  EXPECT_EQ(objLoc.yaw,0.77);
+  EXPECT_EQ(objLoc.x, 1.00);
+  EXPECT_EQ(objLoc.y, 4.00);
+  EXPECT_EQ(objLoc.z, 3.00);
+  EXPECT_EQ(objLoc.roll, 2.00);
+  EXPECT_EQ(objLoc.pitch, 1.50);
+  EXPECT_EQ(objLoc.yaw, 0.77);
 }
 
 
 // Run all the tests that were declared with TEST()
-int main(int argc, char **argv){
+int main(int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
   ros::init(argc, argv, "objects_test");
   ros::NodeHandle nh;

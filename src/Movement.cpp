@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 2019, Ari Kupferberg, Ethan Quist, Corbyn Yhap
  * All rights reserved.
  *
@@ -41,7 +41,6 @@ Movement::Movement() {
 }
 
 Movement::~Movement() {
-
 }
 
 void Movement::setLinearVelocity(float lv) {

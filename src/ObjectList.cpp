@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 2019, Ari Kupferberg, Ethan Quist, Corbyn Yhap
  * All rights reserved.
  *
@@ -32,13 +32,15 @@
   * @brief This Class is for storing and listing the collected objects
   */
 
+#include <vector>
+#include "ros/ros.h"
+// #include <memory>
+
 #include "ObjectList.hpp"
 #include "Object.hpp"
-//#include "GoodObject.hpp"
-//#include <memory>
-#include <vector>
-#include <ros/ros.h>
-#include <geometry_msgs/Point.h>
+// #include "GoodObject.hpp"
+
+#include "geometry_msgs/Point.h"
 
 ObjectList::ObjectList() {
   numberOfObjects = 0;
@@ -61,12 +63,14 @@ void ObjectList::objsCallback(const geometry_msgs::Point::ConstPtr& msg) {
   pose.y = msg->y;
   pose.z = msg->z;
   int count_ = addObjectFound(pose);
-  ROS_INFO_STREAM("An Object Pose has been added to list of collected objects!");
+  ROS_INFO_STREAM(
+      "An Object Pose has been added to list of collected objects!");
   ROS_INFO_STREAM("There are " << count_ << " objects collected");
   if (count_ == 5) {
     ROS_WARN_STREAM("Collected All Objects!");
     for (auto element : objectsFound)
-      ROS_INFO_STREAM("[" << element.x << "," << element.y << "," << element.z << "]");
+      ROS_INFO_STREAM(
+          "[" << element.x << "," << element.y << "," << element.z << "]");
   }
 }
 

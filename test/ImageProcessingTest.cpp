@@ -35,11 +35,11 @@
 
 #include "ImageProcessing.hpp"
 #include "GoodObject.hpp"
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/imgproc.hpp>
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc.hpp"
 
-#include <ros/ros.h>
-#include <gtest/gtest.h>
+#include "ros/ros.h"
+#include "gtest/gtest.h"
 
 TEST(ImageProcessing, setRgbImgFunction) {
   // Create an all White Image
@@ -164,7 +164,6 @@ TEST(ImageProcessing, MultipleGreenBlocks) {
   imageProc.setRgbImg(slate);
   std::vector<std::shared_ptr<Object> > tObjects = imageProc.process();
   ASSERT_EQ(tObjects.size(), 2);
-
 }
 
 TEST(ImageProcessing, MultipleMultiColoredBlocks) {
@@ -210,11 +209,10 @@ TEST(ImageProcessing, MultipleMultiColoredBlocks) {
   imageProc.setRgbImg(slate);
   std::vector<std::shared_ptr<Object> > tObjects = imageProc.process();
   ASSERT_EQ(tObjects.size(), 3);
-
 }
 
 // Run all the tests that were declared with TEST()
-int main(int argc, char **argv){
+int main(int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
   ros::init(argc, argv, "ImageProcessing_test");
   ros::NodeHandle nh;

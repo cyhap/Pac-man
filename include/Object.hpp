@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 2019, Ari Kupferberg, Ethan Quist, Corbyn Yhap
  * All rights reserved.
  *
@@ -38,7 +38,7 @@
 #include <vector>
 
 class Object {
-  public:
+ public:
     struct Pose {
         double x = 0.00;
         double y = 0.00;
@@ -47,7 +47,7 @@ class Object {
         double pitch = 0.00;
         double yaw = 0.00;
     };
-    
+
     /**
     *  @brief   This is the Constructor for the Object Class, with initializer list
     *  @param	  ind index of Object
@@ -70,7 +70,7 @@ class Object {
     */
     std::vector<double> getXYZ();
 
-  private:
+ private:
     int index;  ///< index value of Object
     Pose location;  ///< 6-DOF location of Object as Pose
 };

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 2019, Ari Kupferberg, Ethan Quist, Corbyn Yhap
  * All rights reserved.
  *
@@ -40,6 +40,5 @@
 *  @return	0 Exit status
 */
 int main(int argc, char **argv) {
-
   return 0;
 }

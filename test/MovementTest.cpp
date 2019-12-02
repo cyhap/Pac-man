@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 2019, Ari Kupferberg, Ethan Quist, Corbyn Yhap
  * All rights reserved.
  *
@@ -32,8 +32,8 @@
   * @brief This TEST file is for testing the Movement methods.
   */
 
-#include <ros/ros.h>
-#include <gtest/gtest.h>
+#include "ros/ros.h"
+#include "gtest/gtest.h"
 #include "Movement.hpp"
 
 TEST(Movement, GetAndSet) {
@@ -47,7 +47,6 @@ TEST(Movement, GetAndSet) {
 
   MoveObj.setObjectSeen(true);
   ASSERT_EQ(MoveObj.checkVisuals(), true);
-
 }
 
 // Run all the tests that were declared with TEST()

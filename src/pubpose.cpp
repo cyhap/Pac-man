@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 2019, Ari Kupferberg, Ethan Quist, Corbyn Yhap
  * All rights reserved.
  *
@@ -32,10 +32,12 @@
   * @brief This ROS Publisher node is temporary for testing the ObjectList Subscriber.
   */
 
-#include "Object.hpp"
-#include <ros/ros.h>
-#include <geometry_msgs/Point.h>
 #include <vector>
+
+#include "Object.hpp"
+#include "ros/ros.h"
+#include "geometry_msgs/Point.h"
+
 
 /**
 *  @brief   This is the main function
@@ -47,19 +49,19 @@
 int main(int argc, char **argv) {
   ros::init(argc, argv, "pubpose");
   ros::NodeHandle nh;
-  ros::Publisher pub = nh.advertise<geometry_msgs::Point>("listobjects",1000);
+  ros::Publisher pub = nh.advertise<geometry_msgs::Point>("listobjects", 1000);
 
   // Set random Poses
   std::vector<double> xs{0, 1, 2, 3, 4, 5};
   std::vector<double> ys{0, 9, 7, 5, 3, 1};
   std::vector<double> zs{0, 2, 4, 6, 4, 2};
-  
+
   // Loop at 2Hz until the node is shut down
   ros::Rate rate(2);
   int counter = 0;
 
-  while(ros::ok()) {
-    while(counter < 6) {
+  while (ros::ok()) {
+    while (counter < 6) {
       geometry_msgs::Point msg;
       msg.x = xs[counter];
       msg.y = ys[counter];

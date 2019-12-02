@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 2019, Ari Kupferberg, Ethan Quist, Corbyn Yhap
  * All rights reserved.
  *
@@ -38,17 +38,17 @@
 #include "Object.hpp"
 
 class GoodObject: public Object {
-  private:
+ private:
     bool collect;  ///< Boolean to identify if Object should be collected
 
-  public:
+ public:
     /**
     *  @brief   This is the constructor for the GoodObject Class, with initializer list
     *  @param	  ind index of Object
     *  @param	  loc Pose location of Object
     *  @return	None
     */
-    GoodObject(int ind, Object::Pose loc) 
+  GoodObject(int ind, Object::Pose loc)
     : Object{ ind, loc }, collect{ true } {
     }
 

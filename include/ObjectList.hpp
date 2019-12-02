@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 2019, Ari Kupferberg, Ethan Quist, Corbyn Yhap
  * All rights reserved.
  *
@@ -35,18 +35,20 @@
 #ifndef INCLUDE_OBJECTLIST_HPP_
 #define INCLUDE_OBJECTLIST_HPP_
 
-#include "Object.hpp"
-#include "GoodObject.hpp"
 #include <memory>
 #include <vector>
-#include <geometry_msgs/Point.h>
+
+#include "Object.hpp"
+#include "GoodObject.hpp"
+
+#include "geometry_msgs/Point.h"
 
 class ObjectList {
-  private:
+ private:
     std::vector<Object::Pose> objectsFound;  ///< Vector of collected objects
     int numberOfObjects;  ///< Number of objects in found list
 
-  public:
+ public:
     /**
     *  @brief   This is the constructor for the ObjectList Class
     *  @param	  None

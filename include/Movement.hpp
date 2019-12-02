@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 2019, Ari Kupferberg, Ethan Quist, Corbyn Yhap
  * All rights reserved.
  *
@@ -36,12 +36,12 @@
 #define INCLUDE_MOVEMENT_HPP_
 
 class Movement {
-  private:
+ private:
     float linearVelocity;  ///< Turtlebot's linear velocity
     float angularVelocity;  ///< Turtlebot's angular velocity
     bool objectSeen;  ///< boolean flag for object detection
 
-  public:
+ public:
     /**
     *  @brief   This is the constructor for the Movement Class
     *  @param	  None

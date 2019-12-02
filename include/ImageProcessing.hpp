@@ -36,53 +36,54 @@
 #ifndef INCLUDE_IMAGEPROCESSING_HPP_
 #define INCLUDE_IMAGEPROCESSING_HPP_
 
-#include "Object.hpp"
-#include <opencv2/core.hpp>
 
 #include <memory>
 #include <vector>
 
-class ImageProcessing {
-  private:
-    cv::Mat rgbImg;  ///< COMPLETE ME, CORBYN!
-    cv::Mat rectDepthImg;  ///<  COMPLETE ME, CORBYN!
-    std::vector<Object::Pose> processMask(const cv::Mat&);  ///<  COMPLETE ME, CORBYN!
+#include "Object.hpp"
+#include "opencv2/core.hpp"
 
-  public:
+class ImageProcessing {
+ public:
     /**
     *  @brief    COMPLETE ME, CORBYN!
-    *  @param	  
-    *  @return	
+    *  @param
+    *  @return
     */
     ImageProcessing();
 
     /**
     *  @brief    COMPLETE ME, CORBYN!
-    *  @param	  
-    *  @return	
+    *  @param
+    *  @return
     */
     ~ImageProcessing();
 
     /**
     *  @brief    COMPLETE ME, CORBYN!
-    *  @param	  
-    *  @return	
+    *  @param
+    *  @return
     */
     std::vector<std::shared_ptr<Object>> process();
 
     /**
     *  @brief    COMPLETE ME, CORBYN!
-    *  @param	  
-    *  @return	
+    *  @param
+    *  @return
     */
     bool setRgbImg(const cv::Mat&);
 
     /**
     *  @brief    COMPLETE ME, CORBYN!
-    *  @param	  
-    *  @return	
+    *  @param
+    *  @return
     */
     bool setDptImg(const cv::Mat&);
+
+ private:
+  cv::Mat rgbImg;
+  cv::Mat rectDepthImg;
+  std::vector<Object::Pose> processMask(const cv::Mat&);
 };
 
 #endif  // INCLUDE_IMAGEPROCESSING_HPP_

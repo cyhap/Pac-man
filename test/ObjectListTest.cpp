@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 2019, Ari Kupferberg, Ethan Quist, Corbyn Yhap
  * All rights reserved.
  *
@@ -35,8 +35,8 @@
 #include "ObjectList.hpp"
 #include "Object.hpp"
 #include "GoodObject.hpp"
-#include <ros/ros.h>
-#include <gtest/gtest.h>
+#include "ros/ros.h"
+#include "gtest/gtest.h"
 
 
 TEST(ObjectList, addObject) {
@@ -50,11 +50,11 @@ TEST(ObjectList, addObject) {
   locData.pitch = 1.00;
   locData.yaw = 1.00;
 
-  ASSERT_EQ(objList.addObjectFound(locData),1);
+  ASSERT_EQ(objList.addObjectFound(locData), 1);
 }
 
 // Run all the tests that were declared with TEST()
-int main(int argc, char **argv){
+int main(int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
   ros::init(argc, argv, "objectlist_test");
   ros::NodeHandle nh;
