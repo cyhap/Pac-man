@@ -35,14 +35,26 @@
 #ifndef INCLUDE_MOVEMENT_HPP_
 #define INCLUDE_MOVEMENT_HPP_
 
+#include <ros/ros.h>
+#include <geometry_msgs/Twist.h>
+#include <kobuki_msgs/BumperEvent.h>
+#include <gazebo_msgs/DeleteModel.h>
+#include <stdlib.h>
+
+
 class Movement {
  private:
-    float linearVelocity;  ///< Turtlebot's linear velocity
-    float angularVelocity;  ///< Turtlebot's angular velocity
-    bool objectSeen;  ///< boolean flag for object detection
+  ros::NodeHandle n_;  // Node handler
+  ros::Publisher pub_;  // Node Publisher
+  ros::Subscriber sub_;  // Node Subscriber
+  ros::ServiceClient client_;  // Node Service Client
+  float linearVelocity;  ///< Turtlebot's linear velocity
+  float angularVelocity;  ///< Turtlebot's angular velocity
+  bool objectSeen;  ///< boolean flag for object detection
+
 
  public:
-    /**
+  /**
     *  @brief   This is the constructor for the Movement Class
     *  @param	  None
     *  @return	None
@@ -97,6 +109,13 @@ class Movement {
     *  @return	boolean for objectSeen
     */
     bool checkVisuals();
+  /**
+   *  @brief   This function controls the roaming robot
+   *  @param   None
+   *  @return  None
+   */
+  void roamCallBack(const kobuki_msgs::BumperEvent::ConstPtr&);
+
 };
 
 #endif  // INCLUDE_MOVEMENT_HPP_
