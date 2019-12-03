@@ -36,10 +36,10 @@
 
 #include "Movement.hpp"
 
-#include "ros/ros.h"
-#include "geometry_msgs/Twist.h"
-#include "kobuki_msgs/BumperEvent.h"
-#include "gazebo_msgs/DeleteModel.h"
+//#include "ros/ros.h"
+//#include "geometry_msgs/Twist.h"
+//#include "kobuki_msgs/BumperEvent.h"
+//#include "gazebo_msgs/DeleteModel.h"
 
 Movement::Movement(const double &aColDist, const double &aLinVel,
                    const double &angVel)

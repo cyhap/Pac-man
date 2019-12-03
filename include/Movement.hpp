@@ -39,10 +39,10 @@
 
 #include <utility>
 
-#include "ros/ros.h"
-#include "geometry_msgs/Twist.h"
-#include "kobuki_msgs/BumperEvent.h"
-#include "gazebo_msgs/DeleteModel.h"
+//#include "ros/ros.h"
+//#include "geometry_msgs/Twist.h"
+//#include "kobuki_msgs/BumperEvent.h"
+//#include "gazebo_msgs/DeleteModel.h"
 
 
 class Movement {
@@ -102,13 +102,6 @@ class Movement {
   *  @return	float of angular velocity
   */
   float getAngularVelocity();
-
-  /**
-   *  @brief   This function controls the roaming robot
-   *  @param   None
-   *  @return  None
-   */
-  void roamCallBack(const kobuki_msgs::BumperEvent::ConstPtr&);
 
     /**
 
