@@ -32,8 +32,7 @@
   * @brief This ROS Node is for running the object identification.
   */
 
-#include <ros/ros.h>
-
+#include "ros/ros.h"
 #include "Object.hpp"
 #include "GoodObject.hpp"
 #include "BadObject.hpp"
@@ -87,6 +86,7 @@ int main(int argc, char **argv) {
 
   // Create a node handle
   ros::NodeHandle nh;
+
   image_transport::ImageTransport imTrans(nh);
   image_transport::Subscriber depthImgSub;
   image_transport::Subscriber rgbImgSub;
@@ -99,6 +99,17 @@ int main(int argc, char **argv) {
 
   // Note the default resolution is 640 x 480 as of Indigo. Further research
   // required
+
+  //#### Pseudo Pseudo Code ####//
+  // subsribe to images
+  // process images
+  //// apply good mask
+  //// create good objects
+  //// apply bad mask
+  //// create bad objects
+  //// update map with bad objects - Service call
+  //// Publish good objects
+  ////
 
   ros::spin();
 
