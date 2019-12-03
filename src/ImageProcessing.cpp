@@ -78,12 +78,12 @@ std::vector<std::shared_ptr<Object> > ImageProcessing::process() {
 
   // Create Good Objects with the goodPoses
   for (const auto &tPose : goodPoses) {
-    std::shared_ptr<Object> tAdd(new GoodObject(0, tPose));
+    std::shared_ptr<Object> tAdd(new GoodObject(tPose));
     tReturn.push_back(tAdd);
   }
   // Create Bad Objects with the badPoses
   for (const auto &tPose : badPoses) {
-    std::shared_ptr<Object> tAdd(new BadObject(0, tPose));
+    std::shared_ptr<Object> tAdd(new BadObject(tPose));
     tReturn.push_back(tAdd);
   }
 
