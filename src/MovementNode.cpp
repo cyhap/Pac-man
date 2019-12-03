@@ -32,6 +32,12 @@
   * @brief This is the ROS Node that will handle the search movement of the Turtlebot.
   */
 
+#include <ros/ros.h>
+#include <geometry_msgs/Twist.h>
+#include <kobuki_msgs/BumperEvent.h>
+#include <gazebo_msgs/DeleteModel.h>
+#include <stdlib.h>
+#include "Movement.hpp"
 
 /**
 *  @brief   This is the main function
@@ -40,5 +46,36 @@
 *  @return	0 Exit status
 */
 int main(int argc, char **argv) {
+  // Initiate ROS
+  ros::init(argc, argv, "MovementNode");
+
+  // Create an object
+  Movement roaming;
+
+  // Run when not bumping
+  ros::NodeHandle nh;  // creating the node handler
+
+  // publishing the velocity to the turtlebot to move straight
+  ros::Publisher pub = nh.advertise < geometry_msgs::Twist
+      > ("/mobile_base/commands/velocity", 10);
+
+  ros::Rate rate(2);
+  while (ros::ok()) {
+    geometry_msgs::Twist msg;
+    // move straight
+    msg.linear.x = 0.1;
+    // don't turn
+    msg.angular.z = 0;
+
+    // publish the velocity to the turtlebot
+    pub.publish(msg);
+
+    ROS_INFO_STREAM("Onward!");
+
+    ros::spinOnce();
+    rate.sleep();
+  }
+
+  ros::spin();
   return 0;
 }
