@@ -40,17 +40,22 @@
 #include <kobuki_msgs/BumperEvent.h>
 #include <gazebo_msgs/DeleteModel.h>
 #include <stdlib.h>
+#include <utility>
 
 
 class Movement {
  private:
-  ros::NodeHandle n_;  // Node handler
-  ros::Publisher pub_;  // Node Publisher
-  ros::Subscriber sub_;  // Node Subscriber
-  ros::ServiceClient client_;  // Node Service Client
   float linearVelocity;  ///< Turtlebot's linear velocity
   float angularVelocity;  ///< Turtlebot's angular velocity
   bool objectSeen;  ///< boolean flag for object detection
+  // This is the boolean indicating whether the robot can move forward.
+  bool clearAhead;
+  // This is the minimum distance reading allowed before turning starts.
+  float collisionDist;
+  // This is linear velocity when path is clear
+  double maxLinVel;
+  // This is the angular velocity when path is not clear.
+  double maxAngVel;
 
 
  public:
@@ -59,7 +64,8 @@ class Movement {
     *  @param	  None
     *  @return	None
     */
-    Movement();
+  Movement(const double &aColDist = 0.65, const double &aLinVel = 0.25,
+           const double &angVel = 1);
 
     /**
     *  @brief   This is the destructor for the Movement Class
@@ -115,6 +121,41 @@ class Movement {
    *  @return  None
    */
   void roamCallBack(const kobuki_msgs::BumperEvent::ConstPtr&);
+  /**
+
+   * @brief Uses the turtlebot sensor data to determine whether or not something
+   * is in front of the robot. Sets the clearAhead variable accordingly.
+
+   * @param float the minimum distance observed
+
+   * @return None.
+
+   */
+  void updateMinDist(float);
+  /**
+
+   * @brief Checks the clear ahead boolean and updates the velocities
+   * accordingly. (Straight if clear ahead. Turning if obstacle in front.)
+
+   * @param None
+
+   * @return std::pair<double, double> The linear and angular velocities
+   * respectively.
+
+   */
+  std::pair<double, double> computeVelocities();
+  /**
+
+   * @brief Returns whether or not the robot can move forward. This function was
+   * added so that unit testing could take place on the updateMinDist function.
+
+   * @param None
+
+   * @return bool. Whether or not there is something in range that is less than
+   * the collisionDist member variable.
+
+   */
+  bool getClearAhead();
 
 };
 

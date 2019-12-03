@@ -40,24 +40,36 @@
 
 #include "Movement.hpp"
 
-Movement::Movement() {
-  linearVelocity = 0.0;
-  angularVelocity = 0.0;
-  objectSeen = false;
-  // Publishing velocity commands
-  pub_ = n_.advertise < geometry_msgs::Twist
-      > ("/mobile_base/commands/velocity", 1);
 
-  // Subscribing to Bump Events
-  sub_ = n_.subscribe("mobile_base/events/bumper", 1, &Movement::roamCallBack,
-                      this);
-
-  //service client
-  client_ = n_.serviceClient < gazebo_msgs::DeleteModel
-      > ("/gazebo/delete_model");
+Movement::Movement(const double &aColDist, const double &aLinVel,
+                   const double &angVel)
+    : clearAhead(false),
+      collisionDist(aColDist),
+      maxLinVel(aLinVel),
+      maxAngVel(angVel) {
 }
 
 Movement::~Movement() {
+}
+
+void Movement::updateMinDist(float aDist) {
+  clearAhead = true;
+  if (aDist <= collisionDist) {
+    clearAhead = false;
+  }
+}
+
+std::pair<double, double> Movement::computeVelocities() {
+  double linearVel;
+  double angularVel;
+  if (clearAhead) {
+    linearVel = maxLinVel;
+    angularVel = 0;
+  } else {
+    linearVel = 0;
+    angularVel = maxAngVel;
+  }
+  return std::make_pair(linearVel, angularVel);
 }
 
 void Movement::setLinearVelocity(float lv) {
@@ -87,27 +99,4 @@ bool Movement::checkVisuals() {
   return objectSeen;  // Returning object seen
 }
 
-void Movement::roamCallBack(const kobuki_msgs::BumperEvent::ConstPtr& input) {
-  bool throwaway;
-  std::string modelName("cube_20k_1");
-  ROS_INFO_STREAM("Uh oh!!");
-
-  //delete a box
-  //RemoveModel(const std::string &cube_20k_1);
-  //gazebo_msgs::DeleteModel dmsrv;
-  //dmsrv.request.model_name = "cube_20k_1";
-  //if (client_.call(dmsrv)) {
-  //something
-  //}
-
-  // When bumpevent happens turn the robot instead of going straight
-  geometry_msgs::Twist output;
-  // make turtle turn
-  // don't move straight
-  output.linear.x = 0;
-  // do turn
-  output.angular.z = 3;
-  pub_.publish(output);
-
-}
 

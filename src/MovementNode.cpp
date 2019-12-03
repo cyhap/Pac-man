@@ -32,12 +32,34 @@
   * @brief This is the ROS Node that will handle the search movement of the Turtlebot.
   */
 
-#include <ros/ros.h>
-#include <geometry_msgs/Twist.h>
+#include "Movement.hpp"
+#include <math.h>
+#include <algorithm>
+#include <memory>
+#include <vector>
+
 #include <kobuki_msgs/BumperEvent.h>
 #include <gazebo_msgs/DeleteModel.h>
 #include <stdlib.h>
-#include "Movement.hpp"
+#include "ros/ros.h"
+#include "geometry_msgs/Twist.h"
+#include "sensor_msgs/LaserScan.h"
+
+std::shared_ptr<Movement> movement;
+
+bool isNan(float i) {
+  return std::isnan(i);
+}
+void laserScanCallback(const sensor_msgs::LaserScan::ConstPtr &msg) {
+  std::vector<float> ranges = msg->ranges;
+  // Replace all nans with max range to get the actual minimum
+  std::replace_if(ranges.begin(), ranges.end(), isNan, msg->range_max);
+
+  float minRange = *std::min_element(ranges.begin(), ranges.end());
+  ROS_INFO_STREAM("The closest object is " << minRange << "(m) away.");
+  movement->updateMinDist(minRange);
+}
+
 
 /**
 *  @brief   This is the main function
@@ -46,36 +68,37 @@
 *  @return	0 Exit status
 */
 int main(int argc, char **argv) {
-  // Initiate ROS
+
+  // Initialize the walker node.
   ros::init(argc, argv, "movement");
+  // Initialize the shared pointer to the movement class that will be used to
+  // process the point cloud call backs.
+  movement.reset(new Movement);
 
-  // Create an object
-  Movement roaming;
+  // Create a node handle
+  ros::NodeHandle n;
 
-  // Run when not bumping
-  ros::NodeHandle nh;  // creating the node handler
+  // Publish on the topic required to move turtlebot
+  // This will be remmapped in the launch file.
+  auto pub = n.advertise < geometry_msgs::Twist > ("cmd_vel", 1000);
+  auto sub = n.subscribe("/scan", 1000, laserScanCallback);
 
-  // publishing the velocity to the turtlebot to move straight
-  ros::Publisher pub = nh.advertise < geometry_msgs::Twist
-      > ("/mobile_base/commands/velocity", 10);
+  // Publish at 10 Hz.
+  ros::Rate loop_rate(10.0);
 
-  ros::Rate rate(2);
   while (ros::ok()) {
-    geometry_msgs::Twist msg;
-    // move straight
-    msg.linear.x = 1;
-    // don't turn
-    msg.angular.z = 0;
+    // Publish the velocity as determined by the behavior class.
+    geometry_msgs::Twist msg;  // Call to behavior class here.
+    std::pair<double, double> output = movement->computeVelocities();
+    msg.linear.x = output.first;
+    msg.angular.z = output.second;
 
-    // publish the velocity to the turtlebot
     pub.publish(msg);
 
-    //ROS_INFO_STREAM("Onward!");
-
     ros::spinOnce();
-    rate.sleep();
+
+    loop_rate.sleep();
   }
 
-  ros::spin();
   return 0;
 }
