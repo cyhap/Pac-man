@@ -49,6 +49,8 @@
 #include "geometry_msgs/Twist.h"
 #include "sensor_msgs/LaserScan.h"
 
+std::shared_ptr<Movement> movement;  // SHOULD NOT USE GLOBAL VARIABLES ----
+
 class Mover {
  private:
   bool navStackStatus;
@@ -67,7 +69,6 @@ class Mover {
       closestPose.y = imgPose->linear.y;
       closestPose.yaw = imgPose->angular.z;
       //  -- Send closestPose to Navigation Stack
-      navStackStatus = true;
       allowImgCallback = false;
     } else {
       ROS_INFO_STREAM("Navigation stack is runnning");
@@ -79,25 +80,23 @@ class Mover {
     //    navStackStatus = true;
     //  else if (<nav stack is not running>)
     //    navStackStatus = false;
+    navStackStatus = false; // set always false, for now.
     return navStackStatus;
+  }
+  bool isNan(float i) {
+    return std::isnan(i);
+  }
+  void laserScanCallback(const sensor_msgs::LaserScan::ConstPtr &msg) {
+//    std::vector<float> ranges = msg->ranges;
+//    // Replace all nans with max range to get the actual minimum
+//    std::replace_if(ranges.begin(), ranges.end(), isNan, msg->range_max);
+//    float minRange = *std::min_element(ranges.begin(), ranges.end());
+    float minRange = msg->range_min;
+    ROS_INFO_STREAM("The closest object is " << minRange << "(m) away.");
+    movement->updateMinDist(minRange);
   }
 };
 
-// --------- Methods ---------- //
-std::shared_ptr<Movement> movement;  // SHOULD NOT USE GLOBAL VARIABLES ----
-bool isNan(float i) {
-  return std::isnan(i);
-}
-void laserScanCallback(const sensor_msgs::LaserScan::ConstPtr &msg) {
-  std::vector<float> ranges = msg->ranges;
-  // Replace all nans with max range to get the actual minimum
-  std::replace_if(ranges.begin(), ranges.end(), isNan, msg->range_max);
-
-  float minRange = *std::min_element(ranges.begin(), ranges.end());
-  ROS_INFO_STREAM("The closest object is " << minRange << "(m) away.");
-  movement->updateMinDist(minRange);
-}
-// --------- End Methods ---------- //
 
 /**
 *  @brief   This is the main function
@@ -108,38 +107,40 @@ void laserScanCallback(const sensor_msgs::LaserScan::ConstPtr &msg) {
 int main(int argc, char **argv) {
   // Initialize the walker node.
   ros::init(argc, argv, "movement");
+
+  // Create a node handle
+  ros::NodeHandle nm;
+
+  // Declare Mover Object for function callbacks and interfacing
+  Mover mover;
+
   // Initialize the shared pointer to the movement class that will be used to
   // process the point cloud call backs.
   movement.reset(new Movement);
 
-  // Create a node handle
-  ros::NodeHandle n;
-
   // Publish on the topic required to move turtlebot
   // This will be remmapped in the launch file.
-  auto pub = n.advertise < geometry_msgs::Twist > ("cmd_vel", 1000);
-  auto sub = n.subscribe("/scan", 1000, laserScanCallback);
-
-  // ###### Program Flow Code ###### //
-  Mover mover;
-  ros::Subscriber imgSub = n.subscribe("imgPoses", 1000,
-                                        &Mover::imgCallback, &mover);
+  auto pub = nm.advertise < geometry_msgs::Twist > ("cmd_vel", 1000);
+  auto lsrSub = nm.subscribe("/scan", 1000, &Mover::laserScanCallback, &mover);
+  auto imgSub = nm.subscribe("imgPoses", 1000, &Mover::imgCallback, &mover);
 
   // Publish at 10 Hz.
   ros::Rate loop_rate(10.0);
 
   while (ros::ok()) {
-  // ###### Program Flow Code ###### //
-    if (!mover.checkVisuals()) {
+    // Use the Navigation Stack status to decide movement
+    if (!mover.checkVisuals()) { // Returns navigation stack flag
+      ROS_INFO_STREAM("Movement Search with Laser Scanner");
+      // Allow image callback to look for new objects
       mover.setAllowImgCallback(true);
 
-      // Publish the velocity as determined by the behavior class.
-      geometry_msgs::Twist msg;  // Call to behavior class here.
+      // Set the turtlebot velocities from the laser scanner callback.
+      geometry_msgs::Twist velMsg;
       std::pair<double, double> output = movement->computeVelocities();
-      msg.linear.x = output.first;
-      msg.angular.z = output.second;
+      velMsg.linear.x = output.first;
+      velMsg.angular.z = output.second;
 
-      pub.publish(msg);
+      pub.publish(velMsg);
     }
 
     ros::spinOnce();
