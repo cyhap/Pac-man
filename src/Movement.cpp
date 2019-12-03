@@ -32,14 +32,14 @@
   * @brief This Class provides functionality to control the turtlebot's movements.
   */
 
-#include <ros/ros.h>
-#include <geometry_msgs/Twist.h>
-#include <kobuki_msgs/BumperEvent.h>
-#include <gazebo_msgs/DeleteModel.h>
 #include <stdlib.h>
 
 #include "Movement.hpp"
 
+#include "ros/ros.h"
+#include "geometry_msgs/Twist.h"
+#include "kobuki_msgs/BumperEvent.h"
+#include "gazebo_msgs/DeleteModel.h"
 
 Movement::Movement(const double &aColDist, const double &aLinVel,
                    const double &angVel)
@@ -60,16 +60,14 @@ void Movement::updateMinDist(float aDist) {
 }
 
 std::pair<double, double> Movement::computeVelocities() {
-  double linearVel;
-  double angularVel;
   if (clearAhead) {
-    linearVel = maxLinVel;
-    angularVel = 0;
+    linearVelocity = maxLinVel;
+    angularVelocity = 0;
   } else {
-    linearVel = 0;
-    angularVel = maxAngVel;
+    linearVelocity = 0;
+    angularVelocity = maxAngVel;
   }
-  return std::make_pair(linearVel, angularVel);
+  return std::make_pair(linearVelocity, angularVelocity);
 }
 
 void Movement::setLinearVelocity(float lv) {
@@ -82,11 +80,6 @@ void Movement::setAngularVelocity(float av) {
   return;
 }
 
-void Movement::setObjectSeen(bool os) {
-  objectSeen = os;  // Setting the object seen to the input
-  return;
-}
-
 float Movement::getLinearVelocity() {
   return linearVelocity;  // Returning linear velocity
 }
@@ -94,9 +87,4 @@ float Movement::getLinearVelocity() {
 float Movement::getAngularVelocity() {
   return angularVelocity;  // Returning angular velocity
 }
-
-bool Movement::checkVisuals() {
-  return objectSeen;  // Returning object seen
-}
-
 

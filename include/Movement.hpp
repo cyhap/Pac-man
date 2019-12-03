@@ -35,19 +35,21 @@
 #ifndef INCLUDE_MOVEMENT_HPP_
 #define INCLUDE_MOVEMENT_HPP_
 
-#include <ros/ros.h>
-#include <geometry_msgs/Twist.h>
-#include <kobuki_msgs/BumperEvent.h>
-#include <gazebo_msgs/DeleteModel.h>
 #include <stdlib.h>
+
 #include <utility>
+
+#include "ros/ros.h"
+#include "geometry_msgs/Twist.h"
+#include "kobuki_msgs/BumperEvent.h"
+#include "gazebo_msgs/DeleteModel.h"
 
 
 class Movement {
  private:
-  float linearVelocity;  ///< Turtlebot's linear velocity
-  float angularVelocity;  ///< Turtlebot's angular velocity
-  bool objectSeen;  ///< boolean flag for object detection
+  double linearVelocity;  ///< Turtlebot's linear velocity
+  double angularVelocity;  ///< Turtlebot's angular velocity
+
   // This is the boolean indicating whether the robot can move forward.
   bool clearAhead;
   // This is the minimum distance reading allowed before turning starts.
@@ -56,7 +58,6 @@ class Movement {
   double maxLinVel;
   // This is the angular velocity when path is not clear.
   double maxAngVel;
-
 
  public:
   /**
@@ -67,61 +68,49 @@ class Movement {
   Movement(const double &aColDist = 0.65, const double &aLinVel = 0.25,
            const double &angVel = 1);
 
-    /**
+  /**
     *  @brief   This is the destructor for the Movement Class
     *  @param	  None
     *  @return	None
     */
-    virtual ~Movement();
+  virtual ~Movement();
 
-    /**
-    *  @brief   This function sets the linear velocity of the turtlebot
-    *  @param	  lv linear velocity as float
-    *  @return	None
-    */
-    void setLinearVelocity(float);
+  /**
+  *  @brief   This function sets the linear velocity of the turtlebot
+  *  @param	  lv linear velocity as float
+  *  @return	None
+  */
+  void setLinearVelocity(float);
 
-    /**
-    *  @brief   This function sets the angular velocity of the turtlebot
-    *  @param	  av angular velocity as float
-    *  @return	None
-    */
-    void setAngularVelocity(float);
+  /**
+  *  @brief   This function sets the angular velocity of the turtlebot
+  *  @param	  av angular velocity as float
+  *  @return	None
+  */
+  void setAngularVelocity(float);
 
-    /**
-    *  @brief   This function sets the objectSeen member
-    *  @param	  os boolean
-    *  @return	None
-    */
-    void setObjectSeen(bool);
+  /**
+  *  @brief   This function retrieves the linear velocity
+  *  @param	  None
+  *  @return	float of linear velocity
+  */
+  float getLinearVelocity();
 
-    /**
-    *  @brief   This function retrieves the linear velocity
-    *  @param	  None
-    *  @return	float of linear velocity
-    */
-    float getLinearVelocity();
+  /**
+  *  @brief   This function retrieves the angular velocity
+  *  @param	  None
+  *  @return	float of angular velocity
+  */
+  float getAngularVelocity();
 
-    /**
-    *  @brief   This function retrieves the angular velocity
-    *  @param	  None
-    *  @return	float of angular velocity
-    */
-    float getAngularVelocity();
-
-    /**
-    *  @brief   This function checks the objectSeen member flag
-    *  @param	  None
-    *  @return	boolean for objectSeen
-    */
-    bool checkVisuals();
   /**
    *  @brief   This function controls the roaming robot
    *  @param   None
    *  @return  None
    */
   void roamCallBack(const kobuki_msgs::BumperEvent::ConstPtr&);
-  /**
+
+    /**
 
    * @brief Uses the turtlebot sensor data to determine whether or not something
    * is in front of the robot. Sets the clearAhead variable accordingly.
@@ -156,7 +145,6 @@ class Movement {
 
    */
   bool getClearAhead();
-
 };
 
 #endif  // INCLUDE_MOVEMENT_HPP_
