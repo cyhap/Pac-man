@@ -48,7 +48,7 @@ add_executable(objectlist src/ObjectListNode.cpp src/ObjectList.cpp)
 target_link_libraries(objectlist ${catkin_LIBRARIES})
 add_executable(pubpose src/pubpose.cpp)
 target_link_libraries(pubpose ${catkin_LIBRARIES})
-add_executable(object src/ObjectNode.cpp src/Object.cpp src/GoodObject.cpp src/BadObject.cpp src/ImageProcessing.cpp)
+add_executable(object src/IdentificationNode.cpp src/Object.cpp src/GoodObject.cpp src/BadObject.cpp src/ImageProcessing.cpp)
 target_link_libraries(object ${catkin_LIBRARIES})
 
 
