@@ -39,40 +39,40 @@
 
 class Object {
  public:
-    struct Pose {
-        double x = 0.00;
-        double y = 0.00;
-        double z = 0.00;
-        double roll = 0.00;
-        double pitch = 0.00;
-        double yaw = 0.00;
-    };
+  struct Pose {
+      double x = 0.00;
+      double y = 0.00;
+      double z = 0.00;
+      double roll = 0.00;
+      double pitch = 0.00;
+      double yaw = 0.00;
+  };
 
-    /**
-    *  @brief   This is the Constructor for the Object Class, with initializer list
-    *  @param	  ind index of Object
-    *  @param	  loc Pose location of Object
-    *  @return	None
-    */
-    Object(Object::Pose loc) : location{ loc } {}
+  /**
+  *  @brief   This is the Constructor for the Object Class, with initializer list
+  *  @param	  ind index of Object
+  *  @param	  loc Pose location of Object
+  *  @return	None
+  */
+  explicit Object(Object::Pose loc) : location{ loc } {}
 
-    /**
-    *  @brief   This is a function to get the Pose of the Object
-    *  @param	  None
-    *  @return	None
-    */
-    Pose getPose();
+  /**
+  *  @brief   This is a function to get the Pose of the Object
+  *  @param	  None
+  *  @return	None
+  */
+  Pose getPose();
 
-    /**
-    *  @brief   This is a function to get the XYZ location of the Object
-    *  @param	  None
-    *  @return	None
-    */
-    std::vector<double> getXYZ();
+  /**
+  *  @brief   This is a function to get the XYZ location of the Object
+  *  @param	  None
+  *  @return	None
+  */
+  std::vector<double> getXYZ();
 
  private:
-    int index;  ///< index value of Object
-    Pose location;  ///< 6-DOF location of Object as Pose
+  int index;  ///< index value of Object
+  Pose location;  ///< 6-DOF location of Object as Pose
 };
 
 #endif  // INCLUDE_OBJECT_HPP_

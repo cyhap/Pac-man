@@ -39,32 +39,32 @@
 
 class GoodObject: public Object {
  private:
-    bool collect;  ///< Boolean to identify if Object should be collected
+  bool collect;  ///< Boolean to identify if Object should be collected
 
  public:
-    /**
-    *  @brief   This is the constructor for the GoodObject Class, with initializer list
-    *  @param	  ind index of Object
-    *  @param	  loc Pose location of Object
-    *  @return	None
-    */
-  GoodObject(Object::Pose loc)
-    : Object{ loc }, collect{ true } {
-    }
+  /**
+  *  @brief   This is the constructor for the GoodObject Class, with initializer list
+  *  @param	  ind index of Object
+  *  @param	  loc Pose location of Object
+  *  @return	None
+  */
+  explicit GoodObject(Object::Pose loc)
+  : Object{ loc }, collect{ true } {
+  }
 
-    /**
-    *  @brief   This is the destructor for the GoodObject Class
-    *  @param	  None
-    *  @return	None
-    */
-    ~GoodObject();
+  /**
+  *  @brief   This is the destructor for the GoodObject Class
+  *  @param	  None
+  *  @return	None
+  */
+  ~GoodObject();
 
-    /**
-    *  @brief   This is an override function to check the collect status of the GoodObject
-    *  @param	  None
-    *  @return	None
-    */
-    virtual bool checkCollect();
+  /**
+  *  @brief   This is an override function to check the collect status of the GoodObject
+  *  @param	  None
+  *  @return	None
+  */
+  virtual bool checkCollect();
 };
 
 #endif  // INCLUDE_GOODOBJECT_HPP_
