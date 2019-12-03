@@ -48,8 +48,8 @@ class BadObject: public Object {
     *  @param	  loc Pose location of Object
     *  @return	None
     */
-    BadObject(int ind, Object::Pose loc)
-    : Object{ ind, loc }, collect{ false } {
+    BadObject(Object::Pose loc)
+    : Object{ loc }, collect{ false } {
     }
 
     /**

@@ -48,8 +48,8 @@ class GoodObject: public Object {
     *  @param	  loc Pose location of Object
     *  @return	None
     */
-  GoodObject(int ind, Object::Pose loc)
-    : Object{ ind, loc }, collect{ true } {
+  GoodObject(Object::Pose loc)
+    : Object{ loc }, collect{ true } {
     }
 
     /**

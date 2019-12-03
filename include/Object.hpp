@@ -54,7 +54,7 @@ class Object {
     *  @param	  loc Pose location of Object
     *  @return	None
     */
-    Object(int ind, Object::Pose loc) : index{ ind }, location{ loc } {}
+    Object(Object::Pose loc) : location{ loc } {}
 
     /**
     *  @brief   This is a function to get the Pose of the Object
