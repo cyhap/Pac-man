@@ -44,9 +44,6 @@ TEST(Movement, GetAndSet) {
 
   MoveObj.setAngularVelocity(1.0);
   ASSERT_EQ(MoveObj.getAngularVelocity(), 1.0);
-
-  MoveObj.setObjectSeen(true);
-  ASSERT_EQ(MoveObj.checkVisuals(), true);
 }
 
 // Run all the tests that were declared with TEST()
