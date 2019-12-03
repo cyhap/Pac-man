@@ -32,21 +32,59 @@
   * @brief This is the ROS Node that will handle the search movement of the Turtlebot.
   */
 
-#include "Movement.hpp"
+
 #include <math.h>
-#include <algorithm>
+#include <stdlib.h>
+
 #include <memory>
 #include <vector>
+#include <algorithm>
 
-#include <kobuki_msgs/BumperEvent.h>
-#include <gazebo_msgs/DeleteModel.h>
-#include <stdlib.h>
+#include "Movement.hpp"
+#include "Object.hpp"
+
 #include "ros/ros.h"
+#include "kobuki_msgs/BumperEvent.h"
+#include "gazebo_msgs/DeleteModel.h"
 #include "geometry_msgs/Twist.h"
 #include "sensor_msgs/LaserScan.h"
 
-std::shared_ptr<Movement> movement;
+class Mover {
+ private:
+  bool navStackStatus;
+  bool allowImgCallback;
 
+ public:
+  Mover() : navStackStatus { false }, allowImgCallback { true } {}
+  virtual ~Mover() {}
+  bool getAllowImgCallback() { return allowImgCallback; }
+  void setAllowImgCallback(bool status_) { allowImgCallback = status_; }
+  void imgCallback(const geometry_msgs::Twist::ConstPtr& imgPose) {
+    if (allowImgCallback) {
+      //  -- Find the closest pose from the input
+      Object::Pose closestPose;
+      closestPose.x = imgPose->linear.x;
+      closestPose.y = imgPose->linear.y;
+      closestPose.yaw = imgPose->angular.z;
+      //  -- Send closestPose to Navigation Stack
+      navStackStatus = true;
+      allowImgCallback = false;
+    } else {
+      ROS_INFO_STREAM("Navigation stack is runnning");
+    }
+  }
+  bool checkVisuals() {
+    //  -- Call Navigation Stack Flag
+    //  if (<nav stack is still running>)
+    //    navStackStatus = true;
+    //  else if (<nav stack is not running>)
+    //    navStackStatus = false;
+    return navStackStatus;
+  }
+};
+
+// --------- Methods ---------- //
+std::shared_ptr<Movement> movement;  // SHOULD NOT USE GLOBAL VARIABLES ----
 bool isNan(float i) {
   return std::isnan(i);
 }
@@ -59,7 +97,7 @@ void laserScanCallback(const sensor_msgs::LaserScan::ConstPtr &msg) {
   ROS_INFO_STREAM("The closest object is " << minRange << "(m) away.");
   movement->updateMinDist(minRange);
 }
-
+// --------- End Methods ---------- //
 
 /**
 *  @brief   This is the main function
@@ -68,7 +106,6 @@ void laserScanCallback(const sensor_msgs::LaserScan::ConstPtr &msg) {
 *  @return	0 Exit status
 */
 int main(int argc, char **argv) {
-
   // Initialize the walker node.
   ros::init(argc, argv, "movement");
   // Initialize the shared pointer to the movement class that will be used to
@@ -83,17 +120,27 @@ int main(int argc, char **argv) {
   auto pub = n.advertise < geometry_msgs::Twist > ("cmd_vel", 1000);
   auto sub = n.subscribe("/scan", 1000, laserScanCallback);
 
+  // ###### Program Flow Code ###### //
+  Mover mover;
+  ros::Subscriber imgSub = n.subscribe("imgPoses", 1000,
+                                        &Mover::imgCallback, &mover);
+
   // Publish at 10 Hz.
   ros::Rate loop_rate(10.0);
 
   while (ros::ok()) {
-    // Publish the velocity as determined by the behavior class.
-    geometry_msgs::Twist msg;  // Call to behavior class here.
-    std::pair<double, double> output = movement->computeVelocities();
-    msg.linear.x = output.first;
-    msg.angular.z = output.second;
+  // ###### Program Flow Code ###### //
+    if (!mover.checkVisuals()) {
+      mover.setAllowImgCallback(true);
 
-    pub.publish(msg);
+      // Publish the velocity as determined by the behavior class.
+      geometry_msgs::Twist msg;  // Call to behavior class here.
+      std::pair<double, double> output = movement->computeVelocities();
+      msg.linear.x = output.first;
+      msg.angular.z = output.second;
+
+      pub.publish(msg);
+    }
 
     ros::spinOnce();
 
