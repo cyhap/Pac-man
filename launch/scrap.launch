@@ -1,7 +1,10 @@
 <launch>
 
   <include file="$(find turtlebot_gazebo)/launch/turtlebot_world.launch" >
-    <arg name="world_file" value="$(find pacman)/worlds/random_plus3.world" />
+    <arg name="world_file" value="$(find pacman)/data/worlds/random_world.world" />
   </include>  
+  
+  <node pkg="pacman" type="movement" name="movement" />
+  
 
 </launch>

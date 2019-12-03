@@ -47,7 +47,7 @@
 */
 int main(int argc, char **argv) {
   // Initiate ROS
-  ros::init(argc, argv, "MovementNode");
+  ros::init(argc, argv, "movement");
 
   // Create an object
   Movement roaming;
@@ -63,14 +63,14 @@ int main(int argc, char **argv) {
   while (ros::ok()) {
     geometry_msgs::Twist msg;
     // move straight
-    msg.linear.x = 0.1;
+    msg.linear.x = 1;
     // don't turn
     msg.angular.z = 0;
 
     // publish the velocity to the turtlebot
     pub.publish(msg);
 
-    ROS_INFO_STREAM("Onward!");
+    //ROS_INFO_STREAM("Onward!");
 
     ros::spinOnce();
     rate.sleep();
