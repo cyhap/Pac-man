@@ -29,9 +29,9 @@
         args="load depth_image_proc/point_cloud_xyz pacman_nodelet_manager"
         output="screen">
     <!-- Topics the nodelet subscribes to: -->
-    <!-- Ambiguous. Cold be "/camera/rgb/camera_info" instead -->
+    <!-- Ambiguous. Cold be "/camera/rgb/camera_info or /pacman/depth_registered/camera_info" instead -->
     <remap from="camera_info" to="/pacman/depth_registered/camera_info" />
-    <remap from="img_rect" to="/pacman/depth_registered/image_rect" />
+    <remap from="image_rect" to="/pacman/depth_registered/image_rect" />
     <!-- Topics the nodelet publishes: -->
     <remap from="points" to="/pacman/points" />
   </node>
