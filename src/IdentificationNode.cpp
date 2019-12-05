@@ -39,18 +39,32 @@
 #include "ImageProcessing.hpp"
 
 #include "image_transport/image_transport.h"
-#include "sensor_msgs/Image.h"
+#include "sensor_msgs/PointCloud2.h"
 #include "cv_bridge/cv_bridge.h"
+#include "pcl_conversions/pcl_conversions.h"
+#include "pcl/point_cloud.h"
+#include "pcl/point_types.h"
 
 /**
 *  @brief   This Callback function ... DOES SOMETHING
 *  @param	  aImg An image with depth data
 *  @return	None
 */
-void depthImgCallback(const sensor_msgs::ImageConstPtr &aImg) {
+
+void pntCldCallback(const sensor_msgs::PointCloud2ConstPtr &aPtCloud) {
   // Determine what to do here.
-  ROS_INFO_STREAM("Depth Image Call back Successful.");
+  ROS_INFO_STREAM("Point Cloud Call back Successful.");
+
+
+  // Container for original & filtered data
+  pcl::PCLPointCloud2 *cloud = new pcl::PCLPointCloud2;
+  pcl::PCLPointCloud2ConstPtr cloudPtr(cloud);
+
+  // Convert to PCL data type
+  pcl_conversions::toPCL(*aPtCloud, *cloud);
+
 }
+
 
 /**
 *  @brief   This Callback function ... DOES SOMETHING
@@ -88,12 +102,12 @@ int main(int argc, char **argv) {
   ros::NodeHandle nh;
 
   image_transport::ImageTransport imTrans(nh);
-  image_transport::Subscriber depthImgSub;
+  ros::Subscriber pntCldSub;
   image_transport::Subscriber rgbImgSub;
 
-  // Subscribe to the rectified depth image.
-  depthImgSub = imTrans.subscribe("/depth_registered/image_rect", 1,
-                                  &depthImgCallback);
+  // Subscribe to the Rectified Point Cloud
+  pntCldSub = nh.subscribe("/pacman/points", 1, &pntCldCallback);
+
   // Subscribe to the raw rgb image.
   rgbImgSub = imTrans.subscribe("/camera/rgb/image_raw", 1, &rgbImgCallback);
 

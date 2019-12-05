@@ -13,6 +13,8 @@ find_package(catkin REQUIRED COMPONENTS
   gazebo_msgs
   gazebo_ros
   message_generation
+  pcl_conversions
+  pcl_ros
 )
 
 ################################################
