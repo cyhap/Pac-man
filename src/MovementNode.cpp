@@ -129,7 +129,7 @@ int main(int argc, char **argv) {
 
   while (ros::ok()) {
     // Use the Navigation Stack status to decide movement
-    if (!mover.checkVisuals()) { // Returns navigation stack flag
+    //if (!mover.checkVisuals()) { // Returns navigation stack flag
       ROS_INFO_STREAM("Movement Search with Laser Scanner");
       // Allow image callback to look for new objects
       mover.setAllowImgCallback(true);
@@ -141,7 +141,7 @@ int main(int argc, char **argv) {
       velMsg.angular.z = output.second;
 
       pub.publish(velMsg);
-    }
+    //}
 
     ros::spinOnce();
 
