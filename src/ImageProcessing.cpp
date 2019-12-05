@@ -119,16 +119,17 @@ std::vector<Object::Pose> ImageProcessing::processMask(
   // Obtain the corresponding depth at these points
   for (const auto &tPixel : pixels) {
     Object::Pose tPose;
-    tPose.z = rectDepthImg.at<float>(tPixel.x, tPixel.y);
+    tPose.x = rectDepthImg.at<float>(tPixel.x, tPixel.y);
     // Add that Pose to the list of poses.
     tReturn.push_back(tPose);
   }
   return tReturn;
 }
+#include <iostream>
 
 bool ImageProcessing::setRgbImg(const cv::Mat &aRgbImg) {
   bool validRGB = false;
-  if (aRgbImg.depth() == CV_8UC3) {
+  if (aRgbImg.type() == CV_8UC3) {
     validRGB = true;
     rgbImg = aRgbImg;
   }
@@ -136,7 +137,7 @@ bool ImageProcessing::setRgbImg(const cv::Mat &aRgbImg) {
 }
 bool ImageProcessing::setDptImg(const cv::Mat &aDepthImg) {
   bool validDpt = false;
-  if (aDepthImg.depth() == CV_32FC1) {
+  if (aDepthImg.type() == CV_32FC1) {
     validDpt = true;
     rectDepthImg = aDepthImg;
   }
