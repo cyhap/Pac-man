@@ -65,7 +65,7 @@ class Movement {
     *  @param	  None
     *  @return	None
     */
-  Movement(const double &aColDist = 0.65, const double &aLinVel = 0.25,
+  Movement(const double &aColDist = 0.35, const double &aLinVel = 0.25,
            const double &angVel = 1);
 
   /**
