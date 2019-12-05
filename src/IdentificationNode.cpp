@@ -32,12 +32,13 @@
   * @brief This ROS Node is for running the object identification.
   */
 
-#include "ros/ros.h"
 #include "Object.hpp"
 #include "GoodObject.hpp"
 #include "BadObject.hpp"
 #include "ImageProcessing.hpp"
 
+#include "ros/ros.h"
+#include "pacman/ObjPose.h"  // Our custom msg type
 #include "image_transport/image_transport.h"
 #include "sensor_msgs/PointCloud2.h"
 #include "cv_bridge/cv_bridge.h"
@@ -113,19 +114,19 @@ int main(int argc, char **argv) {
   // Subscribe to the raw rgb image.
   rgbImgSub = imTrans.subscribe("/camera/rgb/image_raw", 1, &rgbImgCallback);
 
-  // Note the default resolution is 640 x 480 as of Indigo. Further research
-  // required
+// Note default resolution is 640x480 as of Indigo. Further research required.
 
-  //#### Pseudo Pseudo Code ####//
-  // subsribe to images
+  // Publisher for Good Object Poses obtained from Image Processing
+  ros::Publisher objpub = nh.advertise<pacman::ObjPose>("imgPoses", 1000);
+
+  //#### Process ####//
   // process images
   //// apply good mask
-  //// create good objects
+  // create good objects
   //// apply bad mask
-  //// create bad objects
-  //// update map with bad objects - Service call
-  //// Publish good objects
-  ////
+  // create bad objects
+  // update map with bad objects - Service call
+  // Publish good objects
 
   ros::spin();
 

@@ -62,6 +62,7 @@ add_dependencies(pubpose pacman_generate_messages_cpp)
 
 add_executable(object src/IdentificationNode.cpp src/Object.cpp src/GoodObject.cpp src/BadObject.cpp src/ImageProcessing.cpp)
 target_link_libraries(object ${catkin_LIBRARIES})
+add_dependencies(object pacman_generate_messages_cpp)
 
 
 #############
