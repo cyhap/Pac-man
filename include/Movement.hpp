@@ -55,82 +55,42 @@ class Movement {
 
  public:
   /**
-    *  @brief   This is the constructor for the Movement Class
-    *  @param	  None
-    *  @return	None
-    */
+  *  @brief   This is the constructor for the Movement Class
+  *  @param	  None
+  *  @return	None
+  */
   Movement(const double &aColDist = 0.55, const double &aLinVel = 0.5,
            const double &angVel = 1);
 
   /**
-    *  @brief   This is the destructor for the Movement Class
-    *  @param	  None
-    *  @return	None
-    */
+  *  @brief   This is the destructor for the Movement Class
+  *  @param	  None
+  *  @return	None
+  */
   virtual ~Movement();
 
   /**
-  *  @brief   This function sets the linear velocity of the turtlebot
-  *  @param	  lv linear velocity as float
+  *  @brief    Uses the turtlebot sensor data to determine whether something is 
+  *   in front of the robot. Sets the clearAhead variable accordingly.
+  *  @param	  aDist float of minimum distance observed from laser scan
   *  @return	None
   */
-  void setLinearVelocity(float);
-
-  /**
-  *  @brief   This function sets the angular velocity of the turtlebot
-  *  @param	  av angular velocity as float
-  *  @return	None
-  */
-  void setAngularVelocity(float);
-
-  /**
-  *  @brief   This function retrieves the linear velocity
-  *  @param	  None
-  *  @return	float of linear velocity
-  */
-  float getLinearVelocity();
-
-  /**
-  *  @brief   This function retrieves the angular velocity
-  *  @param	  None
-  *  @return	float of angular velocity
-  */
-  float getAngularVelocity();
-
-    /**
-
-   * @brief Uses the turtlebot sensor data to determine whether or not something
-   * is in front of the robot. Sets the clearAhead variable accordingly.
-
-   * @param float the minimum distance observed
-
-   * @return None.
-
-   */
   void updateMinDist(float);
+
   /**
-
-   * @brief Checks the clear ahead boolean and updates the velocities
-   * accordingly. (Straight if clear ahead. Turning if obstacle in front.)
-
-   * @param None
-
-   * @return std::pair<double, double> The linear and angular velocities
-   * respectively.
-
-   */
+  *  @brief   Checks the clearAhead boolean and updates the velocities
+  *   accordingly. (Straight if clear ahead. Turning if obstacle in front.)
+  *  @param	  None
+  *  @return	pair of doubles for linear and angular velocities
+  */
   std::pair<double, double> computeVelocities();
+
   /**
-
-   * @brief Returns whether or not the robot can move forward. This function was
-   * added so that unit testing could take place on the updateMinDist function.
-
-   * @param None
-
-   * @return bool. Whether or not there is something in range that is less than
-   * the collisionDist member variable.
-
-   */
+  *  @brief   Returns whether or not the robot can move forward. This function 
+  *   was added so unit testing could take place on the updateMinDist function.
+  *  @param	  None
+  *  @return	boolean of clearAhead status
+  */
   bool getClearAhead();
 };
 

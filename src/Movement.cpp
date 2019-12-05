@@ -65,21 +65,7 @@ std::pair<double, double> Movement::computeVelocities() {
   return std::make_pair(linearVelocity, angularVelocity);
 }
 
-void Movement::setLinearVelocity(float lv) {
-  linearVelocity = lv;  // Setting the linear velocity to the input
-  return;
-}
-
-void Movement::setAngularVelocity(float av) {
-  angularVelocity = av;  // Setting the angular velocity to the input
-  return;
-}
-
-float Movement::getLinearVelocity() {
-  return linearVelocity;  // Returning linear velocity
-}
-
-float Movement::getAngularVelocity() {
-  return angularVelocity;  // Returning angular velocity
+bool Movement::getClearAhead() {
+  return clearAhead;
 }
 

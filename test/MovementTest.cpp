@@ -36,15 +36,36 @@
 #include "gtest/gtest.h"
 #include "Movement.hpp"
 
-TEST(Movement, GetAndSet) {
-  Movement MoveObj;
+TEST(Movement, collision) {
+  // Collision distance currently set to 0.55
+  Movement moveObj;
 
-  MoveObj.setLinearVelocity(1.0);
-  ASSERT_EQ(MoveObj.getLinearVelocity(), 1.0);
-
-  MoveObj.setAngularVelocity(1.0);
-  ASSERT_EQ(MoveObj.getAngularVelocity(), 1.0);
+  float dist = 1.00;
+  moveObj.updateMinDist(dist);
+  ASSERT_TRUE(moveObj.getClearAhead());
+  
+  dist = 0.25;
+  moveObj.updateMinDist(dist);
+  ASSERT_FALSE(moveObj.getClearAhead());
 }
+
+TEST(Movement, velocities) {
+  // Collision distance currently set to 0.55
+  Movement moveObj;
+
+  float dist1 = 1.00;
+  moveObj.updateMinDist(dist1);
+  std::pair<double, double> robotVels1 = moveObj.computeVelocities();
+  std::pair<double, double> testVels1(0.5, 0.0);
+  ASSERT_EQ(robotVels1,testVels1);
+  
+  float dist2 = 0.25;
+  moveObj.updateMinDist(dist2);
+  std::pair<double, double> robotVels2 = moveObj.computeVelocities();
+  std::pair<double, double> testVels2(0.0, 1.0);
+  ASSERT_EQ(robotVels2,testVels2);
+}
+
 
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv) {
