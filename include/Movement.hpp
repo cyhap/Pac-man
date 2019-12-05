@@ -39,12 +39,6 @@
 
 #include <utility>
 
-//#include "ros/ros.h"
-//#include "geometry_msgs/Twist.h"
-//#include "kobuki_msgs/BumperEvent.h"
-//#include "gazebo_msgs/DeleteModel.h"
-
-
 class Movement {
  private:
   double linearVelocity;  ///< Turtlebot's linear velocity
