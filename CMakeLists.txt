@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   std_msgs
   gazebo_msgs
+  gazebo_ros
 )
 
 ################################################

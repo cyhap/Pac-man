@@ -1,0 +1,13 @@
+material strawberry/Diffuse
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture strawberry.png
+      }
+    }
+  }
+}
