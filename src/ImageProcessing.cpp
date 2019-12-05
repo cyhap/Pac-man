@@ -43,7 +43,7 @@
 ImageProcessing::ImageProcessing()
     :
     rgbImg(),
-    rectDepthImg() {
+    rectPntCld() {
   // Fixme [Yhap] Consider what default images should be used if any at all.
 }
 
@@ -94,6 +94,7 @@ std::vector<Object::Pose> ImageProcessing::processMask(
     const cv::Mat &aImage) {
   // Declare the return type
   std::vector<Object::Pose> tReturn;
+
   // Find the contours in the image
   std::vector<std::vector<cv::Point> > contours;
   std::vector<cv::Vec4i> hierarchy;
@@ -116,16 +117,16 @@ std::vector<Object::Pose> ImageProcessing::processMask(
     pixelIter++;
   }
 
-  // Obtain the corresponding depth at these points
+  // Obtain the corresponding XYZ Point
   for (const auto &tPixel : pixels) {
-    Object::Pose tPose;
-    tPose.x = rectDepthImg.at<float>(tPixel.x, tPixel.y);
+    // FIXME[Yhap] This assumes that the depth image was also set.
+    Object::Pose tPose = extractPose(tPixel.x, tPixel.y);
+
     // Add that Pose to the list of poses.
     tReturn.push_back(tPose);
   }
   return tReturn;
 }
-#include <iostream>
 
 bool ImageProcessing::setRgbImg(const cv::Mat &aRgbImg) {
   bool validRGB = false;
@@ -135,11 +136,37 @@ bool ImageProcessing::setRgbImg(const cv::Mat &aRgbImg) {
   }
   return validRGB;
 }
-bool ImageProcessing::setDptImg(const cv::Mat &aDepthImg) {
+bool ImageProcessing::setPntCld(pcl::PCLPointCloud2ConstPtr aPntCld) {
   bool validDpt = false;
-  if (aDepthImg.type() == CV_32FC1) {
+  if (aPntCld) {
     validDpt = true;
-    rectDepthImg = aDepthImg;
+    rectPntCld = aPntCld;
   }
   return validDpt;
+}
+
+Object::Pose ImageProcessing::extractPose(int x, int y) {
+  Object::Pose tReturn;
+  if (rectPntCld) {
+    // Fixme Yhap Determine if the x and y need to be converted (column/width)
+    // (row/height)
+    //pcl::uint32_t tWidth = rectPntCld->width;
+    //pcl::uint32_t tHeight = rectPntCld->height;
+
+    // Convert the x,y index into the starting position in the data
+    pcl::uint32_t tDataStart = y * rectPntCld->row_step
+        + x * rectPntCld->point_step;
+    // Compute the XYZ Indices Relative to that starting Point
+    pcl::uint32_t tXIdx = tDataStart + rectPntCld->fields[0].offset;
+    pcl::uint32_t tYIdx = tDataStart + rectPntCld->fields[1].offset;
+    pcl::uint32_t tZIdx = tDataStart + rectPntCld->fields[2].offset;
+
+    tReturn.x = rectPntCld->data.at(tXIdx);
+    tReturn.y = rectPntCld->data.at(tYIdx);
+    tReturn.z = rectPntCld->data.at(tZIdx);
+
+  } else {
+    // Fixme [Yhap] Figure out what to do in this case. (Means Null Pointer)
+  }
+  return tReturn;
 }

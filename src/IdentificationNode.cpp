@@ -63,6 +63,8 @@ void pntCldCallback(const sensor_msgs::PointCloud2ConstPtr &aPtCloud) {
   // Convert to PCL data type
   pcl_conversions::toPCL(*aPtCloud, *cloud);
 
+  //cloudPtr->
+
 }
 
 

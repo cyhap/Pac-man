@@ -42,48 +42,65 @@
 
 #include "Object.hpp"
 #include "opencv2/core.hpp"
+#include "pcl/PCLPointCloud2.h"
 
 class ImageProcessing {
  public:
-    /**
-    *  @brief    COMPLETE ME, CORBYN!
-    *  @param
-    *  @return
-    */
-    ImageProcessing();
+  /**
+   *  @brief    COMPLETE ME, CORBYN!
+   *  @param
+   *  @return
+   */
+  ImageProcessing();
 
-    /**
-    *  @brief    COMPLETE ME, CORBYN!
-    *  @param
-    *  @return
-    */
-    ~ImageProcessing();
+  /**
+   *  @brief    COMPLETE ME, CORBYN!
+   *  @param
+   *  @return
+   */
+  ~ImageProcessing();
 
-    /**
-    *  @brief    COMPLETE ME, CORBYN!
-    *  @param
-    *  @return
-    */
-    std::vector<std::shared_ptr<Object>> process();
+  /**
+   *  @brief    COMPLETE ME, CORBYN!
+   *  @param
+   *  @return
+   */
+  std::vector<std::shared_ptr<Object>> process();
 
-    /**
-    *  @brief    COMPLETE ME, CORBYN!
-    *  @param
-    *  @return
-    */
-    bool setRgbImg(const cv::Mat&);
+  /**
+   *  @brief    COMPLETE ME, CORBYN!
+   *  @param
+   *  @return
+   */
+  bool setRgbImg(const cv::Mat&);
 
-    /**
-    *  @brief    COMPLETE ME, CORBYN!
-    *  @param
-    *  @return
-    */
-    bool setDptImg(const cv::Mat&);
+  /**
+   *  @brief    COMPLETE ME, CORBYN!
+   *  @param
+   *  @return
+   */
+  bool setPntCld(pcl::PCLPointCloud2ConstPtr);
 
  private:
   cv::Mat rgbImg;
-  cv::Mat rectDepthImg;
+  // Note using boost shared_ptr instead of std::shared_ptr because ROS uses
+  // boost and in order to pass things properly without breaking weak pointers
+  // We also need to use boost.
+  boost::shared_ptr<const pcl::PCLPointCloud2> rectPntCld;
+
+  /**
+   *  @brief    COMPLETE ME, CORBYN!
+   *  @param
+   *  @return
+   */
   std::vector<Object::Pose> processMask(const cv::Mat&);
+
+  /**
+   *  @brief    COMPLETE ME, CORBYN!
+   *  @param
+   *  @return
+   */
+  Object::Pose extractPose(int, int);
 };
 
 #endif  // INCLUDE_IMAGEPROCESSING_HPP_
