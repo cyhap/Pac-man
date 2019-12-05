@@ -44,6 +44,7 @@
 #include "Object.hpp"
 
 #include "ros/ros.h"
+#include "pacman/ObjPose.h"  // Our custom msg type
 #include "kobuki_msgs/BumperEvent.h"
 #include "gazebo_msgs/DeleteModel.h"
 #include "geometry_msgs/Twist.h"
@@ -62,17 +63,18 @@ class Mover {
   virtual ~Mover() {}
   bool getAllowImgCallback() { return allowImgCallback; }
   void setAllowImgCallback(bool status_) { allowImgCallback = status_; }
-  void imgCallback(const geometry_msgs::Twist::ConstPtr& imgPose) {
+  void imgCallback(const pacman::ObjPose::ConstPtr& imgPose) {
     if (allowImgCallback) {
       //  -- Find the closest pose from the input
       Object::Pose closestPose;
-      closestPose.x = imgPose->linear.x;
-      closestPose.y = imgPose->linear.y;
-      closestPose.yaw = imgPose->angular.z;
+      closestPose.x = imgPose->x;
+      closestPose.y = imgPose->y;
+      closestPose.yaw = imgPose->angle3;
       //  -- Send closestPose to Navigation Stack
       allowImgCallback = false;
+      ROS_ERROR_STREAM("Sent Pose to Navigation stack");
     } else {
-      ROS_INFO_STREAM("Navigation stack is runnning");
+      ROS_ERROR_STREAM("Navigation stack is runnning");
     }
   }
   bool checkVisuals() {

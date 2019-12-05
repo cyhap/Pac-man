@@ -12,15 +12,17 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   gazebo_msgs
   gazebo_ros
+  message_generation
 )
 
 ################################################
 ## Declare ROS messages, services and actions ##
 ################################################
 
-# add_message_files(
-#   FILES
-# )
+ add_message_files(
+   FILES
+   ObjPose.msg
+ )
 
 # add_service_files(
 #   FILES
@@ -30,14 +32,16 @@ find_package(catkin REQUIRED COMPONENTS
 #   FILES
 # )
 
-# generate_messages(
-#   DEPENDENCIES
-#   geometry_msgs#   kobuki_msgs#   sensor_msgs#   std_msgs
-# )
+ generate_messages(
+   DEPENDENCIES
+   std_msgs
+ )
 
 find_package(OpenCV 3 REQUIRED)
 
-catkin_package()
+catkin_package(
+  CATKIN_DEPENDS message_runtime
+  )
 
 include_directories( include 
                      ${catkin_INCLUDE_DIRS}
@@ -45,10 +49,15 @@ include_directories( include
 
 add_executable(movement src/MovementNode.cpp src/Movement.cpp)
 target_link_libraries(movement ${catkin_LIBRARIES})
+#add_dependencies(movement pacman_generate_message.cpp)
+
 add_executable(objectlist src/ObjectListNode.cpp src/ObjectList.cpp)
 target_link_libraries(objectlist ${catkin_LIBRARIES})
+
 add_executable(pubpose src/pubpose.cpp)
 target_link_libraries(pubpose ${catkin_LIBRARIES})
+#add_dependencies(pubpose pacman_generate_message.cpp)
+
 add_executable(object src/IdentificationNode.cpp src/Object.cpp src/GoodObject.cpp src/BadObject.cpp src/ImageProcessing.cpp)
 target_link_libraries(object ${catkin_LIBRARIES})
 
