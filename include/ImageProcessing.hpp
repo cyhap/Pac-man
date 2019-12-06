@@ -48,51 +48,60 @@
 class ImageProcessing {
  public:
   /**
-   *  @brief    COMPLETE ME, CORBYN!
-   *  @param
-   *  @return
+   *  @brief  Image Processing Constructor. Initializes with Green Mask for good
+   *          objects and a Red Mask for bad objects.
+   *  @param  None
+   *  @return None
    */
   ImageProcessing();
 
   /**
-   *  @brief    COMPLETE ME, CORBYN!
-   *  @param
-   *  @return
+   *  @brief  Image Processing Destructor
+   *  @param  None
+   *  @return None
    */
   ~ImageProcessing();
 
   /**
-   *  @brief    COMPLETE ME, CORBYN!
-   *  @param
-   *  @return
+   *  @brief  process Use this to perform the image processing and pose
+   *          extraction.
+   *  @param  None.
+   *  @return std::vector<std::shared_ptr<Object> > A vector of all objects
+   *          (good and bad) found within the image.
    */
   std::vector<std::shared_ptr<Object> > process();
 
   /**
-   *  @brief    COMPLETE ME, CORBYN!
-   *  @param
-   *  @return
+   *  @brief  setRgbImg Set the RGB Image Used for Processing
+   *  @param  std::shared_ptr<const cv::Mat> Pointer to the Image that should be
+   *          processed.
+   *  @return bool Whether or not the image submitted was accepted for
+   *          processing
    */
   bool setRgbImg(std::shared_ptr<const cv::Mat>);
 
   /**
-   *  @brief    COMPLETE ME, CORBYN!
-   *  @param
-   *  @return
+   *  @brief  setPntCld Set the Point Cloud Used for Processing
+   *  @param  std::shared_ptr<const pcl::PointCloud<pcl::PointXYZ> >
+   *          Pointer to the Point cloud that should be processed.
+   *  @return bool Whether or not the point cloud submitted was accepted for
+   *          processing
    */
   bool setPntCld(std::shared_ptr<const pcl::PointCloud<pcl::PointXYZ> >);
 
   /**
-   *  @brief    COMPLETE ME, CORBYN!
-   *  @param
-   *  @return
+   *  @brief  setGoodObjectMask Update the Mask Used to Identify Good Objects
+   *  @param  const cv::Scalar& Lower Threshold of the Mask in BGR
+   *  @param  const cv::Scalar& Upper Threshold of the Mask in BGR
+   *  @return None.
    */
   void setGoodObjectMask(const cv::Scalar&, const cv::Scalar&);
 
   /**
-   *  @brief    COMPLETE ME, CORBYN!
-   *  @param
-   *  @return
+   *  @brief  setBadObjectMask Update the Mask Used to Identify Bad Objects
+   *  @param  const cv::Scalar& Lower Threshold of the Mask in BGR
+   *  @param  const cv::Scalar& Upper Threshold of the Mask in BGR
+   *  @return None.
    */
   void setBadObjectMask(const cv::Scalar&, const cv::Scalar&);
 
@@ -106,16 +115,21 @@ class ImageProcessing {
 
 
   /**
-   *  @brief    COMPLETE ME, CORBYN!
-   *  @param
-   *  @return
+   *  @brief  processMask helper function to identify object centers in the
+   *          masked image.
+   *  @param  const cv::Mat & The Masked Image.
+   *  @return std::vector<Object::Pose> A vector of poses corresponding to
+   *          object centers.
    */
   std::vector<Object::Pose> processMask(const cv::Mat&);
 
   /**
-   *  @brief    COMPLETE ME, CORBYN!
-   *  @param
-   *  @return
+   *  @brief  extractPose Use the pixel index to extract a Pose from a point
+   *          cloud
+   *  @param  int x position in image
+   *  @param  int y position in image
+   *  @return Object::Pose Pose with corresponding XYZ positions from the point
+   *          cloud.
    */
   Object::Pose extractPose(int, int);
 };
