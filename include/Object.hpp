@@ -49,12 +49,11 @@ class Object {
   };
 
   /**
-  *  @brief   This is the Constructor for the Object Class, with initializer list
-  *  @param	  ind index of Object
-  *  @param	  loc Pose location of Object
+  *  @brief   This is the destructor for the Object Class
+  *  @param	  None
   *  @return	None
   */
-//  virtual Object(Object::Pose loc) {};
+  virtual ~Object();
 
   /**
   *  @brief   This is a virtual function to get the Pose of the Object
