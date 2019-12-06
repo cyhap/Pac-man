@@ -29,12 +29,13 @@
   * @copyright 2019 Ari Kupferberg
   * @author Ari Kupferberg
   * @date 12/3/2019
-  * @brief This is the ROS Node that will handle the Navigation Stack.
+  * @brief This is the ROS Node that will handle the interaction with the
+      Navigation Stack.
   */
-
-#include <ros/ros.h>
-#include <move_base_msgs/MoveBaseAction.h>
-#include <actionlib/client/simple_action_client.h>
+#include "pacman/NavPose.h"
+#include "ros/ros.h"
+#include "move_base_msgs/MoveBaseAction.h"
+#include "actionlib/client/simple_action_client.h"
 
 // The following lines of code have been pulled from the ROS wiki:
 // http://wiki.ros.org/navigation/Tutorials/SendingSimpleGoals
@@ -42,20 +43,74 @@
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction>
                                                           MoveBaseClient;
 
-int main(int argc, char** argv) {
-  ros::init(argc, argv, "simple_navigation_goals");
+/**
+*  @brief   Server Function for Nav Stack Goal Pose
+*  @param	  Service Request Type variable passed by reference
+*  @param	  Service Response Type variable passed by reference
+*  @return	boolean true
+*/
+bool nav(pacman::NavPose::Request &req,
+          pacman::NavPose::Response &res) {
+  // Tell the action client that we want to spin a thread by default
+  MoveBaseClient ac("move_base", true);
+  // Wait for the action server to come up
+  while (!ac.waitForServer(ros::Duration(5.0))) {
+    ROS_INFO("Waiting for the move_base action server to come up");
+  }
+  // Set up goal
+  move_base_msgs::MoveBaseGoal goal;
+  goal.target_pose.header.frame_id = "base_link";
+  goal.target_pose.header.stamp = ros::Time::now();
+  // Assign Position values
+  goal.target_pose.pose.position.x = req.pose.x;
+  goal.target_pose.pose.position.y = req.pose.y;
+  goal.target_pose.pose.position.z = req.pose.z;
+  // Assign Orientation Values
+  // ----------- Need to get orientation from TurtleBot
+  goal.target_pose.pose.orientation.w = 1.0;
 
-  // tell the action client that we want to spin a thread by default
+  ROS_INFO("Sending goal");
+  ac.sendGoal(goal);
+
+  ac.waitForResult();
+  if (ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
+    ROS_INFO("Hooray, the base moved 1 meter forward");
+  else
+    ROS_INFO("The base failed to move forward 1 meter for some reason");
+  res.str = "Received Goal Pose";
+  ROS_INFO_STREAM(res.str);
+  
+  return true;
+}
+
+
+/**
+*  @brief   This is the main function
+*  @param	  argc for ROS
+*  @param	  argv for ROS
+*  @return	0 Exit status
+*/
+int main(int argc, char** argv) {
+  // Initialize the Nav Stack Interaction node.
+  ros::init(argc, argv, "navigation");
+
+  // Create ROS node handle
+  ros::NodeHandle n;
+  
+  // Set up the server
+  ros::ServiceServer srv = n.advertiseService("navpose", nav);
+/*
+  // Tell the action client that we want to spin a thread by default
   MoveBaseClient ac("move_base", true);
 
-  // wait for the action server to come up
+  // Wait for the action server to come up
   while (!ac.waitForServer(ros::Duration(5.0))) {
     ROS_INFO("Waiting for the move_base action server to come up");
   }
 
   move_base_msgs::MoveBaseGoal goal;
 
-  // we'll send a goal to the robot to move 1 meter forward
+  // Send a goal to the turtlebot
   goal.target_pose.header.frame_id = "base_link";
   goal.target_pose.header.stamp = ros::Time::now();
 
@@ -71,6 +126,6 @@ int main(int argc, char** argv) {
     ROS_INFO("Hooray, the base moved 1 meter forward");
   else
     ROS_INFO("The base failed to move forward 1 meter for some reason");
-
+*/
   return 0;
 }

@@ -43,9 +43,10 @@
 #include "Movement.hpp"
 #include "Object.hpp"
 
-#include "ros/ros.h"
 #include "pacman/ObjPose.h"  // Our custom msg type
 #include "pacman/VecPoses.h"  // Our custom msg type
+#include "pacman/NavPose.h"  // Our custom srv type
+#include "ros/ros.h"
 #include "kobuki_msgs/BumperEvent.h"
 #include "gazebo_msgs/DeleteModel.h"
 #include "geometry_msgs/Twist.h"
@@ -54,6 +55,7 @@
 class Mover {
  public:
   std::shared_ptr<Movement> movement;
+  pacman::ObjPose closestPose;
   bool navStackStatus;
   bool allowImgCallback;
   // Constructor
@@ -67,7 +69,6 @@ class Mover {
     if (allowImgCallback) {
       allowImgCallback = false;
       //  -- Find the closest pose from the vector input
-      pacman::ObjPose closestPose;
       double minMag = 100;
       for (auto indpose : vecPoses->poses) {
         // Grab x,y,z coordinates of current pose
@@ -81,15 +82,7 @@ class Mover {
           closestPose = indpose;
         }
       }
-      Object::Pose navPose;
-      navPose.x = closestPose.x;
-      navPose.y = closestPose.y;
-      navPose.z = closestPose.z;
-      //  Send Goal Pose to Navigation Stack
-      // ----------------------------- INSERT SERVICE CALL HERE
-      ROS_ERROR_STREAM("Sent Pose to Navigation stack");
-      ROS_WARN_STREAM("[" << navPose.x << "," << navPose.y
-                                             << "," << navPose.z << "]");
+      ROS_ERROR_STREAM("Sending Pose to Navigation stack");
     } else {
       ROS_ERROR_STREAM("Navigation stack is runnning");
     }
@@ -122,7 +115,6 @@ class Mover {
   }
 };
 
-
 /**
 *  @brief   This is the main function
 *  @param	  argc for ROS
@@ -150,6 +142,8 @@ int main(int argc, char **argv) {
   auto lsrSub = nm.subscribe("/scan", 1000, &Mover::laserScanCallback, &mover);
   auto imgSub = nm.subscribe("imgPoses", 1000, &Mover::imgCallback, &mover);
 
+  ros::ServiceClient client = nm.serviceClient<pacman::NavPose>("navpose");
+
   // Publish at 10 Hz.
   ros::Rate loop_rate(10.0);
 
@@ -168,7 +162,22 @@ int main(int argc, char **argv) {
 
       pub.publish(velMsg);
     }
+    pacman::ObjPose navPose;
+    navPose.x = mover.closestPose.x;
+    navPose.y = mover.closestPose.y;
+    navPose.z = mover.closestPose.z;
+    ROS_WARN_STREAM("[" << navPose.x << "," << navPose.y
+                                           << "," << navPose.z << "]");
 
+    //  Send Goal Pose to Navigation Stack
+    pacman::NavPose srv;
+    srv.request.pose = navPose;
+    if (client.call(srv)) {
+      ROS_INFO_STREAM("Success! :)");
+    } else {
+      ROS_ERROR_STREAM("Failed... :(");
+//      return 1;
+    }
     ros::spinOnce();
 
     loop_rate.sleep();

@@ -27,9 +27,10 @@ find_package(catkin REQUIRED COMPONENTS
    VecPoses.msg
  )
 
-# add_service_files(
-#   FILES
-# )
+ add_service_files(
+  FILES
+  NavPose.srv
+ )
 
 # add_action_files(
 #   FILES
@@ -65,6 +66,9 @@ add_executable(object src/IdentificationNode.cpp src/GoodObject.cpp src/BadObjec
 target_link_libraries(object ${catkin_LIBRARIES})
 add_dependencies(object pacman_generate_messages_cpp)
 
+add_executable(navigation src/NavigationNode.cpp)
+target_link_libraries(navigation ${catkin_LIBRARIES})
+add_dependencies(navigation pacman_generate_messages_cpp)
 
 #############
 ## Testing ##
