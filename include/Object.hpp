@@ -29,7 +29,7 @@
   * @copyright 2019 Ari Kupferberg
   * @author Ari Kupfeberg
   * @date 11/24/2019
-  * @brief This Class is the Base Class for the Object Classes.
+  * @brief This Pure Virtual Class is the Base Interface for the Object Classes.
   */
 
 #ifndef INCLUDE_OBJECT_HPP_
@@ -54,25 +54,28 @@ class Object {
   *  @param	  loc Pose location of Object
   *  @return	None
   */
-  explicit Object(Object::Pose loc) : location{ loc } {}
+//  virtual Object(Object::Pose loc) {};
 
   /**
-  *  @brief   This is a function to get the Pose of the Object
+  *  @brief   This is a virtual function to get the Pose of the Object
   *  @param	  None
-  *  @return	None
+  *  @return	location 6DOF object Pose
   */
-  Pose getPose();
+  virtual Pose getPose() = 0;
 
   /**
-  *  @brief   This is a function to get the XYZ location of the Object
+  *  @brief   This is a virtual function to get the XYZ location of the Object
   *  @param	  None
-  *  @return	None
+  *  @return	xyz vector of x,y,z coordinates
   */
-  std::vector<double> getXYZ();
+  virtual std::vector<double> getXYZ() = 0;
 
- private:
-  int index;  ///< index value of Object
-  Pose location;  ///< 6-DOF location of Object as Pose
+  /**
+  *  @brief   This is a virtual function to check the collect status of the Object
+  *  @param	  None
+  *  @return	boolean
+  */
+  virtual bool checkCollect() = 0;
 };
 
 #endif  // INCLUDE_OBJECT_HPP_

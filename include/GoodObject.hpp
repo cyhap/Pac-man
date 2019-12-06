@@ -39,6 +39,7 @@
 
 class GoodObject: public Object {
  private:
+  Object::Pose location;  ///< 6-DOF location of Object as Pose
   bool collect;  ///< Boolean to identify if Object should be collected
 
  public:
@@ -48,21 +49,33 @@ class GoodObject: public Object {
   *  @param	  loc Pose location of Object
   *  @return	None
   */
-  explicit GoodObject(Object::Pose loc)
-  : Object{ loc }, collect{ true } {
-  }
+  GoodObject(Object::Pose loc);
 
   /**
   *  @brief   This is the destructor for the GoodObject Class
   *  @param	  None
   *  @return	None
   */
-  ~GoodObject();
+  virtual ~GoodObject();
 
+  /**
+  *  @brief   This is an override function to get the Pose of the GoodObject
+  *  @param	  None
+  *  @return	location 6DOF object Pose
+  */
+  virtual Pose getPose();
+
+  /**
+  *  @brief   This is an override function to get the XYZ location of the GoodObject
+  *  @param	  None
+  *  @return	xyz vector of x,y,z coordinates
+  */
+  virtual std::vector<double> getXYZ();
+  
   /**
   *  @brief   This is an override function to check the collect status of the GoodObject
   *  @param	  None
-  *  @return	None
+  *  @return	boolean
   */
   virtual bool checkCollect();
 };
