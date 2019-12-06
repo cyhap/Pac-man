@@ -47,48 +47,60 @@
 #include "pcl/point_cloud.h"
 #include "pcl/point_types.h"
 
-/**
-*  @brief   This Callback function ... DOES SOMETHING
-*  @param	  aImg An image with depth data
-*  @return	None
-*/
+class Identification {
+ public:
+  ImageProcessing eyes;
+  Identification()
+      :
+      eyes() {
+  }
+  /**
+   *  @brief   This Callback function ... DOES SOMETHING
+   *  @param   aImg An image with depth data
+   *  @return  None
+   */
 
-void pntCldCallback(const sensor_msgs::PointCloud2 &aPtCloud) {
-  // Determine what to do here.
-  ROS_INFO_STREAM("Point Cloud Call back Successful.");
+  void pntCldCallback(const sensor_msgs::PointCloud2 &aPtCloud) {
+    // Determine what to do here.
+    ROS_INFO_STREAM("Point Cloud Call back Successful.");
 
-  std::shared_ptr<pcl::PointCloud<pcl::PointXYZ> > tConvPntCld(
-      new pcl::PointCloud<pcl::PointXYZ>);
+    std::shared_ptr<pcl::PointCloud<pcl::PointXYZ> > tConvPntCld(
+        new pcl::PointCloud<pcl::PointXYZ>);
 
-  pcl::fromROSMsg(aPtCloud, *tConvPntCld);
+    pcl::fromROSMsg(aPtCloud, *tConvPntCld);
 
-  // Pass this to set the pntCloud in the image processing Class
-  //tConvPntCld
-
-}
-
-
-/**
-*  @brief   This Callback function ... DOES SOMETHING
-*  @param	  aImg An image with depth data
-*  @return	None
-*/
-void rgbImgCallback(const sensor_msgs::ImageConstPtr &aImg) {
-  ROS_INFO_STREAM("RGB Image Call back Successful.");
-
-  // Convert ROS Message into a cv::Mat for ImageProcessing Class.
-
-  cv_bridge::CvImageConstPtr cv_ptr;
-  try {
-    cv_ptr = cv_bridge::toCvShare(aImg, sensor_msgs::image_encodings::BGR8);
-  } catch (cv_bridge::Exception &e) {
-    ROS_ERROR("cv_bridge exception: %s", e.what());
-    return;
+    // Pass this to set the pntCloud in the image processing Class
+    eyes.setPntCld(tConvPntCld);
   }
 
+  /**
+   *  @brief   This Callback function ... DOES SOMETHING
+   *  @param   aImg An image with depth data
+   *  @return  None
+   */
+  void rgbImgCallback(const sensor_msgs::ImageConstPtr &aImg) {
+    ROS_INFO_STREAM("RGB Image Call back Successful.");
 
-  // Use cv_ptr->image as input for the image processing class.
-}
+    // Convert ROS Message into a cv::Mat for ImageProcessing Class.
+
+    cv_bridge::CvImageConstPtr cv_ptr;
+    try {
+      cv_ptr = cv_bridge::toCvShare(aImg, sensor_msgs::image_encodings::BGR8);
+    } catch (cv_bridge::Exception &e) {
+      ROS_ERROR("cv_bridge exception: %s", e.what());
+      return;
+    }
+
+    // Convert the image to a shared pointer
+    // May need to make a new pointer above to prevent the ros pointer from
+    // going out of scope instead...
+    //std::shared_ptr<cv::Mat> pic(new cv::Mat(cv_ptr->image));
+    // Consider using above than below
+    std::shared_ptr<cv::Mat> pic(&cv_ptr->image);
+    eyes.setRgbImg(pic);
+  }
+};
+
 
 /**
 *  @brief   This is the main function
@@ -103,17 +115,30 @@ int main(int argc, char **argv) {
   // Create a node handle
   ros::NodeHandle nh;
 
+  // Create an Instance of Identification.
+  Identification identifier;
+
+  // Update the Masks we want for Good and Bad Objects
+  cv::Scalar lowGood;
+  cv::Scalar highGood;
+  cv::Scalar lowBad;
+  cv::Scalar highBad;
+
+  identifier.eyes.setGoodObjectMask(lowGood, highGood);
+  identifier.eyes.setBadObjectMask(lowBad, highBad);
+
+  // Create the Proper Subscribers.
   image_transport::ImageTransport imTrans(nh);
   ros::Subscriber pntCldSub;
   image_transport::Subscriber rgbImgSub;
 
   // Subscribe to the Rectified Point Cloud
-  pntCldSub = nh.subscribe("/pacman/points", 1, &pntCldCallback);
+  pntCldSub = nh.subscribe("/pacman/points", 1, &Identification::pntCldCallback,
+                           &identifier);
 
   // Subscribe to the raw rgb image.
-  rgbImgSub = imTrans.subscribe("/camera/rgb/image_raw", 1, &rgbImgCallback);
-
-// Note default resolution is 640x480 as of Indigo. Further research required.
+  rgbImgSub = imTrans.subscribe("/camera/rgb/image_raw", 1,
+                                &Identification::rgbImgCallback, &identifier);
 
   // Publisher for Good Object Poses obtained from Image Processing
   ros::Publisher objpub = nh.advertise<pacman::ObjPose>("imgPoses", 1000);
@@ -127,7 +152,30 @@ int main(int argc, char **argv) {
   // update map with bad objects - Service call
   // Publish good objects
 
-  ros::spin();
+  // Publish at 10 Hz.
+  ros::Rate loop_rate(10.0);
 
+  while (ros::ok()) {
+    // Process the Images and Extract Objects
+    std::vector<std::shared_ptr<Object> > tObjs = identifier.eyes.process();
+    std::vector<Object::Pose> toSend;
+
+    // Parse Out Good Objects to Publish on a Topic
+    // Update Nav Stack Map with Bad Objects.
+    for (const auto &tObj : tObjs) {
+      // update if statement to make sure only good poses get published
+      if (true) {
+        toSend.emplace_back(tObj->getPose());
+      } else {
+        // Learn how to send this to the Map!!!
+      }
+    }
+
+    // Publish the list of Good Objects.
+    // Discuss with Ari.
+
+    ros::spinOnce();
+    loop_rate.sleep();
+  }
   return 0;
 }
