@@ -53,7 +53,7 @@ class Object {
   *  @param	  None
   *  @return	None
   */
-  virtual ~Object();
+  virtual ~Object() {}
 
   /**
   *  @brief   This is a virtual function to get the Pose of the Object
