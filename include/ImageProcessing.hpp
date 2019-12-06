@@ -82,9 +82,28 @@ class ImageProcessing {
    */
   bool setPntCld(std::shared_ptr<const pcl::PointCloud<pcl::PointXYZ> >);
 
+  /**
+   *  @brief    COMPLETE ME, CORBYN!
+   *  @param
+   *  @return
+   */
+  void setGoodObjectMask(const cv::Scalar&, const cv::Scalar&);
+
+  /**
+   *  @brief    COMPLETE ME, CORBYN!
+   *  @param
+   *  @return
+   */
+  void setBadObjectMask(const cv::Scalar&, const cv::Scalar&);
+
  private:
   std::shared_ptr<const cv::Mat> rgbImg;
   std::shared_ptr<const pcl::PointCloud<pcl::PointXYZ> > rectPntCld;
+  cv::Scalar lowGood;
+  cv::Scalar lowBad;
+  cv::Scalar highGood;
+  cv::Scalar highBad;
+
 
   /**
    *  @brief    COMPLETE ME, CORBYN!

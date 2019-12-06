@@ -48,7 +48,11 @@ ImageProcessing::ImageProcessing()
     :
     rgbImg(
         new cv::Mat(500, 500, CV_8UC3, cv::Scalar(255, 255, 255))),
-    rectPntCld(new pcl::PointCloud<pcl::PointXYZ>) {
+    rectPntCld(new pcl::PointCloud<pcl::PointXYZ>),
+    lowGood(0, 200, 0),
+    lowBad(0, 0, 200),
+    highGood(0, 255, 0),
+    highBad(0, 0, 255) {
 }
 
 ImageProcessing::~ImageProcessing() {
@@ -61,27 +65,20 @@ std::vector<std::shared_ptr<Object> > ImageProcessing::process() {
   // Only perform processing if there is data to process.
   // Otherwise return an empty list.
   if (rgbImg && rectPntCld) {
-    // Define the  BGR Masks used to detect blocks
-    // Green Block
-    cv::Scalar lowGreen(0, 200, 0);
-    cv::Scalar highGreen(0, 255, 0);
-    // Red Block
-    cv::Scalar lowRed(0, 0, 200);
-    cv::Scalar highRed(0, 0, 255);
 
-    cv::Mat blurImg, greenThresh, redThresh;
+    cv::Mat blurImg, goodThresh, badThresh;
 
     // Blur the Image
     int kernelSize = 3;
     cv::blur(*rgbImg, blurImg, cv::Size(kernelSize, kernelSize));
 
-    cv::inRange(blurImg, lowGreen, highGreen, greenThresh);
-    cv::inRange(blurImg, lowRed, highRed, redThresh);
+    cv::inRange(blurImg, lowGood, highGood, goodThresh);
+    cv::inRange(blurImg, lowBad, highBad, badThresh);
 
     // Retrieve Poses for Good Objects
-    std::vector<Object::Pose> goodPoses = processMask(greenThresh);
+    std::vector<Object::Pose> goodPoses = processMask(goodThresh);
     // Retrieve Poses for Bad Objects
-    std::vector<Object::Pose> badPoses = processMask(redThresh);
+    std::vector<Object::Pose> badPoses = processMask(badThresh);
 
     // Create Good Objects with the goodPoses
     for (const auto &tPose : goodPoses) {
@@ -151,6 +148,17 @@ bool ImageProcessing::setPntCld(
     rectPntCld = aPntCld;
   }
   return validDpt;
+}
+void ImageProcessing::setGoodObjectMask(const cv::Scalar &aLow,
+                                        const cv::Scalar &aHigh) {
+  lowGood = aLow;
+  highGood = aHigh;
+}
+
+void ImageProcessing::setBadObjectMask(const cv::Scalar &aLow,
+                                       const cv::Scalar &aHigh) {
+  lowBad = aLow;
+  highBad = aHigh;
 }
 
 Object::Pose ImageProcessing::extractPose(int x, int y) {
