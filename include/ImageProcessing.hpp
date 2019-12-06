@@ -42,7 +42,8 @@
 
 #include "Object.hpp"
 #include "opencv2/core.hpp"
-#include "pcl/PCLPointCloud2.h"
+#include "pcl/point_cloud.h"
+#include "pcl/point_types.h"
 
 class ImageProcessing {
  public:
@@ -65,28 +66,25 @@ class ImageProcessing {
    *  @param
    *  @return
    */
-  std::vector<std::shared_ptr<Object>> process();
+  std::vector<std::shared_ptr<Object> > process();
 
   /**
    *  @brief    COMPLETE ME, CORBYN!
    *  @param
    *  @return
    */
-  bool setRgbImg(const cv::Mat&);
+  bool setRgbImg(std::shared_ptr<const cv::Mat>);
 
   /**
    *  @brief    COMPLETE ME, CORBYN!
    *  @param
    *  @return
    */
-  bool setPntCld(pcl::PCLPointCloud2ConstPtr);
+  bool setPntCld(std::shared_ptr<const pcl::PointCloud<pcl::PointXYZ> >);
 
  private:
-  cv::Mat rgbImg;
-  // Note using boost shared_ptr instead of std::shared_ptr because ROS uses
-  // boost and in order to pass things properly without breaking weak pointers
-  // We also need to use boost.
-  boost::shared_ptr<const pcl::PCLPointCloud2> rectPntCld;
+  std::shared_ptr<const cv::Mat> rgbImg;
+  std::shared_ptr<const pcl::PointCloud<pcl::PointXYZ> > rectPntCld;
 
   /**
    *  @brief    COMPLETE ME, CORBYN!

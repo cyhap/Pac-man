@@ -31,6 +31,7 @@
   * @date 11/25/2019
   * @brief This ROS Node is for running the object identification.
   */
+#include <memory>
 
 #include "Object.hpp"
 #include "GoodObject.hpp"
@@ -52,19 +53,17 @@
 *  @return	None
 */
 
-void pntCldCallback(const sensor_msgs::PointCloud2ConstPtr &aPtCloud) {
+void pntCldCallback(const sensor_msgs::PointCloud2 &aPtCloud) {
   // Determine what to do here.
   ROS_INFO_STREAM("Point Cloud Call back Successful.");
 
+  std::shared_ptr<pcl::PointCloud<pcl::PointXYZ> > tConvPntCld(
+      new pcl::PointCloud<pcl::PointXYZ>);
 
-  // Container for original & filtered data
-  pcl::PCLPointCloud2 *cloud = new pcl::PCLPointCloud2;
-  pcl::PCLPointCloud2ConstPtr cloudPtr(cloud);
+  pcl::fromROSMsg(aPtCloud, *tConvPntCld);
 
-  // Convert to PCL data type
-  pcl_conversions::toPCL(*aPtCloud, *cloud);
-
-  //cloudPtr->
+  // Pass this to set the pntCloud in the image processing Class
+  //tConvPntCld
 
 }
 

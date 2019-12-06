@@ -66,7 +66,7 @@ std::vector<std::shared_ptr<Object> > ImageProcessing::process() {
 
   // Blur the Image
   int kernelSize = 3;
-  cv::blur(rgbImg, blurImg, cv::Size(kernelSize, kernelSize));
+  cv::blur(*rgbImg, blurImg, cv::Size(kernelSize, kernelSize));
 
   cv::inRange(blurImg, lowGreen, highGreen, greenThresh);
   cv::inRange(blurImg, lowRed, highRed, redThresh);
@@ -128,15 +128,16 @@ std::vector<Object::Pose> ImageProcessing::processMask(
   return tReturn;
 }
 
-bool ImageProcessing::setRgbImg(const cv::Mat &aRgbImg) {
+bool ImageProcessing::setRgbImg(std::shared_ptr<const cv::Mat> aRgbImg) {
   bool validRGB = false;
-  if (aRgbImg.type() == CV_8UC3) {
+  if (aRgbImg && aRgbImg->type() == CV_8UC3) {
     validRGB = true;
     rgbImg = aRgbImg;
   }
   return validRGB;
 }
-bool ImageProcessing::setPntCld(pcl::PCLPointCloud2ConstPtr aPntCld) {
+bool ImageProcessing::setPntCld(
+    std::shared_ptr<const pcl::PointCloud<pcl::PointXYZ> > aPntCld) {
   bool validDpt = false;
   if (aPntCld) {
     validDpt = true;
@@ -148,22 +149,11 @@ bool ImageProcessing::setPntCld(pcl::PCLPointCloud2ConstPtr aPntCld) {
 Object::Pose ImageProcessing::extractPose(int x, int y) {
   Object::Pose tReturn;
   if (rectPntCld) {
-    // Fixme Yhap Determine if the x and y need to be converted (column/width)
-    // (row/height)
-    //pcl::uint32_t tWidth = rectPntCld->width;
-    //pcl::uint32_t tHeight = rectPntCld->height;
+    pcl::PointXYZ tPnt = rectPntCld->at(x, y);
 
-    // Convert the x,y index into the starting position in the data
-    pcl::uint32_t tDataStart = y * rectPntCld->row_step
-        + x * rectPntCld->point_step;
-    // Compute the XYZ Indices Relative to that starting Point
-    pcl::uint32_t tXIdx = tDataStart + rectPntCld->fields[0].offset;
-    pcl::uint32_t tYIdx = tDataStart + rectPntCld->fields[1].offset;
-    pcl::uint32_t tZIdx = tDataStart + rectPntCld->fields[2].offset;
-
-    tReturn.x = rectPntCld->data.at(tXIdx);
-    tReturn.y = rectPntCld->data.at(tYIdx);
-    tReturn.z = rectPntCld->data.at(tZIdx);
+    tReturn.x = tPnt.x;
+    tReturn.y = tPnt.y;
+    tReturn.z = tPnt.z;
 
   } else {
     // Fixme [Yhap] Figure out what to do in this case. (Means Null Pointer)

@@ -37,6 +37,8 @@
 #include "GoodObject.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc.hpp"
+#include "pcl/point_types.h"
+#include "pcl/point_cloud.h"
 
 #include "ros/ros.h"
 #include "gtest/gtest.h"
@@ -45,11 +47,15 @@ TEST(ImageProcessing, setRgbImgFunction) {
   // Create an all White Image
   cv::Scalar tWhite(255, 255, 255);
   int tImgSize = 401;
-  cv::Mat slate(tImgSize, tImgSize, CV_8UC3, tWhite);
+  std::shared_ptr<cv::Mat> slate;
+  slate = std::make_shared<cv::Mat>(
+      cv::Mat(tImgSize, tImgSize, CV_8UC3, tWhite));
 
   // Create a "Depth" Image where everything but the block is 10m away
   float tDefaultDepth = 10;  // Meters
-  cv::Mat depth(tImgSize, tImgSize, CV_32FC1, tDefaultDepth);
+  std::shared_ptr<cv::Mat> depth;
+  depth = std::make_shared<cv::Mat>(
+      cv::Mat(tImgSize, tImgSize, CV_32FC1, tDefaultDepth));
 
   // Create an Image Processing instance.
   ImageProcessing imageProc;
@@ -57,29 +63,45 @@ TEST(ImageProcessing, setRgbImgFunction) {
   ASSERT_TRUE(imageProc.setRgbImg(slate));
   ASSERT_FALSE(imageProc.setRgbImg(depth));
 }
-/*
-TEST(ImageProcessing, setPntCldFunction) {
-  // Create an all White Image
-  cv::Scalar tWhite(255, 255, 255);
-  int tImgSize = 401;
-  cv::Mat slate(tImgSize, tImgSize, CV_8UC3, tWhite);
 
-  // Create a "Depth" Image where everything but the block is 10m away
-  float tDefaultDepth = 10;  // Meters
-  cv::Mat depth(tImgSize, tImgSize, CV_32FC1, tDefaultDepth);
+TEST(ImageProcessing, setPntCldFunction) {
+  // Create a Point Cloud with fake data.
+  std::shared_ptr<pcl::PointCloud<pcl::PointXYZ> > cloud(
+      new pcl::PointCloud<pcl::PointXYZ>);
+
+  // Fill in the cloud data
+  int tImgSize = 401;
+  cloud->width = tImgSize;
+  cloud->height = tImgSize;
+  cloud->is_dense = false;
+  cloud->points.resize(cloud->width * cloud->height);
+
+  for (std::size_t i = 0; i < cloud->points.size(); ++i) {
+    cloud->points[i].x = 1024 * rand() / (RAND_MAX + 1.0f);
+    cloud->points[i].y = 1024 * rand() / (RAND_MAX + 1.0f);
+    cloud->points[i].z = 1024 * rand() / (RAND_MAX + 1.0f);
+  }
 
   // Create an Image Processing instance.
   ImageProcessing imageProc;
 
-  ASSERT_TRUE(imageProc.setDptImg(depth));
-  ASSERT_FALSE(imageProc.setDptImg(slate));
+  ASSERT_TRUE(imageProc.setPntCld(cloud));
 }
 
 TEST(ImageProcessing, CenteredGreenBlock) {
+  // Create the expected values.
+  Object::Pose tExpected;
+  tExpected.x = 10;
+  tExpected.y = 15;
+  tExpected.z = 20;
+
   // Create an all White Image
   cv::Scalar tWhite(255, 255, 255);
   int tImgSize = 401;
-  cv::Mat slate(tImgSize, tImgSize, CV_8UC3, tWhite);
+  std::shared_ptr<cv::Mat> slate;
+  slate = std::make_shared<cv::Mat>(
+      cv::Mat(tImgSize, tImgSize, CV_8UC3, tWhite));
+
   // Center of the Image is 200,200
   // Create a Rectangle Object to put at the center of our blank slate.
   int tHeight = 20;
@@ -94,28 +116,43 @@ TEST(ImageProcessing, CenteredGreenBlock) {
 
   // Place the Rectangle in the image.
   cv::Scalar tGreen(0, 255, 0);
-  cv::rectangle(slate, block, tGreen, CV_FILLED);
+  cv::rectangle(*slate, block, tGreen, CV_FILLED);
   // Slate will now have a centered green rectangle.
 
-  // Create a "Depth" Image where everything but the block is 10m away
-  float tDefaultDepth = 10;  // Meters
-  cv::Mat depth(tImgSize, tImgSize, CV_32FC1, tDefaultDepth);
+  // Create a Point Cloud with fake data.
+  std::shared_ptr<pcl::PointCloud<pcl::PointXYZ> > cloud(
+      new pcl::PointCloud<pcl::PointXYZ>);
 
-  // Update the depth of the block to be 7m away.
-  float tBlockDepth = 7;
-  cv::rectangle(depth, block, tBlockDepth, CV_FILLED);
+  // Fill in the cloud data
+  cloud->width = tImgSize;
+  cloud->height = tImgSize;
+  cloud->is_dense = false;
+  cloud->points.resize(cloud->width * cloud->height);
+
+  for (std::size_t i = 0; i < cloud->points.size(); ++i) {
+    cloud->points[i].x = 1024 * rand() / (RAND_MAX + 1.0f);
+    cloud->points[i].y = 1024 * rand() / (RAND_MAX + 1.0f);
+    cloud->points[i].z = 1024 * rand() / (RAND_MAX + 1.0f);
+  }
+
+  // Update the data corresponding to the block to be the expected Point.
+  for (int tXs = tX - tWidth / 2; tXs < tX + tWidth / 2; tXs++) {
+    for (int tYs = tY - tHeight / 2; tYs < tY + tHeight / 2; tYs++) {
+      pcl::PointXYZ &tPnt = cloud->at(tXs, tYs);
+      tPnt.x = tExpected.x;
+      tPnt.y = tExpected.y;
+      tPnt.z = tExpected.z;
+    }
+  }
 
   // Create an Image Processing instance.
   ImageProcessing imageProc;
   // Pass this information to the Image Processing Function.
-  imageProc.setDptImg(depth);
+  imageProc.setPntCld(cloud);
   imageProc.setRgbImg(slate);
   std::vector<std::shared_ptr<Object> > tObjects = imageProc.process();
   ASSERT_EQ(tObjects.size(), 1);
   std::shared_ptr<Object> tObj = *tObjects.begin();
-  // Should have a pose tBlockDepth away along the X direction. (0 Otherwise)
-  Object::Pose tExpected;
-  tExpected.x = tBlockDepth;
 
   Object::Pose tCompare = tObj->getPose();
   ASSERT_EQ(tCompare.x, tExpected.x);
@@ -125,7 +162,7 @@ TEST(ImageProcessing, CenteredGreenBlock) {
   ASSERT_EQ(tCompare.pitch, tExpected.pitch);
   ASSERT_EQ(tCompare.yaw, tExpected.yaw);
 }
-
+/*
 TEST(ImageProcessing, MultipleGreenBlocks) {
   // Create an all White Image
   cv::Scalar tWhite(255, 255, 255);
