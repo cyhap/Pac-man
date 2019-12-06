@@ -39,6 +39,7 @@
 #include "ImageProcessing.hpp"
 
 #include "ros/ros.h"
+#include "pacman/VecPoses.h"  // Our custom msg type
 #include "pacman/ObjPose.h"  // Our custom msg type
 #include "image_transport/image_transport.h"
 #include "sensor_msgs/PointCloud2.h"
@@ -141,7 +142,7 @@ int main(int argc, char **argv) {
                                 &Identification::rgbImgCallback, &identifier);
 
   // Publisher for Good Object Poses obtained from Image Processing
-  ros::Publisher objpub = nh.advertise<pacman::ObjPose>("imgPoses", 1000);
+  ros::Publisher objpub = nh.advertise<pacman::VecPoses>("imgPoses", 1000);
 
   //#### Process ####//
   // process images
@@ -158,21 +159,30 @@ int main(int argc, char **argv) {
   while (ros::ok()) {
     // Process the Images and Extract Objects
     std::vector<std::shared_ptr<Object> > tObjs = identifier.eyes.process();
-    std::vector<Object::Pose> toSend;
+    pacman::VecPoses output;
+
 
     // Parse Out Good Objects to Publish on a Topic
     // Update Nav Stack Map with Bad Objects.
     for (const auto &tObj : tObjs) {
-      // update if statement to make sure only good poses get published
-      if (true) {
-        toSend.emplace_back(tObj->getPose());
+      if (tObj->checkCollect()) {
+        // Convert the Pose to the ROS Pose Msg Type
+        pacman::ObjPose tPosMsg;
+        Object::Pose toSend = tObj->getPose();
+        tPosMsg.x = toSend.x;
+        tPosMsg.y = toSend.y;
+        tPosMsg.z = toSend.z;
+        tPosMsg.angle1 = toSend.roll;
+        tPosMsg.angle2 = toSend.pitch;
+        tPosMsg.angle3 = toSend.yaw;
+        output.poses.emplace_back(tPosMsg);
       } else {
-        // Learn how to send this to the Map!!!
+        // Learn how to send this bad object to the Map!!!
       }
     }
 
     // Publish the list of Good Objects.
-    // Discuss with Ari.
+    objpub.publish(output);
 
     ros::spinOnce();
     loop_rate.sleep();
