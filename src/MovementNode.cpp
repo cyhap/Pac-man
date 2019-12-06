@@ -45,39 +45,72 @@
 
 #include "ros/ros.h"
 #include "pacman/ObjPose.h"  // Our custom msg type
+#include "pacman/VecPoses.h"  // Our custom msg type
 #include "kobuki_msgs/BumperEvent.h"
 #include "gazebo_msgs/DeleteModel.h"
 #include "geometry_msgs/Twist.h"
 #include "sensor_msgs/LaserScan.h"
 
-std::shared_ptr<Movement> movement;  // SHOULD NOT USE GLOBAL VARIABLES ----
-
-
 class Mover {
- private:
+ public:
+  std::shared_ptr<Movement> movement;
   bool navStackStatus;
   bool allowImgCallback;
-
- public:
+  // Constructor
   Mover() : navStackStatus { false }, allowImgCallback { true } {}
-  virtual ~Mover() {}
+  // getter
   bool getAllowImgCallback() { return allowImgCallback; }
+  // setter
   void setAllowImgCallback(bool status_) { allowImgCallback = status_; }
-  void imgCallback(const pacman::ObjPose::ConstPtr& imgPose) {
+  // Image Poses Callback
+  void imgCallback(const pacman::VecPoses::ConstPtr& vecPoses) {
     if (allowImgCallback) {
-      //  -- Find the closest pose from the input
-      Object::Pose closestPose;
-      closestPose.x = imgPose->x;
-      closestPose.y = imgPose->y;
-      closestPose.yaw = imgPose->angle3;
-      //  -- Send closestPose to Navigation Stack
       allowImgCallback = false;
+      //  -- Find the closest pose from the vector input
+      pacman::ObjPose closestPose;
+      double minMag = 100;
+      for (auto indpose : vecPoses->poses) {
+        // Grab x,y,z coordinates of current pose
+        double xpos = indpose.x;
+        double ypos = indpose.y;
+        double zpos = indpose.z;
+        // Obtain magnitude from pose to base
+        double mag = sqrt(pow(xpos,2) + pow(ypos,2) + pow(zpos,2));
+        if (mag < minMag) {
+          minMag = mag;
+          closestPose = indpose;
+        }
+      }
+      Object::Pose navPose;
+      navPose.x = closestPose.x;
+      navPose.y = closestPose.y;
+      navPose.z = closestPose.z;
+      //  Send Goal Pose to Navigation Stack
+      // ----------------------------- INSERT SERVICE CALL HERE
       ROS_ERROR_STREAM("Sent Pose to Navigation stack");
+      ROS_WARN_STREAM("[" << navPose.x << "," << navPose.y
+                                             << "," << navPose.z << "]");
     } else {
       ROS_ERROR_STREAM("Navigation stack is runnning");
     }
   }
+  // Nan
+  static bool isNan(float i) {
+    return std::isnan(i);
+  }
+  // Laser Scanner Callback
+  void laserScanCallback(const sensor_msgs::LaserScan::ConstPtr& msg) {
+    ROS_INFO_STREAM("Received LaserScan");
+    std::vector<float> ranges = msg->ranges;
+    // Replace all nans with max range to get the actual minimum
+    std::replace_if(ranges.begin(), ranges.end(), isNan, msg->range_max);
+    float minRange = *std::min_element(ranges.begin(), ranges.end());
+    ROS_INFO_STREAM("The closest object is " << minRange << "(m) away.");
+    movement->updateMinDist(minRange);
+  }
+  // Nav Stack Status Checker
   bool checkVisuals() {
+    // ----------------------------- FILL IN CODE HERE
     //  -- Call Navigation Stack Flag
     //  if (<nav stack is still running>)
     //    navStackStatus = true;
@@ -90,19 +123,6 @@ class Mover {
 };
 
 
-static bool isNan(float i) {
-  return std::isnan(i);
-}
-void laserScanCallback(const sensor_msgs::LaserScan::ConstPtr& msg) {
-  ROS_INFO_STREAM("Received LaserScan");
-  std::vector<float> ranges = msg->ranges;
-  // Replace all nans with max range to get the actual minimum
-  std::replace_if(ranges.begin(), ranges.end(), isNan, msg->range_max);
-  float minRange = *std::min_element(ranges.begin(), ranges.end());
-  ROS_INFO_STREAM("The closest object is " << minRange << "(m) away.");
-  movement->updateMinDist(minRange);
-}
-
 /**
 *  @brief   This is the main function
 *  @param	  argc for ROS
@@ -110,7 +130,7 @@ void laserScanCallback(const sensor_msgs::LaserScan::ConstPtr& msg) {
 *  @return	0 Exit status
 */
 int main(int argc, char **argv) {
-  // Initialize the walker node.
+  // Initialize the Movement node.
   ros::init(argc, argv, "movement");
 
   // Create a node handle
@@ -121,13 +141,13 @@ int main(int argc, char **argv) {
 
   // Initialize the shared pointer to the movement class that will be used to
   // process the point cloud call backs.
-  movement.reset(new Movement);
+  mover.movement.reset(new Movement);
 
   // Publish on the topic required to move turtlebot
   // This will be remmapped in the launch file.
   auto pub = nm.advertise <geometry_msgs::Twist> ("/cmd_vel_mux/input/navi",
                                                                         1000);
-  auto lsrSub = nm.subscribe("/scan", 1000, laserScanCallback);
+  auto lsrSub = nm.subscribe("/scan", 1000, &Mover::laserScanCallback, &mover);
   auto imgSub = nm.subscribe("imgPoses", 1000, &Mover::imgCallback, &mover);
 
   // Publish at 10 Hz.
@@ -136,13 +156,12 @@ int main(int argc, char **argv) {
   while (ros::ok()) {
     // Use the Navigation Stack status to decide movement
     if (!mover.checkVisuals()) {  // Returns navigation stack flag
-      ROS_INFO_STREAM("Movement Search with Laser Scanner");
       // Allow image callback to look for new objects
       mover.setAllowImgCallback(true);
 
       // Set the turtlebot velocities from the laser scanner callback.
       geometry_msgs::Twist velMsg;
-      std::pair<double, double> output = movement->computeVelocities();
+      std::pair<double, double> output = mover.movement->computeVelocities();
       ROS_WARN_STREAM("Vels: " << output.first << "," << output.second);
       velMsg.linear.x = output.first;
       velMsg.angular.z = output.second;
