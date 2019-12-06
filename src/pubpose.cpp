@@ -37,6 +37,7 @@
 #include "Object.hpp"
 
 #include "pacman/ObjPose.h"  // Our custom msg type
+#include "pacman/VecPoses.h"  // Our custom msg type
 #include "ros/ros.h"
 #include "geometry_msgs/Point.h"
 
@@ -51,38 +52,44 @@
 int main(int argc, char **argv) {
   ros::init(argc, argv, "pubpose");
   ros::NodeHandle nh;
-  ros::Publisher ipub = nh.advertise<pacman::ObjPose>("imgPoses", 1000);
+  ros::Publisher ipub = nh.advertise<pacman::VecPoses>("imgPoses", 1000);
   ros::Publisher opub = nh.advertise<geometry_msgs::Point>("listobjects", 1000);
 
   // Set random Poses
-  std::vector<double> xs{0.00, 1.00, 2.00, 3.00, 4.00, 5.00};
-  std::vector<double> ys{0.00, 9.00, 7.00, 5.00, 3.00, 1.00};
-  std::vector<double> zs{0.00, 2.00, 4.00, 6.00, 4.00, 2.00};
+  std::vector<double> xs{1.00, 2.00, 3.00, 4.00, 5.00};
+  std::vector<double> ys{9.00, 7.00, 5.00, 3.00, 1.00};
+  std::vector<double> zs{2.00, 4.00, 6.00, 4.00, 2.00};
 
   // Loop at 2Hz until the node is shut down
   ros::Rate rate(2);
 
   int counter = 0;
+  pacman::VecPoses vecP;
 
   while (ros::ok()) {
-    while (counter < 6) {
-      pacman::ObjPose pose;
-      pose.x = xs[counter];
-      pose.y = ys[counter];
-      pose.angle3 = zs[counter];
-
+    while (counter < 4) {
       geometry_msgs::Point msg;
       msg.x = xs[counter];
       msg.y = ys[counter];
       msg.z = zs[counter];
 
-      counter++;
-
-      ipub.publish(pose);
       opub.publish(msg);
 
       // Send a message to rosout with the details.
-      ROS_INFO_STREAM("Sent Pose");
+      ROS_INFO_STREAM("Sent Point");
+
+      pacman::ObjPose pose;
+      pose.x = xs[counter];
+      pose.y = ys[counter];
+      pose.angle3 = zs[counter];
+      vecP.poses.emplace_back(pose);
+
+      counter++;
+
+      if (counter == 4) {
+        ipub.publish(vecP);
+        ROS_INFO_STREAM("Sent Vecs");
+      }
 
       // Give one-time control to ROS
       ros::spinOnce();
