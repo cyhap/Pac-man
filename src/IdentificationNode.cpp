@@ -96,7 +96,7 @@ class Identification {
     // going out of scope instead...
     //std::shared_ptr<cv::Mat> pic(new cv::Mat(cv_ptr->image));
     // Consider using above than below
-    std::shared_ptr<cv::Mat> pic(&cv_ptr->image);
+    std::shared_ptr<const cv::Mat> pic(&cv_ptr->image);
     eyes.setRgbImg(pic);
   }
 };
