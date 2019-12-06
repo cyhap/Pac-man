@@ -43,6 +43,21 @@
 #include "ros/ros.h"
 #include "gtest/gtest.h"
 
+void depthCloudGenHelper(int aStartX, int aStopX, int aStartY, int aStopY,
+                         std::shared_ptr<pcl::PointCloud<pcl::PointXYZ> > cloud,
+                         const Object::Pose &tPoint) {
+  // Sets the Point Cloud to have the X Y Z Coordinates from tPoint
+  // over the range of points provided along the x and y axis.
+  for (int tXs = aStartX; tXs < aStopX; tXs++) {
+    for (int tYs = aStartY; tYs < aStopY; tYs++) {
+      pcl::PointXYZ &tPnt = cloud->at(tXs, tYs);
+      tPnt.x = tPoint.x;
+      tPnt.y = tPoint.y;
+      tPnt.z = tPoint.z;
+    }
+  }
+}
+
 TEST(ImageProcessing, setRgbImgFunction) {
   // Create an all White Image
   cv::Scalar tWhite(255, 255, 255);
@@ -136,14 +151,7 @@ TEST(ImageProcessing, CenteredGreenBlock) {
   }
 
   // Update the data corresponding to the block to be the expected Point.
-  for (int tXs = tX - tWidth / 2; tXs < tX + tWidth / 2; tXs++) {
-    for (int tYs = tY - tHeight / 2; tYs < tY + tHeight / 2; tYs++) {
-      pcl::PointXYZ &tPnt = cloud->at(tXs, tYs);
-      tPnt.x = tExpected.x;
-      tPnt.y = tExpected.y;
-      tPnt.z = tExpected.z;
-    }
-  }
+  depthCloudGenHelper(tX, tX + tWidth, tY, tY + tHeight, cloud, tExpected);
 
   // Create an Image Processing instance.
   ImageProcessing imageProc;
@@ -162,12 +170,21 @@ TEST(ImageProcessing, CenteredGreenBlock) {
   ASSERT_EQ(tCompare.pitch, tExpected.pitch);
   ASSERT_EQ(tCompare.yaw, tExpected.yaw);
 }
-/*
+
 TEST(ImageProcessing, MultipleGreenBlocks) {
+  // Create the expected values.
+  Object::Pose tExpected;
+  tExpected.x = 10;
+  tExpected.y = 15;
+  tExpected.z = 20;
+
   // Create an all White Image
   cv::Scalar tWhite(255, 255, 255);
   int tImgSize = 401;
-  cv::Mat slate(tImgSize, tImgSize, CV_8UC3, tWhite);
+  std::shared_ptr<cv::Mat> slate;
+  slate = std::make_shared<cv::Mat>(
+      cv::Mat(tImgSize, tImgSize, CV_8UC3, tWhite));
+
   // Center of the Image is 200,200
   // Create a Rectangle Object to put at the center of our blank slate.
   int tHeight = 20;
@@ -182,32 +199,55 @@ TEST(ImageProcessing, MultipleGreenBlocks) {
 
   // Place the Rectangle in the image.
   cv::Scalar tGreen(0, 255, 0);
-  cv::rectangle(slate, block, tGreen, CV_FILLED);
+  cv::rectangle(*slate, block, tGreen, CV_FILLED);
   // Slate will now have a centered green rectangle.
 
-  // Add an additional Rectangle in theimage.
+  // Add an additional Rectangle in the image.
   cv::Rect2i block2(0, 0, tWidth, tHeight);
-  cv::rectangle(slate, block2, tGreen, CV_FILLED);
+  cv::rectangle(*slate, block2, tGreen, CV_FILLED);
 
-  // Create a "Depth" Image where everything but the block is 10m away
-  // Note Depth is less relevant for this test.
-  float tDefaultDepth = 10;  // Meters
-  cv::Mat depth(tImgSize, tImgSize, CV_32FC1, tDefaultDepth);
+  // Create a Point Cloud with fake data.
+  std::shared_ptr<pcl::PointCloud<pcl::PointXYZ> > cloud(
+      new pcl::PointCloud<pcl::PointXYZ>);
+
+  // Fill in the cloud data
+  cloud->width = tImgSize;
+  cloud->height = tImgSize;
+  cloud->is_dense = false;
+  cloud->points.resize(cloud->width * cloud->height);
+
+  for (std::size_t i = 0; i < cloud->points.size(); ++i) {
+    cloud->points[i].x = 1024 * rand() / (RAND_MAX + 1.0f);
+    cloud->points[i].y = 1024 * rand() / (RAND_MAX + 1.0f);
+    cloud->points[i].z = 1024 * rand() / (RAND_MAX + 1.0f);
+  }
+  // Note the points are irrelevant for this test.
+
 
   // Create an Image Processing instance.
   ImageProcessing imageProc;
+
   // Pass this information to the Image Processing Function.
-  imageProc.setDptImg(depth);
+  imageProc.setPntCld(cloud);
   imageProc.setRgbImg(slate);
   std::vector<std::shared_ptr<Object> > tObjects = imageProc.process();
   ASSERT_EQ(tObjects.size(), 2);
 }
 
 TEST(ImageProcessing, MultipleMultiColoredBlocks) {
+  // Create the expected values.
+  Object::Pose tExpected;
+  tExpected.x = 10;
+  tExpected.y = 15;
+  tExpected.z = 20;
+
   // Create an all White Image
   cv::Scalar tWhite(255, 255, 255);
   int tImgSize = 401;
-  cv::Mat slate(tImgSize, tImgSize, CV_8UC3, tWhite);
+  std::shared_ptr<cv::Mat> slate;
+  slate = std::make_shared<cv::Mat>(
+      cv::Mat(tImgSize, tImgSize, CV_8UC3, tWhite));
+
   // Center of the Image is 200,200
   // Create a Rectangle Object to put at the center of our blank slate.
   int tHeight = 20;
@@ -222,32 +262,47 @@ TEST(ImageProcessing, MultipleMultiColoredBlocks) {
 
   // Place the Rectangle in the image.
   cv::Scalar tGreen(0, 255, 0);
-  cv::rectangle(slate, block, tGreen, CV_FILLED);
+  cv::rectangle(*slate, block, tGreen, CV_FILLED);
   // Slate will now have a centered green rectangle.
 
   // Add an additional Rectangle in the image.
   cv::Rect2i block2(0, 0, tWidth, tHeight);
-  cv::rectangle(slate, block2, tGreen, CV_FILLED);
+  cv::rectangle(*slate, block2, tGreen, CV_FILLED);
 
   // Add an addition Red rectangle in the image
   cv::Rect2i block3(100, 0, tWidth, tHeight);
   cv::Scalar tRed(0, 0, 255);
-  cv::rectangle(slate, block3, tRed, CV_FILLED);
+  cv::rectangle(*slate, block3, tRed, CV_FILLED);
 
-  // Create a "Depth" Image where everything but the block is 10m away
-  // Note Depth is less relevant for this test.
-  float tDefaultDepth = 10;  // Meters
-  cv::Mat depth(tImgSize, tImgSize, CV_32FC1, tDefaultDepth);
+  // Create a Point Cloud with fake data.
+  std::shared_ptr<pcl::PointCloud<pcl::PointXYZ> > cloud(
+      new pcl::PointCloud<pcl::PointXYZ>);
+
+  // Fill in the cloud data
+  cloud->width = tImgSize;
+  cloud->height = tImgSize;
+  cloud->is_dense = false;
+  cloud->points.resize(cloud->width * cloud->height);
+
+  for (std::size_t i = 0; i < cloud->points.size(); ++i) {
+    cloud->points[i].x = 1024 * rand() / (RAND_MAX + 1.0f);
+    cloud->points[i].y = 1024 * rand() / (RAND_MAX + 1.0f);
+    cloud->points[i].z = 1024 * rand() / (RAND_MAX + 1.0f);
+  }
+  // Note the points are irrelevant for this test.
+
 
   // Create an Image Processing instance.
   ImageProcessing imageProc;
+
   // Pass this information to the Image Processing Function.
-  imageProc.setDptImg(depth);
+  imageProc.setPntCld(cloud);
   imageProc.setRgbImg(slate);
+
   std::vector<std::shared_ptr<Object> > tObjects = imageProc.process();
   ASSERT_EQ(tObjects.size(), 3);
 }
- */
+
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
