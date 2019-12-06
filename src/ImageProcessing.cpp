@@ -33,18 +33,22 @@
   *        data together.
  */
 
+#include <memory>
+
 #include "ImageProcessing.hpp"
 #include "opencv2/imgcodecs.hpp"
 #include "opencv2/imgproc.hpp"
+#include "pcl/point_cloud.h"
+#include "pcl/point_types.h"
 
 #include "GoodObject.hpp"
 #include "BadObject.hpp"
 
 ImageProcessing::ImageProcessing()
     :
-    rgbImg(),
-    rectPntCld() {
-  // Fixme [Yhap] Consider what default images should be used if any at all.
+    rgbImg(
+        new cv::Mat(500, 500, CV_8UC3, cv::Scalar(255, 255, 255))),
+    rectPntCld(new pcl::PointCloud<pcl::PointXYZ>) {
 }
 
 ImageProcessing::~ImageProcessing() {
@@ -54,37 +58,41 @@ std::vector<std::shared_ptr<Object> > ImageProcessing::process() {
   // Create the return variable.
   std::vector<std::shared_ptr<Object> > tReturn;
 
-  // Define the  BGR Masks used to detect blocks
-  // Green Block
-  cv::Scalar lowGreen(0, 200, 0);
-  cv::Scalar highGreen(0, 255, 0);
-  // Red Block
-  cv::Scalar lowRed(0, 0, 200);
-  cv::Scalar highRed(0, 0, 255);
+  // Only perform processing if there is data to process.
+  // Otherwise return an empty list.
+  if (rgbImg && rectPntCld) {
+    // Define the  BGR Masks used to detect blocks
+    // Green Block
+    cv::Scalar lowGreen(0, 200, 0);
+    cv::Scalar highGreen(0, 255, 0);
+    // Red Block
+    cv::Scalar lowRed(0, 0, 200);
+    cv::Scalar highRed(0, 0, 255);
 
-  cv::Mat blurImg, greenThresh, redThresh;
+    cv::Mat blurImg, greenThresh, redThresh;
 
-  // Blur the Image
-  int kernelSize = 3;
-  cv::blur(*rgbImg, blurImg, cv::Size(kernelSize, kernelSize));
+    // Blur the Image
+    int kernelSize = 3;
+    cv::blur(*rgbImg, blurImg, cv::Size(kernelSize, kernelSize));
 
-  cv::inRange(blurImg, lowGreen, highGreen, greenThresh);
-  cv::inRange(blurImg, lowRed, highRed, redThresh);
+    cv::inRange(blurImg, lowGreen, highGreen, greenThresh);
+    cv::inRange(blurImg, lowRed, highRed, redThresh);
 
-  // Retrieve Poses for Good Objects
-  std::vector<Object::Pose> goodPoses = processMask(greenThresh);
-  // Retrieve Poses for Bad Objects
-  std::vector<Object::Pose> badPoses = processMask(redThresh);
+    // Retrieve Poses for Good Objects
+    std::vector<Object::Pose> goodPoses = processMask(greenThresh);
+    // Retrieve Poses for Bad Objects
+    std::vector<Object::Pose> badPoses = processMask(redThresh);
 
-  // Create Good Objects with the goodPoses
-  for (const auto &tPose : goodPoses) {
-    std::shared_ptr<Object> tAdd(new GoodObject(tPose));
-    tReturn.emplace_back(tAdd);
-  }
-  // Create Bad Objects with the badPoses
-  for (const auto &tPose : badPoses) {
-    std::shared_ptr<Object> tAdd(new BadObject(tPose));
-    tReturn.emplace_back(tAdd);
+    // Create Good Objects with the goodPoses
+    for (const auto &tPose : goodPoses) {
+      std::shared_ptr<Object> tAdd(new GoodObject(tPose));
+      tReturn.emplace_back(tAdd);
+    }
+    // Create Bad Objects with the badPoses
+    for (const auto &tPose : badPoses) {
+      std::shared_ptr<Object> tAdd(new BadObject(tPose));
+      tReturn.emplace_back(tAdd);
+    }
   }
 
   return tReturn;
@@ -119,7 +127,6 @@ std::vector<Object::Pose> ImageProcessing::processMask(
 
   // Obtain the corresponding XYZ Point
   for (const auto &tPixel : pixels) {
-    // FIXME[Yhap] This assumes that the depth image was also set.
     Object::Pose tPose = extractPose(tPixel.x, tPixel.y);
 
     // Add that Pose to the list of poses.
@@ -156,7 +163,7 @@ Object::Pose ImageProcessing::extractPose(int x, int y) {
     tReturn.z = tPnt.z;
 
   } else {
-    // Fixme [Yhap] Figure out what to do in this case. (Means Null Pointer)
+    // This should never happen.
   }
   return tReturn;
 }
