@@ -35,6 +35,8 @@
 #ifndef INCLUDE_BADOBJECT_HPP_
 #define INCLUDE_BADOBJECT_HPP_
 
+#include <vector>
+
 #include "Object.hpp"
 
 class BadObject: public Object {
@@ -49,7 +51,7 @@ class BadObject: public Object {
   *  @param	  loc Pose location of Object
   *  @return	None
   */
-  BadObject(Object::Pose);
+  explicit BadObject(Object::Pose);
 
   /**
   *  @brief   This is the destructor for the BadObject Class
@@ -71,7 +73,7 @@ class BadObject: public Object {
   *  @return	xyz vector of x,y,z coordinates
   */
   virtual std::vector<double> getXYZ();
-  
+
   /**
   *  @brief   This is an override function to check the collect status of the BadObject
   *  @param	  None

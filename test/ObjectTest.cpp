@@ -46,7 +46,7 @@ TEST(GoodObject, collecttrue) {
   ASSERT_TRUE(obj1.checkCollect());
 }
 
-TEST(GoodObject, objxyz) {
+TEST(GoodObject, goodobjxyz) {
   Object::Pose locData;
   locData.x = 1.00;
   locData.y = 2.00;
@@ -59,7 +59,7 @@ TEST(GoodObject, objxyz) {
   ASSERT_EQ(objXYZ, testXYZ);
 }
 
-TEST(GoodObject, objpose) {
+TEST(GoodObject, goodobjpose) {
   Object::Pose locData;
   locData.x = 1.00;
   locData.y = 4.00;
@@ -84,6 +84,39 @@ TEST(BadObject, collectfalse) {
   BadObject obj1(locData);
 
   ASSERT_FALSE(obj1.checkCollect());
+}
+
+TEST(BadObject, badobjxyz) {
+  Object::Pose locData;
+  locData.x = 7.00;
+  locData.y = 0.00;
+  locData.z = 2.00;
+
+  BadObject obj1(locData);
+  std::vector<double> objXYZ = obj1.getXYZ();
+  std::vector<double> testXYZ{7.00, 0.00, 2.00};
+
+  ASSERT_EQ(objXYZ, testXYZ);
+}
+
+TEST(BadObject, badobjpose) {
+  Object::Pose locData;
+  locData.x = 1.00;
+  locData.y = 2.00;
+  locData.z = 3.00;
+  locData.roll = 4.00;
+  locData.pitch = 5.00;
+  locData.yaw = 6.00;
+
+  BadObject obj1(locData);
+  Object::Pose objLoc = obj1.getPose();
+
+  EXPECT_EQ(objLoc.x, locData.x);
+  EXPECT_EQ(objLoc.y, locData.y);
+  EXPECT_EQ(objLoc.z, locData.z);
+  EXPECT_EQ(objLoc.roll, locData.roll);
+  EXPECT_EQ(objLoc.pitch, locData.pitch);
+  EXPECT_EQ(objLoc.yaw, locData.yaw);
 }
 
 

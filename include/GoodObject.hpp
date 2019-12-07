@@ -35,6 +35,8 @@
 #ifndef INCLUDE_GOODOBJECT_HPP_
 #define INCLUDE_GOODOBJECT_HPP_
 
+#include <vector>
+
 #include "Object.hpp"
 
 class GoodObject: public Object {
@@ -49,7 +51,7 @@ class GoodObject: public Object {
   *  @param	  loc Pose location of Object
   *  @return	None
   */
-  GoodObject(Object::Pose loc);
+  explicit GoodObject(Object::Pose loc);
 
   /**
   *  @brief   This is the destructor for the GoodObject Class
@@ -71,7 +73,7 @@ class GoodObject: public Object {
   *  @return	xyz vector of x,y,z coordinates
   */
   virtual std::vector<double> getXYZ();
-  
+
   /**
   *  @brief   This is an override function to check the collect status of the GoodObject
   *  @param	  None
