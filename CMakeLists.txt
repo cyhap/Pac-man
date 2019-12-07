@@ -73,32 +73,25 @@ add_dependencies(navigation pacman_generate_messages_cpp)
 #############
 ## Testing ##
 #############
+if(CATKIN_ENABLE_TESTING)
+  add_library(movementlibrary src/Movement.cpp)
+  add_library(objectlibrary src/GoodObject.cpp src/BadObject.cpp)
+  add_library(objectlistlibrary src/ObjectList.cpp src/GoodObject.cpp)
+  add_library(imageProcesinglibrary src/ImageProcessing.cpp)
 
-add_library(movementlibrary src/Movement.cpp)
-add_library(objectlibrary src/GoodObject.cpp src/BadObject.cpp)
-add_library(objectlistlibrary src/ObjectList.cpp src/GoodObject.cpp)
-add_library(imageProcesinglibrary src/ImageProcessing.cpp)
-
-find_package(rostest REQUIRED)
-## Add gtest based cpp test target and link libraries
-
-catkin_add_gtest(movement_test test/MovementTest.cpp)
-if(TARGET movement_test)
+  find_package(rostest REQUIRED)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 --coverage")
+  
+  ## Add gtest based cpp test target and link libraries
+  catkin_add_gtest(movement_test test/MovementTest.cpp)
   target_link_libraries(movement_test movementlibrary ${catkin_LIBRARIES})
-endif()
 
-catkin_add_gtest(objects_test test/ObjectTest.cpp)
-if(TARGET objects_test)
+  catkin_add_gtest(objects_test test/ObjectTest.cpp)
   target_link_libraries(objects_test objectlibrary ${catkin_LIBRARIES})
-endif()
 
-catkin_add_gtest(objectlist_test test/ObjectListTest.cpp)
-if(TARGET objectlist_test)
+  catkin_add_gtest(objectlist_test test/ObjectListTest.cpp)
   target_link_libraries(objectlist_test objectlistlibrary ${catkin_LIBRARIES})
-endif()
 
-catkin_add_gtest(imageProcessing_test test/ImageProcessingTest.cpp)
-if(TARGET imageProcessing_test)
+  catkin_add_gtest(imageProcessing_test test/ImageProcessingTest.cpp)
   target_link_libraries(imageProcessing_test imageProcesinglibrary objectlibrary ${catkin_LIBRARIES})
 endif()
-
