@@ -35,13 +35,12 @@
 #ifndef INCLUDE_OBJECTLIST_HPP_
 #define INCLUDE_OBJECTLIST_HPP_
 
-#include <memory>
 #include <vector>
 
 #include "Object.hpp"
 #include "GoodObject.hpp"
 
-#include "geometry_msgs/Point.h"
+#include "pacman/ObjPose.h"  // Our custom msg data
 
 class ObjectList {
  private:
@@ -75,7 +74,7 @@ class ObjectList {
     *  @param	  obj Pointer to the object found
     *  @return	None
     */
-    void objsCallback(const geometry_msgs::Point::ConstPtr&);
+    void objsCallback(const pacman::ObjPose::ConstPtr&);
 };
 
 #endif  // INCLUDE_OBJECTLIST_HPP_

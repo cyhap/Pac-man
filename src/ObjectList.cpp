@@ -33,14 +33,12 @@
   */
 
 #include <vector>
-#include "ros/ros.h"
-// #include <memory>
+//#include "ros/ros.h"
 
 #include "ObjectList.hpp"
 #include "Object.hpp"
-// #include "GoodObject.hpp"
 
-#include "geometry_msgs/Point.h"
+#include "pacman/ObjPose.h"  // Our custom msg data
 
 ObjectList::ObjectList() {
   numberOfObjects = 0;
@@ -49,22 +47,21 @@ ObjectList::ObjectList() {
 ObjectList::~ObjectList() {}
 
 int ObjectList::addObjectFound(Object::Pose objpose) {
-//  int objNumber = numberOfObjects+1;
-//  std::shared_ptr<Object> obj(new GoodObject(objNumber, objpose));
-
+  // Add object Pose to vector
   objectsFound.emplace_back(objpose);
+  // update variable size of vector
   numberOfObjects = objectsFound.size();
   return numberOfObjects;
 }
 
-void ObjectList::objsCallback(const geometry_msgs::Point::ConstPtr& msg) {
+void ObjectList::objsCallback(const pacman::ObjPose::ConstPtr& obj) {
   Object::Pose pose;
-  pose.x = msg->x;
-  pose.y = msg->y;
-  pose.z = msg->z;
+  pose.x = obj->x;
+  pose.y = obj->y;
+  pose.z = obj->z;
   int count_ = addObjectFound(pose);
-  ROS_INFO_STREAM(
-      "An Object Pose has been added to list of collected objects!");
+  /*
+  ROS_INFO_STREAM("An Object has been added to list of collected objects!");
   ROS_INFO_STREAM("There are " << count_ << " objects collected");
   if (count_ == 5) {
     ROS_WARN_STREAM("Collected All Objects!");
@@ -72,5 +69,6 @@ void ObjectList::objsCallback(const geometry_msgs::Point::ConstPtr& msg) {
       ROS_INFO_STREAM(
           "[" << element.x << "," << element.y << "," << element.z << "]");
   }
+  */
 }
 

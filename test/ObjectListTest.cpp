@@ -34,7 +34,7 @@
 
 #include "ObjectList.hpp"
 #include "Object.hpp"
-#include "GoodObject.hpp"
+
 #include "ros/ros.h"
 #include "gtest/gtest.h"
 
