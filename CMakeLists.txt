@@ -62,9 +62,9 @@ add_executable(pubpose src/pubpose.cpp)
 target_link_libraries(pubpose ${catkin_LIBRARIES})
 add_dependencies(pubpose pacman_generate_messages_cpp)
 
-add_executable(object src/IdentificationNode.cpp src/GoodObject.cpp src/BadObject.cpp src/ImageProcessing.cpp)
-target_link_libraries(object ${catkin_LIBRARIES})
-add_dependencies(object pacman_generate_messages_cpp)
+add_executable(identification src/IdentificationNode.cpp src/GoodObject.cpp src/BadObject.cpp src/ImageProcessing.cpp)
+target_link_libraries(identification ${catkin_LIBRARIES})
+add_dependencies(identification pacman_generate_messages_cpp)
 
 add_executable(navigation src/NavigationNode.cpp)
 target_link_libraries(navigation ${catkin_LIBRARIES})

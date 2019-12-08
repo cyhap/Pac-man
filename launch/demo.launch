@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<launch>
+
+  <include file="$(find turtlebot_gazebo)/launch/turtlebot_world.launch" >
+    <arg name="world_file" value="$(find pacman)/data/worlds/demo_world.world" />
+  </include>  
+  
+  
+  <!-- node to throttle model states topic -->
+  <node name="model_state_throttler" 
+        type="throttle"
+        pkg="topic_tools" 
+        args="messages /gazebo/model_states 1 /my_model_states" />
+
+  <node
+    name = "movement"
+    pkg = "pacman"
+    type = "movement"
+  />
+  <node
+    name = "navigation"
+    pkg = "pacman"
+    type = "navigation"
+  />
+  <!--
+    <node
+    name = "Eyes"
+    pkg = "pacman"
+    type = "identification"
+  />
+
+      output = "screen"
+    launch-prefix = "gnome-terminal DASH DASH command"
+  -->
+
+</launch>
