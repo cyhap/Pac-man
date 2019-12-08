@@ -33,6 +33,20 @@ The following programs/packages are used and must be installed:
 * Gazebo
 * Turtlebot_Gazebo
 
+Our demonstration runs on Gazebo 7.16.0, issues may occur if using an older version of gazebo
+In order to update gazebo follow the code below:
+```
+sudo sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list'
+
+wget http://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
+
+sudo apt-get update
+
+sudo apt-get install gazebo7 -y
+```
+
+
+
 ## Download Package
 ```
 cd <your catkin workspace>/src
