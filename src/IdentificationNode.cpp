@@ -120,10 +120,11 @@ int main(int argc, char **argv) {
   Identification identifier;
 
   // Update the Masks we want for Good and Bad Objects
-  cv::Scalar lowGood;
-  cv::Scalar highGood;
-  cv::Scalar lowBad;
-  cv::Scalar highBad;
+  // Red will be considered Good (The Strawberry)
+  cv::Scalar lowGood(0, 0, 200);
+  cv::Scalar highGood(0, 0, 255);
+  cv::Scalar lowBad(200, 0, 0);
+  cv::Scalar highBad(255, 0, 0);
 
   identifier.eyes.setGoodObjectMask(lowGood, highGood);
   identifier.eyes.setBadObjectMask(lowBad, highBad);
