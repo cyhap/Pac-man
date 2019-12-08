@@ -16,7 +16,11 @@
     name = "movement"
     pkg = "pacman"
     type = "movement"
-  />
+  >
+    <remap from="cmd_vel" to="/cmd_vel_mux/input/teleop" />
+  </node>
+
+
   <node
     name = "navigation"
     pkg = "pacman"
