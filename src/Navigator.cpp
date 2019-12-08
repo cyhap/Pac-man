@@ -132,7 +132,6 @@ bool Navigator::checkVisuals() {
     navStackStatus = false;
   else
     navStackStatus = true;
-  navStackStatus = false;  // set always false, for now.
   ROS_INFO_STREAM("Checked Visuals, output: " << navStackStatus);
   return navStackStatus;
 }

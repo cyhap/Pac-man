@@ -36,7 +36,9 @@
 
 bool nav(pacman::NavPose::Request &req,
           pacman::NavPose::Response &res) {
+  double x = req.pose.x;
   res.str = "Received Goal Pose";
+  ROS_INFO_STREAM(res.str);
   return true;
 }
 
