@@ -38,7 +38,7 @@
 #include "ObjectList.hpp"
 #include "Object.hpp"
 
-#include "pacman/ObjPose.h"  // Our custom msg data
+#include "geometry_msgs/Point.h"
 
 ObjectList::ObjectList() {
   numberOfObjects = 0;
@@ -54,7 +54,7 @@ int ObjectList::addObjectFound(Object::Pose objpose) {
   return numberOfObjects;
 }
 
-void ObjectList::objsCallback(const pacman::ObjPose::ConstPtr& obj) {
+void ObjectList::objsCallback(const geometry_msgs::Point::ConstPtr& obj) {
   Object::Pose pose;
   pose.x = obj->x;
   pose.y = obj->y;

@@ -40,7 +40,7 @@
 #include "Object.hpp"
 #include "GoodObject.hpp"
 
-#include "pacman/ObjPose.h"  // Our custom msg data
+#include "geometry_msgs/Point.h"
 
 class ObjectList {
  private:
@@ -74,7 +74,7 @@ class ObjectList {
     *  @param	  obj Pointer to the object found
     *  @return	None
     */
-    void objsCallback(const pacman::ObjPose::ConstPtr&);
+    void objsCallback(const geometry_msgs::Point::ConstPtr&);
 };
 
 #endif  // INCLUDE_OBJECTLIST_HPP_
