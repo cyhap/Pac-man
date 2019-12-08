@@ -144,15 +144,6 @@ int main(int argc, char **argv) {
   // Publisher for Good Object Poses obtained from Image Processing
   ros::Publisher objpub = nh.advertise<pacman::VecPoses>("imgPoses", 1000);
 
-  //#### Process ####//
-  // process images
-  //// apply good mask
-  // create good objects
-  //// apply bad mask
-  // create bad objects
-  // update map with bad objects - Service call
-  // Publish good objects
-
   // Publish at 10 Hz.
   ros::Rate loop_rate(10.0);
 
@@ -160,7 +151,6 @@ int main(int argc, char **argv) {
     // Process the Images and Extract Objects
     std::vector<std::shared_ptr<Object> > tObjs = identifier.eyes.process();
     pacman::VecPoses output;
-
 
     // Parse Out Good Objects to Publish on a Topic
     // Update Nav Stack Map with Bad Objects.
@@ -172,9 +162,7 @@ int main(int argc, char **argv) {
         tPosMsg.x = toSend.x;
         tPosMsg.y = toSend.y;
         tPosMsg.z = toSend.z;
-        tPosMsg.angle1 = toSend.roll;
-        tPosMsg.angle2 = toSend.pitch;
-        tPosMsg.angle3 = toSend.yaw;
+        tPosMsg.theta = toSend.yaw;
         output.poses.emplace_back(tPosMsg);
       } else {
         // Learn how to send this bad object to the Map!!!

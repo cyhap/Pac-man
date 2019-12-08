@@ -81,7 +81,7 @@ int main(int argc, char **argv) {
       pacman::ObjPose pose;
       pose.x = xs[counter];
       pose.y = ys[counter];
-      pose.angle3 = zs[counter];
+      pose.theta = zs[counter];
       vecP.poses.emplace_back(pose);
 
       counter++;
