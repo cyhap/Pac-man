@@ -51,6 +51,14 @@
 #include "ros/ros.h"
 #include "sensor_msgs/LaserScan.h"
 
+// used for object deletion
+#include "gazebo_msgs/DeleteModel.h"
+#include "gazebo_msgs/GetModelState.h"
+#include "gazebo_msgs/ModelStates.h"
+#include "std_msgs/String.h"
+#include "geometry_msgs/Twist.h"
+#include "geometry_msgs/Pose.h"
+
 class Navigator {
  public:
   pacman::ObjPose closestPose;
@@ -88,6 +96,20 @@ class Navigator {
 
   // Nav Stack Status Checker
   bool checkVisuals();
+
+  // Function called when goal reaached
+  void goalDelete();
+
+  // finding closest object to turtlebot
+  void closestCallback(const gazebo_msgs::ModelStates);
+
+
+ private:
+  ros::NodeHandle n_;
+  ros::Subscriber subClosestObj_;
+  ros::ServiceClient clientDelObj_;
+  ros::ServiceClient clientGetPos_;
+  std::string closestObject;
 };
 
 #endif  // INCLUDE_NAVIGATOR_HPP_

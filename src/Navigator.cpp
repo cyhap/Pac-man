@@ -49,8 +49,21 @@
 #include "ros/ros.h"
 #include "sensor_msgs/LaserScan.h"
 
-Navigator::Navigator() 
+Navigator::Navigator()
   : navStackStatus{ false }, allowImgCallback{ true } , sendGoal{ false } {
+  //service client for deleting objects
+  clientDelObj_ = n_.serviceClient < gazebo_msgs::DeleteModel
+      > ("/gazebo/delete_model");
+
+  // subsriber to find closest object -
+  //THIS IS A CUSTOM THROTTLE TOPIC, DONT FORGET TO ADD IT TO LAUNCH
+  subClosestObj_ = n_.subscribe("/my_model_states", 1000,
+                                &Navigator::closestCallback, this);
+
+  //service client from get model state
+  clientGetPos_ = n_.serviceClient < gazebo_msgs::GetModelState
+      > ("/gazebo/get_model_state");
+
 }
 
 //void Navigator::setSendGoal(bool status_) {
@@ -110,5 +123,60 @@ bool Navigator::checkVisuals() {
   navStackStatus = false;  // set always false, for now.
   ROS_INFO_STREAM("Checked Visuals, output: " << navStackStatus);
   return navStackStatus;
+}
+
+void Navigator::goalDelete() {
+  //calling delete service call
+  gazebo_msgs::DeleteModel dmsrv;
+  dmsrv.request.model_name = closestObject;
+  if (clientDelObj_.call(dmsrv)) {
+    //calls in background
+  }
+}
+
+void Navigator::closestCallback(const gazebo_msgs::ModelStates msg) {
+  float closest_dist = 1000.0;  // arbitrary large number
+  int closest = 0;
+  float dist;
+  int lent;
+  float x, y, x1, y1, x2, y2;
+
+  //finding turtle position
+  gazebo_msgs::GetModelState getsrv;
+  getsrv.request.model_name = "mobile_base";
+  if (clientGetPos_.call(getsrv)) {
+    x1 = getsrv.response.pose.position.x;
+    y1 = getsrv.response.pose.position.y;
+    ROS_INFO_STREAM("Position of turtlebot: " << x1 << " " << y1);
+  } else {
+    ROS_ERROR_STREAM("Failed to call get model state service");
+    x1 = 8.0;  // some number
+    y1 = 8.0;  // some number
+  }
+
+  //find object nearest to turtlebot
+  lent = msg.pose.size();
+  for (int i = 0; i < lent; i++) {
+    x2 = msg.pose[i].position.x;
+    y2 = msg.pose[i].position.y;
+    x = x1 - x2;
+    y = y1 - y2;
+    dist = sqrt(x * x + y * y);
+    if (dist < closest_dist) {
+      if (msg.name[i] == "mobile_base") {
+        //skip mobile_base
+      } else {
+        if (msg.name[i] == "ground_plane") {
+          //skip ground plane
+        } else {
+          closest_dist = dist;
+          closest = i;
+        }
+      }
+    }
+  }
+
+  ROS_INFO_STREAM("node: " << closest << ", name: " << msg.name[closest]);
+  closestObject = msg.name[closest];
 }
 
