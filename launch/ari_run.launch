@@ -45,24 +45,23 @@
     type = "navigation"
   />
   
-<!--  <node-->
-<!--    name = "Eyes"-->
-<!--    pkg = "pacman"-->
-<!--    type = "identification"-->
-<!--    output = "screen"-->
-<!--    launch-prefix = "gnome-terminal - -command"-->
-<!--  />-->
+  <node
+    name = "Eyes"
+    pkg = "pacman"
+    type = "identification"
+    output = "screen"
+    launch-prefix = "gnome-terminal --command"
+  />
 
   <node
     name = "objectlist"
     pkg = "pacman"
     type = "objectlist"
     output = "screen"
-    launch-prefix = "gnome-terminal --command"
   />
-  <node
-    name = "pubpose"
-    pkg = "pacman"
-    type = "pubpose"
-  />
+<!--  <node-->
+<!--    name = "pubpose"-->
+<!--    pkg = "pacman"-->
+<!--    type = "pubpose"-->
+<!--  />-->
 </launch>
