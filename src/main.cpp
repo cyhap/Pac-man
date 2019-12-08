@@ -32,7 +32,6 @@
   * @brief This is the main ROS Node that will run the Turtlebot and interaction.
   */
 
-
 #include <math.h>
 #include <stdlib.h>
 
@@ -48,76 +47,8 @@
 #include "pacman/VecPoses.h"  // Our custom msg vector
 #include "pacman/NavPose.h"  // Our custom srv type
 #include "ros/ros.h"
-#include "kobuki_msgs/BumperEvent.h"
-#include "gazebo_msgs/DeleteModel.h"
 #include "geometry_msgs/Twist.h"
 #include "sensor_msgs/LaserScan.h"
-
-//class Navigator {
-// public:
-//  std::shared_ptr<Movement> movement;
-//  pacman::ObjPose closestPose;
-//  bool navStackStatus;
-//  bool allowImgCallback;
-//  bool sendGoal;
-//  // Constructor
-//  Navigator() : navStackStatus{ false }, allowImgCallback{ true } , sendGoal{ false } {}
-//  // getter
-//  void setSendGoal(bool status_) { sendGoal = status_; }
-//  // setter
-//  void setAllowImgCallback(bool status_) { allowImgCallback = status_; }
-//  // Laser Scanner Callback
-//  void laserScanCallback(const sensor_msgs::LaserScan::ConstPtr& msg) {
-//    ROS_INFO_STREAM("Received LaserScan");
-//    std::vector<float> ranges = msg->ranges;
-//    // Replace all nans with max range to get the actual minimum
-//    std::replace_if(ranges.begin(), ranges.end(), isNan, msg->range_max);
-//    float minRange = *std::min_element(ranges.begin(), ranges.end());
-//    ROS_INFO_STREAM("The closest object is " << minRange << "(m) away.");
-//    movement->updateMinDist(minRange);
-//  }
-//  // Image Poses Callback
-//  void imgCallback(const pacman::VecPoses::ConstPtr& vecPoses) {
-//    if (allowImgCallback) {
-//      allowImgCallback = false;
-//      //  -- Find the closest pose from the vector input
-//      double minMag = 100;
-//      for (auto indpose : vecPoses->poses) {
-//        // Grab x,y,z coordinates of current pose
-//        double xpos = indpose.x;
-//        double ypos = indpose.y;
-//        double zpos = indpose.z;
-//        // Obtain magnitude from pose to base
-//        double mag = sqrt(pow(xpos, 2) + pow(ypos, 2) + pow(zpos, 2));
-//        if (mag < minMag) {
-//          minMag = mag;
-//          closestPose = indpose;
-//        }
-//      }
-//      ROS_ERROR_STREAM("Sending Pose to Navigation stack");
-//      sendGoal = true;
-//    } else {
-//      ROS_ERROR_STREAM("Navigation stack is runnning");
-//      sendGoal = false;
-//    }
-//  }
-//  // Nan
-//  static bool isNan(float i) {
-//    return std::isnan(i);
-//  }
-//  // Nav Stack Status Checker
-//  bool checkVisuals() {
-//    // ----------------------------- FILL IN CODE HERE
-//    //  -- Call Navigation Stack Flag
-//    //  if (<nav stack is still running>)
-//    //    navStackStatus = true;
-//    //  else if (<nav stack is not running>)
-//    //    navStackStatus = false;
-//    navStackStatus = false;  // set always false, for now.
-//    ROS_INFO_STREAM("Checked Visuals, output: " << navStackStatus);
-//    return navStackStatus;
-//  }
-//};
 
 /**
 *  @brief   This is the main function
@@ -179,7 +110,7 @@ int main(int argc, char **argv) {
       pacman::NavPose srv;
       srv.request.pose = navPose;
       if (client.call(srv)) {
-        ROS_INFO_STREAM("Success! :)");
+        ROS_INFO_STREAM("Success! :) - " << srv.response.str);
       } else {
         ROS_ERROR_STREAM("Failed... :(");
       }
