@@ -48,35 +48,33 @@
 #include "pacman/NavPose.h"  // Our custom srv type
 #include "ros/ros.h"
 #include "sensor_msgs/LaserScan.h"
+#include "move_base_msgs/MoveBaseAction.h"
+#include "actionlib/client/simple_action_client.h"
+
+// used for object deletion
+#include "gazebo_msgs/DeleteModel.h"
+#include "gazebo_msgs/GetModelState.h"
+#include "gazebo_msgs/ModelStates.h"
+#include "std_msgs/String.h"
+#include "geometry_msgs/Twist.h"
+#include "geometry_msgs/Pose.h"
 
 Navigator::Navigator()
-  : navStackStatus{ false }, allowImgCallback{ true } , sendGoal{ false } {
-  //service client for deleting objects
-  clientDelObj_ = n_.serviceClient < gazebo_msgs::DeleteModel
-      > ("/gazebo/delete_model");
-
-  // subsriber to find closest object -
+  : navStackStatus{ false }, allowImgCallback{ true } , sendGoal{ false } ,
+          aclient("move_base", true) {
+  // Subsriber to find closest object -
   //THIS IS A CUSTOM THROTTLE TOPIC, DONT FORGET TO ADD IT TO LAUNCH
   subClosestObj_ = n_.subscribe("/my_model_states", 1000,
                                 &Navigator::closestCallback, this);
 
-  //service client from get model state
-  clientGetPos_ = n_.serviceClient < gazebo_msgs::GetModelState
-      > ("/gazebo/get_model_state");
+  // Service client for deleting objects
+  clientDelObj_ = n_.serviceClient<gazebo_msgs::DeleteModel>
+                                              ("/gazebo/delete_model");
 
+  // Service client from get model state
+  clientGetPos_ = n_.serviceClient<gazebo_msgs::GetModelState>
+                                              ("/gazebo/get_model_state");
 }
-
-//void Navigator::setSendGoal(bool status_) {
-//  sendGoal = status_;
-//}
-
-//void Navigator::setAllowImgCallback(bool status_) {
-//  allowImgCallback = status_;
-//}
-
-//void Navigator::getPose() {
-//  return closestPose;
-//}
 
 void Navigator::laserScanCallback(const sensor_msgs::LaserScan::ConstPtr& msg) {
   ROS_INFO_STREAM("Received LaserScan");
@@ -91,6 +89,10 @@ void Navigator::laserScanCallback(const sensor_msgs::LaserScan::ConstPtr& msg) {
 void Navigator::imgCallback(const pacman::VecPoses::ConstPtr& vecPoses) {
   if (allowImgCallback) {
     allowImgCallback = false;
+
+    // Service cleint to get Turtlebot orientation
+    gazebo_msgs::GetModelState anglesrv;
+
     //  -- Find the closest pose from the vector input
     double minMag = 100;
     for (auto indpose : vecPoses->poses) {
@@ -98,39 +100,49 @@ void Navigator::imgCallback(const pacman::VecPoses::ConstPtr& vecPoses) {
       double xpos = indpose.x;
       double ypos = indpose.y;
       double zpos = indpose.z;
+      
       // Obtain magnitude from pose to base
       double mag = sqrt(pow(xpos, 2) + pow(ypos, 2) + pow(zpos, 2));
       if (mag < minMag) {
         minMag = mag;
         closestPose = indpose;
+        // Call service for orientation of base
+        anglesrv.request.model_name = "mobile_base";
+        if (clientGetPos_.call(anglesrv))
+          closestPose.theta = anglesrv.response.pose.orientation.z;
+        else
+          ROS_ERROR_STREAM("Failed to get model state service");
       }
     }
-    ROS_ERROR_STREAM("Sending Pose to Navigation stack");
+    ROS_WARN_STREAM("Sending Pose to Navigation stack");
     sendGoal = true;
   } else {
-    ROS_ERROR_STREAM("Navigation stack is runnning");
+    ROS_WARN_STREAM("Navigation stack is runnning");
     sendGoal = false;
   }
 }
 
 bool Navigator::checkVisuals() {
-  // ----------------------------- FILL IN CODE HERE
-  //  -- Call Navigation Stack Flag
-  //  if (<nav stack is still running>)
-  //    navStackStatus = true;
-  //  else if (<nav stack is not running>)
-  //    navStackStatus = false;
+  // Wait for the action server to come up
+  while (!aclient.waitForServer(ros::Duration(5.0))) {
+    ROS_INFO("Waiting for the move_base action server to come up");
+  }
+  // Check State of Navigation Stack
+  if (aclient.getState().isDone())
+    navStackStatus = false;
+  else
+    navStackStatus = true;
   navStackStatus = false;  // set always false, for now.
   ROS_INFO_STREAM("Checked Visuals, output: " << navStackStatus);
   return navStackStatus;
 }
 
 void Navigator::goalDelete() {
-  //calling delete service call
+  // Service call to delete object
   gazebo_msgs::DeleteModel dmsrv;
   dmsrv.request.model_name = closestObject;
   if (clientDelObj_.call(dmsrv)) {
-    //calls in background
+    // calls in background
   }
 }
 
@@ -141,7 +153,7 @@ void Navigator::closestCallback(const gazebo_msgs::ModelStates msg) {
   int lent;
   float x, y, x1, y1, x2, y2;
 
-  //finding turtle position
+  // Finding turtle position
   gazebo_msgs::GetModelState getsrv;
   getsrv.request.model_name = "mobile_base";
   if (clientGetPos_.call(getsrv)) {
@@ -154,7 +166,7 @@ void Navigator::closestCallback(const gazebo_msgs::ModelStates msg) {
     y1 = 8.0;  // some number
   }
 
-  //find object nearest to turtlebot
+  // Find object nearest to turtlebot
   lent = msg.pose.size();
   for (int i = 0; i < lent; i++) {
     x2 = msg.pose[i].position.x;
@@ -164,10 +176,10 @@ void Navigator::closestCallback(const gazebo_msgs::ModelStates msg) {
     dist = sqrt(x * x + y * y);
     if (dist < closest_dist) {
       if (msg.name[i] == "mobile_base") {
-        //skip mobile_base
+        // Skip mobile_base
       } else {
         if (msg.name[i] == "ground_plane") {
-          //skip ground plane
+          // Skip ground plane
         } else {
           closest_dist = dist;
           closest = i;

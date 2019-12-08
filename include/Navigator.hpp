@@ -50,6 +50,8 @@
 #include "pacman/NavPose.h"  // Our custom srv type
 #include "ros/ros.h"
 #include "sensor_msgs/LaserScan.h"
+#include "move_base_msgs/MoveBaseAction.h"
+#include "actionlib/client/simple_action_client.h"
 
 // used for object deletion
 #include "gazebo_msgs/DeleteModel.h"
@@ -60,6 +62,9 @@
 #include "geometry_msgs/Pose.h"
 
 class Navigator {
+  typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction>
+                                                          MoveBaseClient;
+
  public:
   pacman::ObjPose closestPose;
   bool navStackStatus;
@@ -67,40 +72,53 @@ class Navigator {
   bool sendGoal;
   std::shared_ptr<Movement> movement;
 
-  // Constructor
+  /**
+  *  @brief   This is the constructor for the Navigator Class
+  *  @param	  None
+  *  @return	None
+  */
   Navigator();
 
-//  // setter
-//  void setSendGoal(bool);
-
-//  // setter
-//  void setAllowImgCallback(bool);
-
-//  // getter
-//  pacman::ObjPose Navigator::getPose();
-
-//  // getter
-//  bool Navigator::getNavStatus();
-
-//  // getter
-//  bool Navigator::getSendGoal();
-
-  // Laser Scanner Callback
+  /**
+  *  @brief   This is a callback for the laser scanner data
+  *  @param	  msg Laser Scanner distance data
+  *  @return	None
+  */
   void laserScanCallback(const sensor_msgs::LaserScan::ConstPtr&);
 
-  // Image Poses Callback
+  /**
+  *  @brief   This is a callback for the object poses from image processing
+  *  @param	  vecPoses vector of object poses
+  *  @return	None
+  */
   void imgCallback(const pacman::VecPoses::ConstPtr&);
 
-  // Nan
+  /**
+  *  @brief   This is a function that checks for NaNs
+  *  @param	  i variable
+  *  @return	Boolean
+  */
   static bool isNan(float i) { return std::isnan(i); }
 
-  // Nav Stack Status Checker
+  /**
+  *  @brief   This is a function that checks the Navigation Stack status
+  *  @param	  None
+  *  @return	Boolean
+  */
   bool checkVisuals();
 
-  // Function called when goal reaached
+  /**
+  *  @brief   This is a function that deletes a collected object from the world
+  *  @param	  None
+  *  @return	None
+  */
   void goalDelete();
 
-  // finding closest object to turtlebot
+  /**
+  *  @brief   This is a callback to find the closest object to the robot
+  *  @param	  msg States of the models
+  *  @return	None
+  */
   void closestCallback(const gazebo_msgs::ModelStates);
 
 
@@ -110,6 +128,8 @@ class Navigator {
   ros::ServiceClient clientDelObj_;
   ros::ServiceClient clientGetPos_;
   std::string closestObject;
+  // Set up the action client with it set to spin a thread by default
+  MoveBaseClient aclient;
 };
 
 #endif  // INCLUDE_NAVIGATOR_HPP_
