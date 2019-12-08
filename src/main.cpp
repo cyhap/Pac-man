@@ -25,11 +25,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
  /**
-  * @file MovementNode.cpp
-  * @copyright 2019 Ethan Quist
-  * @author Ethan Quist
+  * @file main.cpp
+  * @copyright 2019 Ethan Quist, Ari Kupferberg
+  * @author Ethan Quist, Ari Kupferberg
   * @date 11/24/2019
-  * @brief This is the ROS Node that will handle the search movement of the Turtlebot.
+  * @brief This is the main ROS Node that will run the Turtlebot and interaction.
   */
 
 
