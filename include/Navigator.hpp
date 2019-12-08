@@ -25,52 +25,69 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
  /**
-  * @file MovementTest.cpp
-  * @copyright 2019 Ethan Quist
-  * @author Ethan Quist
-  * @date 11/27/2019
-  * @brief This TEST file is for testing the Movement methods.
+  * @file Navigator.hpp
+  * @copyright 2019 Ari Kupferberg
+  * @author Ari Kupfeberg
+  * @date 12/7/2019
+  * @brief This ROS dependent Class is for Navigation Control.
   */
 
-#include "ros/ros.h"
-#include "gtest/gtest.h"
+#ifndef INCLUDE_NAVIGATOR_HPP_
+#define INCLUDE_NAVIGATOR_HPP_
+
+#include <math.h>
+#include <stdlib.h>
+
+#include <memory>
+#include <vector>
+#include <algorithm>
+
 #include "Movement.hpp"
+#include "Object.hpp"
 
-TEST(Movement, collision) {
-  // Collision distance currently set to 0.55
-  Movement moveObj;
+#include "pacman/ObjPose.h"  // Our custom msg data
+#include "pacman/VecPoses.h"  // Our custom msg vector
+#include "pacman/NavPose.h"  // Our custom srv type
+#include "ros/ros.h"
+#include "sensor_msgs/LaserScan.h"
 
-  float dist = 1.00;
-  moveObj.updateMinDist(dist);
-  ASSERT_TRUE(moveObj.getClearAhead());
+class Navigator {
+ public:
+  pacman::ObjPose closestPose;
+  bool navStackStatus;
+  bool allowImgCallback;
+  bool sendGoal;
+  std::shared_ptr<Movement> movement;
 
-  dist = 0.25;
-  moveObj.updateMinDist(dist);
-  ASSERT_FALSE(moveObj.getClearAhead());
-}
+  // Constructor
+  Navigator();
 
-TEST(Movement, velocities) {
-  // Collision distance currently set to 0.55
-  Movement moveObj;
+//  // setter
+//  void setSendGoal(bool);
 
-  float dist1 = 1.00;
-  moveObj.updateMinDist(dist1);
-  std::pair<double, double> robotVels1 = moveObj.computeVelocities();
-  std::pair<double, double> testVels1(0.5, 0.0);
-  ASSERT_EQ(robotVels1, testVels1);
+//  // setter
+//  void setAllowImgCallback(bool);
 
-  float dist2 = 0.25;
-  moveObj.updateMinDist(dist2);
-  std::pair<double, double> robotVels2 = moveObj.computeVelocities();
-  std::pair<double, double> testVels2(0.0, 1.0);
-  ASSERT_EQ(robotVels2, testVels2);
-}
+//  // getter
+//  pacman::ObjPose Navigator::getPose();
 
+//  // getter
+//  bool Navigator::getNavStatus();
 
-// Run all the tests that were declared with TEST()
-int main(int argc, char **argv) {
-  testing::InitGoogleTest(&argc, argv);
-  ros::init(argc, argv, "movement_test");
-  ros::NodeHandle nh;
-  return RUN_ALL_TESTS();
-}
+//  // getter
+//  bool Navigator::getSendGoal();
+
+  // Laser Scanner Callback
+  void laserScanCallback(const sensor_msgs::LaserScan::ConstPtr&);
+
+  // Image Poses Callback
+  void imgCallback(const pacman::VecPoses::ConstPtr&);
+
+  // Nan
+  static bool isNan(float i) { return std::isnan(i); }
+
+  // Nav Stack Status Checker
+  bool checkVisuals();
+};
+
+#endif  // INCLUDE_NAVIGATOR_HPP_

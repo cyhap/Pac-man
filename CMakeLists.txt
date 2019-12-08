@@ -51,7 +51,7 @@ include_directories( include
                      ${catkin_INCLUDE_DIRS}
                      ${OpenCV_INCLUDE_DIRS} )
 
-add_executable(movement src/MovementNode.cpp src/Movement.cpp)
+add_executable(movement src/main.cpp src/Movement.cpp src/Navigator.cpp)
 target_link_libraries(movement ${catkin_LIBRARIES})
 add_dependencies(movement pacman_generate_messages_cpp)
 

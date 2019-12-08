@@ -12,4 +12,16 @@
     output = "screen"
     launch-prefix = "gnome-terminal --command"
   />
+  <node
+    name = "navigation"
+    pkg = "pacman"
+    type = "navigation"
+    output = "screen"
+    launch-prefix = "gnome-terminal --command"
+  />
+  <node
+    name = "pubpose"
+    pkg = "pacman"
+    type = "pubpose"
+  />
 </launch>

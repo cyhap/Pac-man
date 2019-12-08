@@ -54,9 +54,9 @@ bool nav(pacman::NavPose::Request &req,
   // Tell the action client that we want to spin a thread by default
   MoveBaseClient ac("move_base", true);
   // Wait for the action server to come up
-  while (!ac.waitForServer(ros::Duration(5.0))) {
-    ROS_INFO("Waiting for the move_base action server to come up");
-  }
+//  while (!ac.waitForServer(ros::Duration(5.0))) {
+//    ROS_INFO("Waiting for the move_base action server to come up");
+//  }
   // Set up goal
   move_base_msgs::MoveBaseGoal goal;
   goal.target_pose.header.frame_id = "base_link";
@@ -70,13 +70,13 @@ bool nav(pacman::NavPose::Request &req,
   goal.target_pose.pose.orientation.w = 1.0;
 
   ROS_INFO("Sending goal");
-  ac.sendGoal(goal);
+//  ac.sendGoal(goal);
 
   ac.waitForResult();
   if (ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
-    ROS_INFO("Hooray, the base moved 1 meter forward");
+    ROS_INFO("Hooray, the base moved forward");
   else
-    ROS_INFO("The base failed to move forward 1 meter for some reason");
+    ROS_INFO("The base failed to move forward for some reason");
   res.str = "Received Goal Pose";
   ROS_INFO_STREAM(res.str);
   
@@ -99,6 +99,8 @@ int main(int argc, char** argv) {
   
   // Set up the server
   ros::ServiceServer srv = n.advertiseService("navpose", nav);
+
+  while (ros::ok()) {
 /*
   // Tell the action client that we want to spin a thread by default
   MoveBaseClient ac("move_base", true);
@@ -127,5 +129,7 @@ int main(int argc, char** argv) {
   else
     ROS_INFO("The base failed to move forward 1 meter for some reason");
 */
+  ros::spinOnce();
+  }
   return 0;
 }
