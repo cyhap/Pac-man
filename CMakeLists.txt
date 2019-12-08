@@ -70,6 +70,10 @@ add_executable(navigation src/NavigationNode.cpp)
 target_link_libraries(navigation ${catkin_LIBRARIES})
 add_dependencies(navigation pacman_generate_messages_cpp)
 
+add_executable(srvTest src/mytestserver.cpp)
+target_link_libraries(srvTest ${catkin_LIBRARIES})
+add_dependencies(srvTest pacman_generate_messages_cpp)
+
 #############
 ## Testing ##
 #############
@@ -98,5 +102,5 @@ if(CATKIN_ENABLE_TESTING)
   ## Add rostest based tests
   add_rostest_gtest(myTest test/testsrv.test test/myTest.cpp)
   target_link_libraries(myTest ${catkin_LIBRARIES})
-  add_dependencies(myTest navigation pacman_generate_messages_cpp ${catkin_EXPORTED_TARGETS})
+  add_dependencies(myTest srvTest pacman_generate_messages_cpp ${catkin_EXPORTED_TARGETS})
 endif()
