@@ -27,12 +27,11 @@
     type = "navigation"
   />
 
-    <node
-    name = "Eyes"
+  <node
+    name = "eyes"
     pkg = "pacman"
     type = "identification"
     output = "screen"
-    launch-prefix = "gnome-terminal --command"
   />
   
   
