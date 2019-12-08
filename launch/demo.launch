@@ -26,13 +26,13 @@
     pkg = "pacman"
     type = "navigation"
   />
-  <!--
+
     <node
     name = "Eyes"
     pkg = "pacman"
     type = "identification"
   />
-
+  <!--
       output = "screen"
     launch-prefix = "gnome-terminal DASH DASH command"
   -->

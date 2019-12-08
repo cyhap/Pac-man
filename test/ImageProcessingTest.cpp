@@ -88,7 +88,7 @@ TEST(ImageProcessing, setPntCldFunction) {
   int tImgSize = 401;
   cloud->width = tImgSize;
   cloud->height = tImgSize;
-  cloud->is_dense = false;
+  cloud->is_dense = true;
   cloud->points.resize(cloud->width * cloud->height);
 
   for (std::size_t i = 0; i < cloud->points.size(); ++i) {
@@ -141,7 +141,7 @@ TEST(ImageProcessing, CenteredGreenBlock) {
   // Fill in the cloud data
   cloud->width = tImgSize;
   cloud->height = tImgSize;
-  cloud->is_dense = false;
+  cloud->is_dense = true;
   cloud->points.resize(cloud->width * cloud->height);
 
   for (std::size_t i = 0; i < cloud->points.size(); ++i) {
@@ -213,7 +213,7 @@ TEST(ImageProcessing, MultipleGreenBlocks) {
   // Fill in the cloud data
   cloud->width = tImgSize;
   cloud->height = tImgSize;
-  cloud->is_dense = false;
+  cloud->is_dense = true;
   cloud->points.resize(cloud->width * cloud->height);
 
   for (std::size_t i = 0; i < cloud->points.size(); ++i) {
@@ -281,7 +281,7 @@ TEST(ImageProcessing, MultipleMultiColoredBlocks) {
   // Fill in the cloud data
   cloud->width = tImgSize;
   cloud->height = tImgSize;
-  cloud->is_dense = false;
+  cloud->is_dense = true;
   cloud->points.resize(cloud->width * cloud->height);
 
   for (std::size_t i = 0; i < cloud->points.size(); ++i) {

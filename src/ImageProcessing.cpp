@@ -44,11 +44,13 @@
 #include "GoodObject.hpp"
 #include "BadObject.hpp"
 
+#include <iostream> //REMOVE
+
 ImageProcessing::ImageProcessing()
     :
     rgbImg(
         new cv::Mat(500, 500, CV_8UC3, cv::Scalar(255, 255, 255))),
-    rectPntCld(new pcl::PointCloud<pcl::PointXYZ>),
+    rectPntCld(),
     lowGood(0, 200, 0),
     lowBad(0, 0, 200),
     highGood(0, 255, 0),
@@ -66,11 +68,26 @@ std::vector<std::shared_ptr<Object> > ImageProcessing::process() {
   // Otherwise return an empty list.
   if (rgbImg && rectPntCld) {
 
-    cv::Mat blurImg, goodThresh, badThresh;
+    if (rgbImg) {
+      std::cout << "Still Valid Here 1" << std::endl;
+    }
 
+    // Allocate Memory for processing
+    cv::Mat blurImg(rgbImg->rows, rgbImg->cols, rgbImg->type());
+    cv::Mat goodThresh(rgbImg->rows, rgbImg->cols, rgbImg->type());
+    cv::Mat badThresh(rgbImg->rows, rgbImg->cols, rgbImg->type());
+
+    if (rgbImg) {
+      std::cout << "Still Valid Here 2" << std::endl;
+    }
     // Blur the Image
     int kernelSize = 3;
+    if (rgbImg) {
+      std::cout << "Still Valid Here 3" << std::endl;
+    }
+    std::cout << "Begin Processing..." << std::endl;
     cv::blur(*rgbImg, blurImg, cv::Size(kernelSize, kernelSize));
+    std::cout << "First Pointer Used" << std::endl;
 
     cv::inRange(blurImg, lowGood, highGood, goodThresh);
     cv::inRange(blurImg, lowBad, highBad, badThresh);
@@ -106,22 +123,33 @@ std::vector<Object::Pose> ImageProcessing::processMask(
   cv::findContours(aImage, contours, hierarchy, cv::RETR_TREE,
                    cv::CHAIN_APPROX_SIMPLE);
   // Extract the moments from the contours
+  std::cout << "Begin Processing Moments." << std::endl;
+
   std::vector<cv::Moments> mu(contours.size());
   auto momentIter = mu.begin();
   for (const auto &tContour : contours) {
     *momentIter = cv::moments(tContour, false);
     momentIter++;
+    std::cout << "Inc Moment" << std::endl;
   }
+  std::cout << "Begin Processing Centroids." << std::endl;
 
   std::vector<cv::Point2i> pixels(mu.size());
   auto pixelIter = pixels.begin();
   // Extract the Centroid from the Moments
   for (const auto &tMoment : mu) {
-    *pixelIter = cv::Point2i(tMoment.m10 / tMoment.m00,
-                             tMoment.m01 / tMoment.m00);
-    pixelIter++;
+    std::cout << "Moment 10: " << tMoment.m10 << std::endl;
+    std::cout << "Moment 00: " << tMoment.m00 << std::endl;
+    std::cout << "Moment 01: " << tMoment.m01 << std::endl;
+    // Ignore m00 == 0 Moments (Cant compute center)
+    if (tMoment.m00) {
+      *pixelIter = cv::Point2i(tMoment.m10 / tMoment.m00,
+                               tMoment.m01 / tMoment.m00);
+      pixelIter++;
+      std::cout << "Inc Pixel" << std::endl;
+    }
   }
-
+  std::cout << "Begin Extracting Poses." << std::endl;
   // Obtain the corresponding XYZ Point
   for (const auto &tPixel : pixels) {
     Object::Pose tPose = extractPose(tPixel.x, tPixel.y);
@@ -129,6 +157,7 @@ std::vector<Object::Pose> ImageProcessing::processMask(
     // Add that Pose to the list of poses.
     tReturn.push_back(tPose);
   }
+  std::cout << "Complete Mask Processing." << std::endl;
   return tReturn;
 }
 
@@ -143,9 +172,21 @@ bool ImageProcessing::setRgbImg(std::shared_ptr<const cv::Mat> aRgbImg) {
 bool ImageProcessing::setPntCld(
     std::shared_ptr<const pcl::PointCloud<pcl::PointXYZ> > aPntCld) {
   bool validDpt = false;
-  if (aPntCld) {
+  // Check the Point cloud has no Nans And is Organized
+  if (aPntCld && aPntCld->height > 1) {
     validDpt = true;
     rectPntCld = aPntCld;
+  }
+  else {
+
+    std::cout << "Setting of Point Cloud was attempted but failed."
+              << std::endl;
+    if (aPntCld->height <= 1) {
+      std::cout << "Unorganized Point Cloud" << std::endl;
+    }
+    if (!aPntCld->is_dense) {
+      std::cout << "Non Dense Point Cloud" << std::endl;
+    }
   }
   return validDpt;
 }
@@ -164,6 +205,14 @@ void ImageProcessing::setBadObjectMask(const cv::Scalar &aLow,
 Object::Pose ImageProcessing::extractPose(int x, int y) {
   Object::Pose tReturn;
   if (rectPntCld) {
+    if (rectPntCld->height <= 1) {
+      std::cout << "Unorganized Point Cloud" << std::endl;
+    }
+    if (!rectPntCld->is_dense) {
+      std::cout << "Non Dense Point Cloud" << std::endl;
+    }
+
+    std::cout << "The X,Y Chosen: (" << x << ", " << y << ")" << std::endl;
     pcl::PointXYZ tPnt = rectPntCld->at(x, y);
 
     tReturn.x = tPnt.x;

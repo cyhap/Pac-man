@@ -48,6 +48,8 @@
 #include "pcl/point_cloud.h"
 #include "pcl/point_types.h"
 
+#include <iostream>
+
 class Identification {
  public:
   ImageProcessing eyes;
@@ -95,10 +97,14 @@ class Identification {
     // Convert the image to a shared pointer
     // May need to make a new pointer above to prevent the ros pointer from
     // going out of scope instead...
-    //std::shared_ptr<cv::Mat> pic(new cv::Mat(cv_ptr->image));
+    ROS_INFO_STREAM("Converting to Shared Pointer");
+    std::shared_ptr<cv::Mat> pic(new cv::Mat(cv_ptr->image));
+    ROS_INFO_STREAM("Conversion successful.");
     // Consider using above than below
-    std::shared_ptr<const cv::Mat> pic(&cv_ptr->image);
-    eyes.setRgbImg(pic);
+    //std::shared_ptr<const cv::Mat> pic(&cv_ptr->image);
+    if (eyes.setRgbImg(pic)) {
+      ROS_INFO_STREAM("Setting successful.");
+    }
   }
 };
 
@@ -151,7 +157,9 @@ int main(int argc, char **argv) {
 
   while (ros::ok()) {
     // Process the Images and Extract Objects
+    ROS_INFO_STREAM("Making the process Call");
     std::vector<std::shared_ptr<Object> > tObjs = identifier.eyes.process();
+    ROS_INFO_STREAM("Call successful.");
     pacman::VecPoses output;
 
     // Parse Out Good Objects to Publish on a Topic
@@ -170,12 +178,16 @@ int main(int argc, char **argv) {
         // Learn how to send this bad object to the Map!!!
       }
     }
+    ROS_INFO_STREAM("Publishing Objects");
 
     // Publish the list of Good Objects.
     objpub.publish(output);
+    ROS_INFO_STREAM("Publishing Done");
 
     ros::spinOnce();
+    ROS_INFO_STREAM("SpinOnce Called");
     loop_rate.sleep();
+    ROS_INFO_STREAM("Done Sleeping");
   }
   return 0;
 }
