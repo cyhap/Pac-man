@@ -94,4 +94,9 @@ if(CATKIN_ENABLE_TESTING)
 
   catkin_add_gtest(imageProcessing_test test/ImageProcessingTest.cpp)
   target_link_libraries(imageProcessing_test imageProcesinglibrary objectlibrary ${catkin_LIBRARIES})
+  
+  ## Add rostest based tests
+  add_rostest_gtest(myTest test/testsrv.test test/myTest.cpp)
+  target_link_libraries(myTest ${catkin_LIBRARIES})
+  add_dependencies(myTest navigation pacman_generate_messages_cpp ${catkin_EXPORTED_TARGETS})
 endif()
