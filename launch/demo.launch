@@ -4,7 +4,7 @@
   <include file="$(find turtlebot_gazebo)/launch/turtlebot_world.launch" >
     <arg name="world_file" value="$(find pacman)/data/worlds/demo_world.world" />
   </include>  
-  
+  <include file="$(find pacman)/launch/bootPointCloudNodelet.launch"/>
   
   <!-- node to throttle model states topic -->
   <node name="model_state_throttler" 
@@ -31,7 +31,11 @@
     name = "Eyes"
     pkg = "pacman"
     type = "identification"
+    output = "screen"
+    launch-prefix = "gnome-terminal --command"
   />
+  
+  
   <!--
       output = "screen"
     launch-prefix = "gnome-terminal DASH DASH command"

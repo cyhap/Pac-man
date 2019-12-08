@@ -134,8 +134,7 @@ std::vector<Object::Pose> ImageProcessing::processMask(
   }
   std::cout << "Begin Processing Centroids." << std::endl;
 
-  std::vector<cv::Point2i> pixels(mu.size());
-  auto pixelIter = pixels.begin();
+  std::vector<cv::Point2i> pixels;
   // Extract the Centroid from the Moments
   for (const auto &tMoment : mu) {
     std::cout << "Moment 10: " << tMoment.m10 << std::endl;
@@ -143,9 +142,8 @@ std::vector<Object::Pose> ImageProcessing::processMask(
     std::cout << "Moment 01: " << tMoment.m01 << std::endl;
     // Ignore m00 == 0 Moments (Cant compute center)
     if (tMoment.m00) {
-      *pixelIter = cv::Point2i(tMoment.m10 / tMoment.m00,
-                               tMoment.m01 / tMoment.m00);
-      pixelIter++;
+      pixels.emplace_back(
+          cv::Point2i(tMoment.m10 / tMoment.m00, tMoment.m01 / tMoment.m00));
       std::cout << "Inc Pixel" << std::endl;
     }
   }
