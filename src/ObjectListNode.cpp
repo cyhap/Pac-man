@@ -59,8 +59,22 @@ int main(int argc, char **argv) {
   ros::Subscriber sub = nh.subscribe("listobjects", 1000,
                                      &ObjectList::objsCallback, &objList);
 
-  // Give control to ROS
-  ros::spin();
+  while (ros::ok()) {
+    // If object added, display in terminal
+    if (objList.objectFlag) {
+      objList.objectFlag = false;
+      int count_ = objList.getSize();
+      ROS_INFO_STREAM("An Object has been added to list of collected objects!");
+      ROS_INFO_STREAM("There are " << count_ << " objects collected");
+      for (auto element : objList.getObjectList())
+        ROS_INFO_STREAM(
+            "[" << element.x << "," << element.y << "," << element.z << "]");
+      if (count_ == 5)
+        ROS_WARN_STREAM("Collected All Objects!");
+    }
 
+    // Give control to ROS
+    ros::spinOnce();
+  }
   return 0;
 }

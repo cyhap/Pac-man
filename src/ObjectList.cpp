@@ -42,16 +42,16 @@
 
 ObjectList::ObjectList() {
   numberOfObjects = 0;
+  objectFlag = false;
 }
 
 ObjectList::~ObjectList() {}
 
-int ObjectList::addObjectFound(Object::Pose objpose) {
+void ObjectList::addObjectFound(Object::Pose objpose) {
   // Add object Pose to vector
   objectsFound.emplace_back(objpose);
   // update variable size of vector
   numberOfObjects = objectsFound.size();
-  return numberOfObjects;
 }
 
 void ObjectList::objsCallback(const geometry_msgs::Point::ConstPtr& obj) {
@@ -59,16 +59,15 @@ void ObjectList::objsCallback(const geometry_msgs::Point::ConstPtr& obj) {
   pose.x = obj->x;
   pose.y = obj->y;
   pose.z = obj->z;
-  int count_ = addObjectFound(pose);
-  /*
-  ROS_INFO_STREAM("An Object has been added to list of collected objects!");
-  ROS_INFO_STREAM("There are " << count_ << " objects collected");
-  if (count_ == 5) {
-    ROS_WARN_STREAM("Collected All Objects!");
-    for (auto element : objectsFound)
-      ROS_INFO_STREAM(
-          "[" << element.x << "," << element.y << "," << element.z << "]");
-  }
-  */
+  addObjectFound(pose);
+  objectFlag = true;
+}
+
+std::vector<Object::Pose> ObjectList::getObjectList() {
+  return objectsFound;
+}
+
+int ObjectList::getSize() {
+  return numberOfObjects;
 }
 

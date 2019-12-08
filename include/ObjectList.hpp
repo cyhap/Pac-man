@@ -48,6 +48,8 @@ class ObjectList {
     int numberOfObjects;  ///< Number of objects in found list
 
  public:
+    bool objectFlag;
+
     /**
     *  @brief   This is the constructor for the ObjectList Class
     *  @param	  None
@@ -67,7 +69,7 @@ class ObjectList {
     *  @param	  obj Pointer to an object found
     *  @return	The number of objects in the list
     */
-    int addObjectFound(Object::Pose);
+    void addObjectFound(Object::Pose);
 
     /**
     *  @brief   This is the callback function for updating the object list
@@ -75,6 +77,20 @@ class ObjectList {
     *  @return	None
     */
     void objsCallback(const geometry_msgs::Point::ConstPtr&);
+
+    /**
+    *  @brief   This is a function to get the list of objects
+    *  @param	  None
+    *  @return	The vector of objects
+    */
+    std::vector<Object::Pose> getObjectList();
+ 
+    /**
+    *  @brief   This is a function to get the number of objects
+    *  @param	  None
+    *  @return	The number of objects
+    */   
+    int getSize();
 };
 
 #endif  // INCLUDE_OBJECTLIST_HPP_
