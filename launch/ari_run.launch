@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<launch>
+
+  <include file="$(find turtlebot_gazebo)/launch/turtlebot_world.launch" >
+    <arg name="world_file" value="$(find pacman)/data/worlds/demo_world.world" />
+  </include>  
+  
+  <!-- node to throttle model states topic -->
+  <node name="model_state_throttler" 
+        type="throttle"
+        pkg="topic_tools" 
+        args="messages /gazebo/model_states 1 /my_model_states" 
+  />
+  
+  <!-- Run the map server -->
+  <node name="map_server" 
+        pkg="map_server" 
+        type="map_server" 
+        args="$(find pacman)/data/maps/my_map1.yaml"
+  />
+  
+  <!--- Run AMCL --> 
+  <include file="$(find amcl)/examples/amcl_omni.launch" />
+
+  <!-- Run the Nav Stack -->
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen" >
+<!--    <rosparam file="$(find turtlebot_2dnav)/costmap_common_params.yaml" command="load" ns="global_costmap" /> -->
+<!--    <rosparam file="$(find turtlebot_2dnav)/costmap_common_params.yaml" command="load" ns="local_costmap" />-->
+<!--    <rosparam file="$(find turtlebot_2dnav)/local_costmap_params.yaml" command="load" />-->
+<!--    <rosparam file="$(find turtlebot_2dnav)/global_costmap_params.yaml" command="load" /> -->
+<!--    <rosparam file="$(find turtlebot_2dnav)/base_local_planner_params.yaml" command="load" />-->
+ </node>
+  
+  <node
+    name = "movement"
+    pkg = "pacman"
+    type = "movement"
+    output = "screen"
+    launch-prefix = "gnome-terminal --command"
+  />
+  
+  <node
+    name = "navigation"
+    pkg = "pacman"
+    type = "navigation"
+  />
+  
+<!--  <node-->
+<!--    name = "Eyes"-->
+<!--    pkg = "pacman"-->
+<!--    type = "identification"-->
+<!--    output = "screen"-->
+<!--    launch-prefix = "gnome-terminal - -command"-->
+<!--  />-->
+
+  <node
+    name = "objectlist"
+    pkg = "pacman"
+    type = "objectlist"
+    output = "screen"
+    launch-prefix = "gnome-terminal --command"
+  />
+  <node
+    name = "pubpose"
+    pkg = "pacman"
+    type = "pubpose"
+  />
+</launch>

@@ -56,46 +56,46 @@ int main(int argc, char **argv) {
   ros::Publisher opub = nh.advertise<geometry_msgs::Point>("listobjects", 1000);
 
   // Set random Poses
-  std::vector<double> xs{1.00, 2.00, 3.00, 4.00, 5.00};
-  std::vector<double> ys{9.00, 7.00, 5.00, 3.00, 1.00};
-  std::vector<double> zs{2.00, 4.00, 6.00, 4.00, 2.00};
+  std::vector<double> xs{1.00, 1.00, 2.00, 3.00, 4.00, 5.00};
+  std::vector<double> ys{2.00, 9.00, 7.00, 5.00, 3.00, 1.00};
+  std::vector<double> zs{0.00, 0.00, 0.00, 0.00, 0.00, 0.00};
 
-  // Loop at 2Hz until the node is shut down
+  // Loop at 1Hz until the node is shut down
   ros::Rate rate(2);
 
-  int counter = 0;
+  unsigned i = 0;
   pacman::VecPoses vecP;
 
-  while (ros::ok()) {
-    while (counter < 4) {
-      geometry_msgs::Point msg;
-      msg.x = xs[counter];
-      msg.y = ys[counter];
-      msg.z = zs[counter];
 
+  while (ros::ok()) {
+    for (auto element : xs) {
+      geometry_msgs::Point msg;
+      msg.x = element;
+      msg.y = ys[i];
+      msg.z = zs[i];
+      ++i;
       opub.publish(msg);
 
       // Send a message to rosout with the details.
-      ROS_INFO_STREAM("Sent Point");
+      ROS_INFO_STREAM("Sent Pose");
 
       pacman::ObjPose pose;
-      pose.x = xs[counter];
-      pose.y = ys[counter];
-      pose.theta = zs[counter];
+      pose.x = xs[i];
+      pose.y = ys[i];
+      pose.theta = zs[i];
       vecP.poses.emplace_back(pose);
 
-      counter++;
-
-      if (counter == 4) {
-        ipub.publish(vecP);
-        ROS_INFO_STREAM("Sent Vecs");
-      }
+      ipub.publish(vecP);
+      ROS_INFO_STREAM("Sent Vecs");
 
       // Give one-time control to ROS
       ros::spinOnce();
 
       // Wait until next iteration
       rate.sleep();
+
+      if (i>5)
+        return 0;
     }
   }
 }
