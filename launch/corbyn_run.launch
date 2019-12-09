@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- 3D sensor -->
+  <arg name="3d_sensor" default="$(env TURTLEBOT_3D_SENSOR)"/>  <!-- r200, kinect, asus_xtion_pro -->
+  
+  <include file="$(find turtlebot_gazebo)/launch/turtlebot_world.launch" >
+    <arg name="world_file" value="$(find pacman)/data/worlds/demo_world.world" />
+  </include>  
+  
+  <!-- node to throttle model states topic -->
+  <node name="model_state_throttler" 
+        type="throttle"
+        pkg="topic_tools" 
+        args="messages /gazebo/model_states 1 /my_model_states" 
+  />
+  
+  <!-- Run the map server -->
+  <node name="map_server" 
+        pkg="map_server" 
+        type="map_server" 
+        args="$(find pacman)/data/maps/my_map1.yaml"
+  />
+  
+  <!--- Run AMCL --> 
+  <!-- AMCL -->
+  <arg name="custom_amcl_launch_file" default="$(find turtlebot_navigation)/launch/includes/amcl/$(arg 3d_sensor)_amcl.launch.xml"/>
+  <arg name="initial_pose_x" default="0.0"/> <!-- Use 17.0 for willow's map in simulation -->
+  <arg name="initial_pose_y" default="0.0"/> <!-- Use 17.0 for willow's map in simulation -->
+  <arg name="initial_pose_a" default="0.0"/>
+  <include file="$(arg custom_amcl_launch_file)">
+    <arg name="initial_pose_x" value="$(arg initial_pose_x)"/>
+    <arg name="initial_pose_y" value="$(arg initial_pose_y)"/>
+    <arg name="initial_pose_a" value="$(arg initial_pose_a)"/>
+  </include>
+  
+  <!-- Run the Nav Stack -->
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen" >
+<!--    <rosparam file="$(find turtlebot_2dnav)/costmap_common_params.yaml" command="load" ns="global_costmap" /> -->
+<!--    <rosparam file="$(find turtlebot_2dnav)/costmap_common_params.yaml" command="load" ns="local_costmap" />-->
+<!--    <rosparam file="$(find turtlebot_2dnav)/local_costmap_params.yaml" command="load" />-->
+<!--    <rosparam file="$(find turtlebot_2dnav)/global_costmap_params.yaml" command="load" /> -->
+<!--    <rosparam file="$(find turtlebot_2dnav)/base_local_planner_params.yaml" command="load" />-->
+ </node>
+  
+  <node
+    name = "movement"
+    pkg = "pacman"
+    type = "movement"
+    output = "screen"
+    launch-prefix = "gnome-terminal --command"
+  />
+  
+  <node
+    name = "navigation"
+    pkg = "pacman"
+    type = "navigation"
+  />
+  
+  <node
+    name = "Eyes"
+    pkg = "pacman"
+    type = "identification"
+    output = "screen"
+    launch-prefix = "gnome-terminal --command"
+  />
+
+  <node
+    name = "objectlist"
+    pkg = "pacman"
+    type = "objectlist"
+    output = "screen"
+  />
+<!--  <node-->
+<!--    name = "pubpose"-->
+<!--    pkg = "pacman"-->
+<!--    type = "pubpose"-->
+<!--  />-->
+</launch>
