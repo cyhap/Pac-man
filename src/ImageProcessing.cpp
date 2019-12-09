@@ -34,6 +34,7 @@
  */
 
 #include <memory>
+#include <math.h>
 
 #include "ImageProcessing.hpp"
 #include "opencv2/imgcodecs.hpp"
@@ -93,8 +94,10 @@ std::vector<std::shared_ptr<Object> > ImageProcessing::process() {
     cv::inRange(blurImg, lowBad, highBad, badThresh);
 
     // Retrieve Poses for Good Objects
+    std::cout << "Processing good mask." << std::endl;
     std::vector<Object::Pose> goodPoses = processMask(goodThresh);
     // Retrieve Poses for Bad Objects
+    std::cout << "Processing bad mask." << std::endl;
     std::vector<Object::Pose> badPoses = processMask(badThresh);
 
     // Create Good Objects with the goodPoses
@@ -121,39 +124,46 @@ std::vector<Object::Pose> ImageProcessing::processMask(
   std::vector<std::vector<cv::Point> > contours;
   std::vector<cv::Vec4i> hierarchy;
   cv::findContours(aImage, contours, hierarchy, cv::RETR_TREE,
-                   cv::CHAIN_APPROX_SIMPLE);
+                   cv::CHAIN_APPROX_SIMPLE, cv::Point(0, 0));
   // Extract the moments from the contours
   std::cout << "Begin Processing Moments." << std::endl;
 
   std::vector<cv::Moments> mu(contours.size());
+
   auto momentIter = mu.begin();
   for (const auto &tContour : contours) {
     *momentIter = cv::moments(tContour, false);
     momentIter++;
-    std::cout << "Inc Moment" << std::endl;
   }
   std::cout << "Begin Processing Centroids." << std::endl;
 
   std::vector<cv::Point2i> pixels;
   // Extract the Centroid from the Moments
   for (const auto &tMoment : mu) {
-    std::cout << "Moment 10: " << tMoment.m10 << std::endl;
-    std::cout << "Moment 00: " << tMoment.m00 << std::endl;
-    std::cout << "Moment 01: " << tMoment.m01 << std::endl;
+
     // Ignore m00 == 0 Moments (Cant compute center)
-    if (tMoment.m00) {
+    if (tMoment.m00 > 1200) {
+      std::cout << "Moment 10: " << tMoment.m10 << std::endl;
+      std::cout << "Moment 00: " << tMoment.m00 << std::endl;
+      std::cout << "Moment 01: " << tMoment.m01 << std::endl;
       pixels.emplace_back(
           cv::Point2i(tMoment.m10 / tMoment.m00, tMoment.m01 / tMoment.m00));
       std::cout << "Inc Pixel" << std::endl;
     }
   }
+  if (pixels.size() > 0) {
+    std::cout << "Found " << pixels.size() << " Things in this mask."
+              << std::endl;
+  }
   std::cout << "Begin Extracting Poses." << std::endl;
   // Obtain the corresponding XYZ Point
   for (const auto &tPixel : pixels) {
     Object::Pose tPose = extractPose(tPixel.x, tPixel.y);
-
-    // Add that Pose to the list of poses.
-    tReturn.push_back(tPose);
+    // Check whether the depth sensor got an accurate (Non-NAN) reading.
+    if (!std::isnan(tPose.x)) {
+      // Add that Pose to the list of poses.
+      tReturn.push_back(tPose);
+    }
   }
   std::cout << "Complete Mask Processing." << std::endl;
   return tReturn;

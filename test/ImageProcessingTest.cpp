@@ -119,8 +119,8 @@ TEST(ImageProcessing, CenteredGreenBlock) {
 
   // Center of the Image is 200,200
   // Create a Rectangle Object to put at the center of our blank slate.
-  int tHeight = 20;
-  int tWidth = 20;
+  int tHeight = 50;
+  int tWidth = 30;
   // Subtract half the height and width from the image center to find the top
   // left corner of the rectangle.
   int tX = tImgSize / 2 - tWidth / 2;
@@ -187,8 +187,8 @@ TEST(ImageProcessing, MultipleGreenBlocks) {
 
   // Center of the Image is 200,200
   // Create a Rectangle Object to put at the center of our blank slate.
-  int tHeight = 20;
-  int tWidth = 20;
+  int tHeight = 50;
+  int tWidth = 30;
   // Subtract half the height and width from the image center to find the top
   // left corner of the rectangle.
   int tX = tImgSize / 2 - tWidth / 2;
@@ -250,8 +250,8 @@ TEST(ImageProcessing, MultipleMultiColoredBlocks) {
 
   // Center of the Image is 200,200
   // Create a Rectangle Object to put at the center of our blank slate.
-  int tHeight = 20;
-  int tWidth = 20;
+  int tHeight = 50;
+  int tWidth = 30;
   // Subtract half the height and width from the image center to find the top
   // left corner of the rectangle.
   int tX = tImgSize / 2 - tWidth / 2;
