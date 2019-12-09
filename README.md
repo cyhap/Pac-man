@@ -76,19 +76,48 @@ catkin_make run_tests
 
 
 ## Run 
-*TO DO*
+After the respository has been downloaded with all listed dependancies above it can be run through the following code:
+```
+cd <your workspace>
+roslaunch pacman demo.launch
+```
+This code will run and launch all necessary nodes to see the software working.
+
+A neat function to use to see the published mask images the software produces can be seen by running the following code in a separate terminal while the launch above is running:
+```
+rqt_image_view
+```
+
 
 ## Demo
-_TO DO_
+The demonstration of our software is run through the same launch file stated above. It will open up Gazebo and automatically start the nodes required to make the turtlebot collect the objects. Make sure the dependencies on the correct Gazebo version are followed.
+```
+cd <your workspace>
+roslaunch pacman demo.launch
+```
+
+## Rosbag and Logging
+We have provided the option to use rosbag and record the messages passed between nodes in our software. To run our software with rosbag  logging enabled run the following code:
+```
+cd <your workspace>
+roslaunch pacman demo.launch recordChatter:=1
+```
 
 ## Product Backlog / Worklog
 The link below is for the AIP Workbook for our project:</br>
 https://drive.google.com/file/d/1Yul22CLmPJAjaOQzCEN-TskSz7LMM9vA/view?usp=sharing
 
-## Sprint Planning
-Sprint Planning Document for Iteration 1:</br>
+## Sprint Planning and Review
+Sprint 1 Planning and Review:</br>
 https://docs.google.com/document/d/1PFSHEmctJcphnvS_sIFLBwKtJKjMI6X8Y2TYh6Sgb3E/edit?usp=sharing
 
-
-Sprint Planning Document for Iteration 2:</br>
+Sprint 2 Planning and Review:</br>
 https://docs.google.com/document/d/1PW3oNJy1oSttl2ZZlZhgE-w6Ei8aKcm3vlHW0Bm25Wg/edit?usp=sharing
+
+Sprint 3 Planning and Review:</br>
+https://docs.google.com/document/d/1YeXOjUnyZIUHrRWdbr8HYcAxKHh3Rp9Pjmb5Gm5eai4/edit?usp=sharing
+
+## Final Presentation
+A link to our final presentation:</br>
+https://docs.google.com/presentation/d/1-ndrX1u3dt5uddjnWisbmw2-8t7fMI8LAkdIyzekoBo/edit?usp=sharing
+
