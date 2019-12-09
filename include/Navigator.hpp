@@ -108,26 +108,46 @@ class Navigator {
   bool checkVisuals();
 
   /**
-  *  @brief   This is a function that deletes a collected object from the world
-  *  @param	  None
-  *  @return	None
-  */
-  void goalDelete();
-
-  /**
   *  @brief   This is a callback to find the closest object to the robot
   *  @param	  msg States of the models
   *  @return	None
   */
   void closestCallback(const gazebo_msgs::ModelStates);
 
+  /**
+  *  @brief   Function to delete object off world
+  *  @param   None
+  *  @return  None
+  */
+  void deleteObject();
+
+  /**
+  *  @brief   Function to set delete bool to true
+  *  @param   None
+  *  @return  None
+  */
+  void setDelete();
+
+  /**
+  *  @brief   Function to set delete bool to false
+  *  @param   None
+  *  @return  None
+  */
+  void resetDelete();
 
  private:
+  // Node handler for class
   ros::NodeHandle n_;
+  // subscriber for model states topic
   ros::Subscriber subClosestObj_;
+  // client handle for deleting the object
   ros::ServiceClient clientDelObj_;
+  // client handle for getting poses
   ros::ServiceClient clientGetPos_;
+  // string name of closest object
   std::string closestObject;
+  // flag to allow deletion of object
+  bool deleteOkay;
   // Set up the action client with it set to spin a thread by default
   MoveBaseClient aclient;
 };

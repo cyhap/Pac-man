@@ -115,11 +115,10 @@ int main(int argc, char **argv) {
         velMsg.angular.z = 0.00;
       }
     } else {  // Object blocking path
-      // --check if good or bad
-      // --navigator functionality
-      if (true) {  // Is a good object
-        // --delete object!!
+      if (navigator.closestPose.collect) {  // Is a good object
+        navigator.setDelete();
       } else {
+        navigator.resetDelete();
         ROS_WARN_STREAM("Object in path! Turning right");
         velMsg.linear.x = 0.00;
         velMsg.angular.z = 1.00;

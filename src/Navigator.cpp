@@ -34,7 +34,6 @@
 
 #include <math.h>
 #include <stdlib.h>
-
 #include <memory>
 #include <vector>
 #include <algorithm>
@@ -62,18 +61,20 @@
 Navigator::Navigator()
   : navStackStatus{ false }, allowImgCallback{ true } , sendGoal{ false } ,
           aclient("move_base", true) {
-  // Subsriber to find closest object -
   //THIS IS A CUSTOM THROTTLE TOPIC, DONT FORGET TO ADD IT TO LAUNCH
   subClosestObj_ = n_.subscribe("/my_model_states", 1000,
-                                &Navigator::closestCallback, this);
+    &Navigator::closestCallback, this);
 
   // Service client for deleting objects
   clientDelObj_ = n_.serviceClient<gazebo_msgs::DeleteModel>
-                                              ("/gazebo/delete_model");
+    ("/gazebo/delete_model");
 
   // Service client from get model state
   clientGetPos_ = n_.serviceClient<gazebo_msgs::GetModelState>
-                                              ("/gazebo/get_model_state");
+    ("/gazebo/get_model_state");
+
+  closestObject = "none";
+  deleteOkay = false;
 }
 
 void Navigator::laserScanCallback(const sensor_msgs::LaserScan::ConstPtr& msg) {
@@ -89,7 +90,7 @@ void Navigator::laserScanCallback(const sensor_msgs::LaserScan::ConstPtr& msg) {
 void Navigator::imgCallback(const pacman::VecPoses::ConstPtr& vecPoses) {
   //  -- Find the closest pose from the vector input
   double minY = 0;
-  for (auto indpose : vecPoses->poses) {
+  for (const auto& indpose : vecPoses->poses) {
     // Grab y coordinate of current pose
     double ypos = indpose.y;
     // Check y value of pose
@@ -113,31 +114,6 @@ bool Navigator::checkVisuals() {
   return navStackStatus;
 }
 
-void Navigator::goalDelete() {
-  // Service call to delete object
-  gazebo_msgs::DeleteModel dmsrv;
-  dmsrv.request.model_name = closestObject;
-  if (clientDelObj_.call(dmsrv)) {
-    // calls in background
-  }
-}
-
-//void Mover::deleteObject() {
-// 
-//  //ROS_INFO_STREAM("bump!");
-
-//  if ( closestObject != "none" && deleteOkay) {
-//    //calling delete service call     
-//    gazebo_msgs::DeleteModel dmsrv;
-//    dmsrv.request.model_name = closestObject;
-//    if (clientDelObj_.call(dmsrv)) {
-//      //calls in background
-//      closestObject = "none";
-//    }
-//  }
-
-//}
-
 void Navigator::closestCallback(const gazebo_msgs::ModelStates msg) {
   float closestDist = 1000.0;
   int closest = 0;
@@ -157,33 +133,57 @@ void Navigator::closestCallback(const gazebo_msgs::ModelStates msg) {
   }
 
   // Find the object nearest to the Turtlebot
-  
-//  auto msgName = msg.name.begin();
-//  for (auto element : msg.pose) {
-//    double x2 = element.position.x;
-//    double y2 = element.position.y;
-//    double x = x1-x2;  // distance in x
-//    double y = y1-y2;  // distance in y
-//    double dist = sqrt(pow(x, 2) + pow(y, 2));
-//    if (dist < 1) {
-//      if (dist < closestDist) {
-//        if (*msgName == "mobile_base"){  //skip mobile_base
-//        } else {
-//          if(msg.name[i] == "ground_plane"){  //skip ground plane
-//          } else {
-//            std::string wallstr("wall");
-//            std::size_t found = msg.name[i].find(wallstr);
-//            if(found!=std::string::npos){
-//              // skip grey walls
-//            } else {
-//              closest_dist = dist;
-//              closest = i;
-//              closestObject = msg.name[closest]; 
-//            }
-//          }
-//        }
-//        msgName++;
-//      }
-//    }
+  auto msgName = msg.name.begin();
+
+  for (const auto& element : msg.pose) {
+    double x2 = element.position.x;
+    double y2 = element.position.y;
+
+    double x = x1-x2;  // distance in x
+    double y = y1-y2;  // distance in y
+
+    double dist = sqrt(pow(x, 2) + pow(y, 2));
+
+    if (dist < 1) {
+      if (dist < closestDist) {
+        if (*msgName == "mobile_base" || *msgName == "ground_plane") {
+          //skip "mobile_base" or "ground_plane"
+        } else {
+          // Check if it's a wall
+          std::string wallstr("wall");
+          std::size_t found = msgName->find(wallstr);
+          if (found != std::string::npos) {
+            // skip grey walls
+          } else {
+            closestDist = dist;
+            closestObject = *msgName;
+          }
+        }
+        msgName++;
+      }
+    }
+  }
+}
+
+void Navigator::deleteObject() {
+  if ( closestObject != "none" && deleteOkay) {
+    // Make the delete service call     
+    gazebo_msgs::DeleteModel dmsrv;
+    dmsrv.request.model_name = closestObject;
+    if (clientDelObj_.call(dmsrv)) {
+      // Object succesfully deleted
+      closestObject = "none";
+    }
+  }
+}
+
+void Navigator::setDelete() {
+  deleteOkay = true;
+  ROS_INFO_STREAM("This object is okay to delete");
+}
+
+void Navigator::resetDelete() {
+  deleteOkay = false;
+  ROS_INFO_STREAM("Do not delete this collision item");
 }
 
