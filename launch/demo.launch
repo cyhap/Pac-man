@@ -21,13 +21,6 @@
     <remap from="cmd_vel" to="/mobile_base/commands/velocity" />
   </node>
 
-
-  <node
-    name = "navigation"
-    pkg = "pacman"
-    type = "navigation"
-  />
-
   <node
     name = "eyes"
     pkg = "pacman"

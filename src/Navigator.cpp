@@ -134,33 +134,63 @@ void Navigator::closestCallback(const gazebo_msgs::ModelStates msg) {
   }
 
   // Find the object nearest to the Turtlebot
-  auto msgName = msg.name.begin();
-
-  for (const auto& element : msg.pose) {
-    double x2 = element.position.x;
-    double y2 = element.position.y;
-
-    double x = x1-x2;  // distance in x
-    double y = y1-y2;  // distance in y
-
-    double dist = sqrt(pow(x, 2) + pow(y, 2));
-    if (dist < 1.5 && dist < closestDist) {
-      if (*msgName == "mobile_base" || *msgName == "ground_plane") {
-        //skip "mobile_base" or "ground_plane"
-      } else {
-        // Check if it's a wall
-        std::string wallstr("wall");
-        std::size_t found = msgName->find(wallstr);
-        if (found != std::string::npos) {
-          // skip grey walls
+  int closest = 0;
+  int lent = msg.pose.size();
+  for (int i = 0; i < lent; i++) {
+    double x2 = msg.pose[i].position.x;  // pose from sub
+    double y2 = msg.pose[i].position.y;  // pose from sub
+    double x = x1-x2;
+    double y = y1-y2;
+    double dist = sqrt(x * x + y * y);  // dist formula
+    if (dist < 1) {
+      if (dist < closestDist) {
+        if (msg.name[i] == "mobile_base") {
+          // skip mobile_base
         } else {
-          closestDist = dist;
-          closestObject = *msgName;
+          if (msg.name[i] == "ground_plane") {
+            // skip ground plane
+          } else {
+            std::string wallstr("wall");
+            std::size_t found = msg.name[i].find(wallstr);
+            if (found != std::string::npos) {
+              // skip grey walls
+            } else {
+              closestDist = dist;
+              closest = i;
+              closestObject = msg.name[closest];  // found closest
+            }
+          }
         }
       }
-      msgName++;
     }
   }
+//  auto msgName = msg.name.begin();
+//  int i = 0;
+//  for (const auto& element : msg.pose) {
+//    double x2 = element.position.x;
+//    double y2 = element.position.y;
+
+//    double x = x1-x2;  // distance in x
+//    double y = y1-y2;  // distance in y
+
+//    double dist = sqrt(pow(x, 2) + pow(y, 2));
+//    if (dist < 1.5 && dist < closestDist) {
+//      if (msg.name[i] == "mobile_base" || msg.name[i] == "ground_plane") {
+//        //skip "mobile_base" or "ground_plane"
+//      } else {
+//        // Check if it's a wall
+//        std::string wallstr("wall");
+//        std::size_t found = msg.name[i].find(wallstr);
+//        if (found != std::string::npos) {
+//          // skip grey walls
+//        } else {
+//          closestDist = dist;
+//          closestObject = msg.name[i];
+//        }
+//      }
+//      i++;
+//    }
+//  }
   ROS_INFO_STREAM(closestObject);
 }
 

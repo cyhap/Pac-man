@@ -99,18 +99,18 @@ int main(int argc, char **argv) {
       double xVal = navigator.closestPose.x;
       if (xVal > midImgright) {  // Object on the right
         // Turn right
-        ROS_WARN_STREAM("Rigth Turn: [0.25,-0.5]");
-        velMsg.linear.x = 0.25;
+        ROS_WARN_STREAM("Rigth Turn: [0.1,-0.5]");
+        velMsg.linear.x = 0.1;
         velMsg.angular.z = -0.50;
       } else if (xVal < midImgLeft) {  // Object on the left
         // Turn left
-        ROS_WARN_STREAM("Left Turn: [0.25,0.5]");
-        velMsg.linear.x = 0.25;
+        ROS_WARN_STREAM("Left Turn: [0.1,0.5]");
+        velMsg.linear.x = 0.1;
         velMsg.angular.z = 0.50;
       } else {  // Object centered
         // Go straight
-        ROS_WARN_STREAM("Straight Ahead: [1,0]");
-        velMsg.linear.x = 1.00;
+        ROS_WARN_STREAM("Straight Ahead: [0.5,0]");
+        velMsg.linear.x = 0.50;
         velMsg.angular.z = 0.00;
       }
     } else {  // Object blocking path
@@ -125,7 +125,10 @@ int main(int argc, char **argv) {
       }
     }
     pub.publish(velMsg);
-
+    
+    navigator.closestPose.x = 320;
+    navigator.closestPose.y = 240;
+    navigator.closestPose.collect = false;
     ros::spinOnce();
 
     loop_rate.sleep();
