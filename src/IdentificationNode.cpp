@@ -113,8 +113,8 @@ class Identification {
     cv::Scalar lowGood(0, 80, 80);
     cv::Scalar highGood(50, 255, 255);
     // Mask for the Ghost
-    cv::Scalar lowBad(0, 80, 80);
-    cv::Scalar highBad(150, 255, 255);
+    cv::Scalar lowBad(45, 80, 80);
+    cv::Scalar highBad(75, 255, 255);
 
     cv::inRange(hsvImg, lowGood, highGood, goodThresh);
     cv::inRange(hsvImg, lowBad, highBad, badThresh);
@@ -166,8 +166,8 @@ int main(int argc, char **argv) {
   cv::Scalar lowGood(0, 80, 80);
   cv::Scalar highGood(50, 255, 255);
   // Mask for the Ghost
-  cv::Scalar lowBad(0, 80, 80);
-  cv::Scalar highBad(150, 255, 255);
+  cv::Scalar lowBad(45, 80, 80);
+  cv::Scalar highBad(75, 255, 255);
 
   identifier.eyes.setGoodObjectMask(lowGood, highGood);
   identifier.eyes.setBadObjectMask(lowBad, highBad);
