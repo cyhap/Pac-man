@@ -74,7 +74,7 @@ int main(int argc, char **argv) {
 
   // Publish on the topic required to move turtlebot
   // This will be remmapped in the launch file.
-  auto pub = nm.advertise<geometry_msgs::Twist>("/cmd_vel_mux/input/navi", 1000);
+  auto pub = nm.advertise<geometry_msgs::Twist>("cmd_vel", 1000);
   auto lsrSub = nm.subscribe("/scan", 1000, &Navigator::laserScanCallback,
     &navigator);
   auto imgSub = nm.subscribe("imgPoses", 1000, &Navigator::imgCallback,
@@ -99,12 +99,12 @@ int main(int argc, char **argv) {
       double xVal = navigator.closestPose.x;
       if (xVal > midImgright) {  // Object on the right
         // Turn right
-        ROS_WARN_STREAM("Rigth Turn: [0.25,0.5]");
+        ROS_WARN_STREAM("Rigth Turn: [0.25,-0.5]");
         velMsg.linear.x = 0.25;
         velMsg.angular.z = -0.50;
       } else if (xVal < midImgLeft) {  // Object on the left
         // Turn left
-        ROS_WARN_STREAM("Left Turn: [0.25,-0.5]");
+        ROS_WARN_STREAM("Left Turn: [0.25,0.5]");
         velMsg.linear.x = 0.25;
         velMsg.angular.z = 0.50;
       } else {  // Object centered
@@ -114,8 +114,9 @@ int main(int argc, char **argv) {
         velMsg.angular.z = 0.00;
       }
     } else {  // Object blocking path
-      if (!navigator.closestPose.collect) {  // Is a good object
+      if (navigator.closestPose.collect) {  // Is a good object
         navigator.setDelete();
+        navigator.deleteObject();
       } else {
         navigator.resetDelete();
         ROS_WARN_STREAM("Object in path! Turning right");

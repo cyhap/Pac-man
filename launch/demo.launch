@@ -17,7 +17,9 @@
     pkg = "pacman"
     type = "movement"
     output = "screen"
-  />
+  >
+    <remap from="cmd_vel" to="/mobile_base/commands/velocity" />
+  </node>
 
 
   <node

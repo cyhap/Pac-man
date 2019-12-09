@@ -91,7 +91,7 @@ void Navigator::imgCallback(const pacman::VecPoses::ConstPtr& vecPoses) {
   //  -- Find the closest pose from the vector input
   double minY = 0;
   for (const auto &indpose : vecPoses->poses) {
-    if (!indpose.collect) {
+    if (indpose.collect) {
       // Grab y coordinate of current pose
       double ypos = indpose.y;
       // Check y value of pose
@@ -144,8 +144,7 @@ void Navigator::closestCallback(const gazebo_msgs::ModelStates msg) {
     double y = y1-y2;  // distance in y
 
     double dist = sqrt(pow(x, 2) + pow(y, 2));
-
-    if (dist < 1 && dist < closestDist) {
+    if (dist < 1.5 && dist < closestDist) {
       if (*msgName == "mobile_base" || *msgName == "ground_plane") {
         //skip "mobile_base" or "ground_plane"
       } else {
@@ -162,6 +161,7 @@ void Navigator::closestCallback(const gazebo_msgs::ModelStates msg) {
       msgName++;
     }
   }
+  ROS_INFO_STREAM(closestObject);
 }
 
 void Navigator::deleteObject() {
