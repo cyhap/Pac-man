@@ -199,7 +199,6 @@ int main(int argc, char **argv) {
     // Parse Out Good Objects to Publish on a Topic
     // Update Nav Stack Map with Bad Objects.
     for (const auto &tObj : tObjs) {
-      if (tObj->checkCollect()) {
         // Convert the Pose to the ROS Pose Msg Type
         pacman::ObjPose tPosMsg;
         Object::Pose toSend = tObj->getPose();
@@ -207,10 +206,8 @@ int main(int argc, char **argv) {
         tPosMsg.y = toSend.y;
         tPosMsg.z = toSend.z;
         tPosMsg.theta = toSend.yaw;
+        tPosMsg.collect = tObj->checkCollect();
         output.poses.emplace_back(tPosMsg);
-      } else {
-        // Learn how to send this bad object to the Map!!!
-      }
     }
     // Publish the list of Good Objects.
     // Verify there is something to publish
