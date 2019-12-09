@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
 <launch>
-
+  <arg
+    name="save_strawberry_loc"
+    default="0"
+  />
   <include file="$(find turtlebot_gazebo)/launch/turtlebot_world.launch" >
     <arg name="world_file" value="$(find pacman)/data/worlds/pacworld.world" />
   </include>
@@ -35,5 +38,11 @@
     output = "screen"
     launch-prefix = "gnome-terminal --command"
   />
-
+  <node
+   name="strawberry_poses"
+   pkg="rosbag"
+   type="record"
+   args = "-O PacA.bag /listobjects"
+   if="$(arg save_strawberry_loc)"
+  />
 </launch>
