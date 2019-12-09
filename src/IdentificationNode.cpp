@@ -25,7 +25,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
  /**
-  * @file ObjectNode.cpp
+  * @file Identification.cpp
   * @copyright 2019 Ari Kupferberg
   * @author Ari Kupfeberg, Corbyn Yhap
   * @date 11/25/2019
@@ -140,7 +140,7 @@ class Identification {
 */
 int main(int argc, char **argv) {
   // Initialize the ROS node
-  ros::init(argc, argv, "object");
+  ros::init(argc, argv, "identification");
 
   // Create a node handle
   ros::NodeHandle nh;

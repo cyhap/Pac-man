@@ -211,11 +211,11 @@ void Navigator::resetDelete() {
 }
 
 geometry_msgs::Twist Navigator::navigate(bool clear_, int &turns) {
-  // Set center width range of image
-  double midImgLeft = 280;
-  double midImgright = 360;
-
   if (clear_) {
+    // Set center width range of image
+    double midImgLeft = 280;
+    double midImgright = 360;
+
     ROS_WARN_STREAM("Path is clear!");
     double xVal = closestPose.x;
     if (xVal > midImgright) {  // Object on the right

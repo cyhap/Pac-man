@@ -29,7 +29,7 @@
   * @copyright 2019 Ari Kupferberg
   * @author Ari Kupferberg
   * @date 12/8/2019
-  * @brief This is for service for testing
+  * @brief This is for creating a service for testing
   */
 #include "pacman/NavPose.h"
 #include "ros/ros.h"
@@ -37,7 +37,6 @@
 // Cpplint Error though Accepted ROS Methodology.
 bool nav(pacman::NavPose::Request &req,
           pacman::NavPose::Response &res) {
-  double x = req.pose.x;
   res.str = "Received Goal Pose";
   ROS_INFO_STREAM(res.str);
   return true;

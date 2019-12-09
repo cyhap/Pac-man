@@ -26,8 +26,8 @@
  */
  /**
   * @file MovementTest.cpp
-  * @copyright 2019 Ethan Quist
-  * @author Ethan Quist
+  * @copyright 2019 Ethan Quist, Ari Kupferberg
+  * @author Ethan Quist, Ari Kupferberg
   * @date 11/27/2019
   * @brief This TEST file is for testing the Movement methods.
   */

@@ -39,6 +39,7 @@
 
 class Object {
  public:
+  // Struct of 6DOF object pose
   struct Pose {
       double x = 0.00;
       double y = 0.00;

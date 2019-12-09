@@ -41,8 +41,10 @@
 
 class GoodObject: public Object {
  private:
-  Object::Pose location;  ///< 6-DOF location of Object as Pose
-  bool collect;  ///< Boolean to identify if Object should be collected
+  // 6-DOF location of Object as Pose
+  Object::Pose location;
+  // Boolean to identify if Object should be collected
+  bool collect;
 
  public:
   /**

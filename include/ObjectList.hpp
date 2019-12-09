@@ -44,10 +44,13 @@
 
 class ObjectList {
  private:
-    std::vector<Object::Pose> objectsFound;  ///< Vector of collected objects
-    int numberOfObjects;  ///< Number of objects in found list
+    // Vector of collected objects
+    std::vector<Object::Pose> objectsFound;
+    // Number of objects in found list
+    int numberOfObjects;
 
  public:
+    // Boolean flag to check for object collected
     bool objectFlag;
 
     /**

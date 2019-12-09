@@ -67,10 +67,15 @@ class Navigator {
                                                           MoveBaseClient;
 
  public:
+  // Closest object pose to the Turtlebot
   pacman::ObjPose closestPose;
+  // Status of the Navigation Stack
   bool navStackStatus;
+  // Flag to allow the imgCallback method to implement
   bool allowImgCallback;
+  // boolean for sending goal to navigation stack
   bool sendGoal;
+  // Smart Pointer to instance of Movement Class
   std::shared_ptr<Movement> movement;
 
   /**
@@ -138,8 +143,9 @@ class Navigator {
 
   /**
   *  @brief   Function to navigate the world
-  *  @param   None
-  *  @return  None
+  *  @param	  clear_ Boolean for path clear
+  *  @param	  turns Count for number of right/left rotations
+  *  @return  Twist Velocity paramters
   */
   geometry_msgs::Twist navigate(bool, int&);
 

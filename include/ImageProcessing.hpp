@@ -128,14 +128,20 @@ class ImageProcessing {
   cv::Mat applyBadMask(const cv::Mat&);
 
  private:
+  // Smart pointer to an RGB openCV image
   std::shared_ptr<const cv::Mat> rgbImg;
+  // Smart pointer to an openCV rectified point cloud
   std::shared_ptr<const pcl::PointCloud<pcl::PointXYZ> > rectPntCld;
+  // Lower range for good object mask
   cv::Scalar lowGood;
+  // Upper range for good object mask
   cv::Scalar lowBad;
+  // Lower range for bad object mask
   cv::Scalar highGood;
+  // Upper range for bad object mask
   cv::Scalar highBad;
+  // boolean for pose pixel
   bool pixelForPose;
-
 
   /**
    *  @brief  processMask helper function to identify object centers in the

@@ -41,9 +41,10 @@
 
 class Movement {
  private:
-  double linearVelocity;  ///< Turtlebot's linear velocity
-  double angularVelocity;  ///< Turtlebot's angular velocity
-
+  // Turtlebot's current linear velocity
+  double linearVelocity;
+  // Turtlebot's current angular velocity
+  double angularVelocity;
   // This is the boolean indicating whether the robot can move forward.
   bool clearAhead;
   // This is the minimum distance reading allowed before turning starts.
@@ -56,7 +57,9 @@ class Movement {
  public:
   /**
   *  @brief   This is the constructor for the Movement Class
-  *  @param	  None
+  *  @param	  aColDist Minimum collision distance
+  *  @param	  aLinVel Maximum linear velocity
+  *  @param	  angVel Maximum angular velocity
   *  @return	None
   */
   Movement(const double &aColDist = 0.55, const double &aLinVel = 0.5,
