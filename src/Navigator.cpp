@@ -151,13 +151,19 @@ void Navigator::closestCallback(const gazebo_msgs::ModelStates msg) {
             // skip ground plane
           } else {
             std::string wallstr("wall");
+            std::string ghostStr("blue");
             std::size_t found = msg.name[i].find(wallstr);
             if (found != std::string::npos) {
               // skip grey walls
             } else {
+              auto found2 = msg.name[i].find(ghostStr);
+              if (found2 != ghostStr.npos) {
+
+              } else {
               closestDist = dist;
               closest = i;
               closestObject = msg.name[closest];  // found closest
+              }
             }
           }
         }
