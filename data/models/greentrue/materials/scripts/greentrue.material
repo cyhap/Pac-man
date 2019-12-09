@@ -1,0 +1,13 @@
+material greentrue/Diffuse
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture truegreen.png
+      }
+    }
+  }
+}

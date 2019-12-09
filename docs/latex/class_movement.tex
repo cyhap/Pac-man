@@ -1,0 +1,142 @@
+\hypertarget{class_movement}{}\doxysection{Movement Class Reference}
+\label{class_movement}\index{Movement@{Movement}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_movement_a775c1f5bad01d37c73e9430121d390ac}{Movement}} (const double \&a\+Col\+Dist=0.\+55, const double \&a\+Lin\+Vel=0.\+5, const double \&ang\+Vel=1)
+\begin{DoxyCompactList}\small\item\em This is the constructor for the \mbox{\hyperlink{class_movement}{Movement}} Class. \end{DoxyCompactList}\item 
+virtual \mbox{\hyperlink{class_movement_ab62140422526d18ae3596930d04d05ce}{$\sim$\+Movement}} ()
+\begin{DoxyCompactList}\small\item\em This is the destructor for the \mbox{\hyperlink{class_movement}{Movement}} Class. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_movement_af474ffd4ef49748e0681154ab3f6eba7}{update\+Min\+Dist}} (float)
+\begin{DoxyCompactList}\small\item\em Uses the turtlebot sensor data to determine whether something is in front of the robot. Sets the clear\+Ahead variable accordingly. \end{DoxyCompactList}\item 
+std\+::pair$<$ double, double $>$ \mbox{\hyperlink{class_movement_a52d2fac04eb3f62ea54e2332013ff60c}{compute\+Velocities}} ()
+\begin{DoxyCompactList}\small\item\em Checks the clear\+Ahead boolean and updates the velocities accordingly. (Straight if clear ahead. Turning if obstacle in front.) \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_movement_a17e99e0e7092e98c40afe0ad540d63d5}{get\+Clear\+Ahead}} ()
+\begin{DoxyCompactList}\small\item\em Returns whether or not the robot can move forward. This function was added so unit testing could take place on the update\+Min\+Dist function. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_movement_a654467d4142dff8fb4f26024b761e286}\label{class_movement_a654467d4142dff8fb4f26024b761e286}} 
+double {\bfseries linear\+Velocity}
+\item 
+\mbox{\Hypertarget{class_movement_a2ad033b27bc735d3af00151a4563cdf8}\label{class_movement_a2ad033b27bc735d3af00151a4563cdf8}} 
+double {\bfseries angular\+Velocity}
+\item 
+\mbox{\Hypertarget{class_movement_a2eb9a6883ed7a74b8894124f735b3211}\label{class_movement_a2eb9a6883ed7a74b8894124f735b3211}} 
+bool {\bfseries clear\+Ahead}
+\item 
+\mbox{\Hypertarget{class_movement_a3ea7835f8d32a3b087cf2e2c71bb43b7}\label{class_movement_a3ea7835f8d32a3b087cf2e2c71bb43b7}} 
+float {\bfseries collision\+Dist}
+\item 
+\mbox{\Hypertarget{class_movement_a4dc0a0848a31ee3ccba31b27ead75fae}\label{class_movement_a4dc0a0848a31ee3ccba31b27ead75fae}} 
+double {\bfseries max\+Lin\+Vel}
+\item 
+\mbox{\Hypertarget{class_movement_a2ecd3d29d4345b4142ef7c9f40b554a5}\label{class_movement_a2ecd3d29d4345b4142ef7c9f40b554a5}} 
+double {\bfseries max\+Ang\+Vel}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_movement_a775c1f5bad01d37c73e9430121d390ac}\label{class_movement_a775c1f5bad01d37c73e9430121d390ac}} 
+\index{Movement@{Movement}!Movement@{Movement}}
+\index{Movement@{Movement}!Movement@{Movement}}
+\doxysubsubsection{\texorpdfstring{Movement()}{Movement()}}
+{\footnotesize\ttfamily Movement\+::\+Movement (\begin{DoxyParamCaption}\item[{const double \&}]{a\+Col\+Dist = {\ttfamily 0.55},  }\item[{const double \&}]{a\+Lin\+Vel = {\ttfamily 0.5},  }\item[{const double \&}]{ang\+Vel = {\ttfamily 1} }\end{DoxyParamCaption})}
+
+
+
+This is the constructor for the \mbox{\hyperlink{class_movement}{Movement}} Class. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em a\+Col\+Dist} & Minimum collision distance \\
+\hline
+{\em a\+Lin\+Vel} & Maximum linear velocity \\
+\hline
+{\em ang\+Vel} & Maximum angular velocity \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+None 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_movement_ab62140422526d18ae3596930d04d05ce}\label{class_movement_ab62140422526d18ae3596930d04d05ce}} 
+\index{Movement@{Movement}!````~Movement@{$\sim$Movement}}
+\index{````~Movement@{$\sim$Movement}!Movement@{Movement}}
+\doxysubsubsection{\texorpdfstring{$\sim$Movement()}{~Movement()}}
+{\footnotesize\ttfamily Movement\+::$\sim$\+Movement (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+This is the destructor for the \mbox{\hyperlink{class_movement}{Movement}} Class. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em None} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+None 
+\end{DoxyReturn}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_movement_a52d2fac04eb3f62ea54e2332013ff60c}\label{class_movement_a52d2fac04eb3f62ea54e2332013ff60c}} 
+\index{Movement@{Movement}!computeVelocities@{computeVelocities}}
+\index{computeVelocities@{computeVelocities}!Movement@{Movement}}
+\doxysubsubsection{\texorpdfstring{computeVelocities()}{computeVelocities()}}
+{\footnotesize\ttfamily std\+::pair$<$ double, double $>$ Movement\+::compute\+Velocities (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Checks the clear\+Ahead boolean and updates the velocities accordingly. (Straight if clear ahead. Turning if obstacle in front.) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em None} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pair of doubles for linear and angular velocities 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_movement_a17e99e0e7092e98c40afe0ad540d63d5}\label{class_movement_a17e99e0e7092e98c40afe0ad540d63d5}} 
+\index{Movement@{Movement}!getClearAhead@{getClearAhead}}
+\index{getClearAhead@{getClearAhead}!Movement@{Movement}}
+\doxysubsubsection{\texorpdfstring{getClearAhead()}{getClearAhead()}}
+{\footnotesize\ttfamily bool Movement\+::get\+Clear\+Ahead (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Returns whether or not the robot can move forward. This function was added so unit testing could take place on the update\+Min\+Dist function. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em None} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+boolean of clear\+Ahead status 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_movement_af474ffd4ef49748e0681154ab3f6eba7}\label{class_movement_af474ffd4ef49748e0681154ab3f6eba7}} 
+\index{Movement@{Movement}!updateMinDist@{updateMinDist}}
+\index{updateMinDist@{updateMinDist}!Movement@{Movement}}
+\doxysubsubsection{\texorpdfstring{updateMinDist()}{updateMinDist()}}
+{\footnotesize\ttfamily void Movement\+::update\+Min\+Dist (\begin{DoxyParamCaption}\item[{float}]{a\+Dist }\end{DoxyParamCaption})}
+
+
+
+Uses the turtlebot sensor data to determine whether something is in front of the robot. Sets the clear\+Ahead variable accordingly. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em a\+Dist} & float of minimum distance observed from laser scan \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+None 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/ethan/\+Desktop/\+Doxygen Environment/pacman-\/phase3c/include/\mbox{\hyperlink{_movement_8hpp}{Movement.\+hpp}}\item 
+C\+:/\+Users/ethan/\+Desktop/\+Doxygen Environment/pacman-\/phase3c/src/\mbox{\hyperlink{_movement_8cpp}{Movement.\+cpp}}\end{DoxyCompactItemize}

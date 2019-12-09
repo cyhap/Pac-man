@@ -35,68 +35,66 @@
 #ifndef INCLUDE_MOVEMENT_HPP_
 #define INCLUDE_MOVEMENT_HPP_
 
+#include <stdlib.h>
+
+#include <utility>
+
 class Movement {
  private:
-    float linearVelocity;  ///< Turtlebot's linear velocity
-    float angularVelocity;  ///< Turtlebot's angular velocity
-    bool objectSeen;  ///< boolean flag for object detection
+  // Turtlebot's current linear velocity
+  double linearVelocity;
+  // Turtlebot's current angular velocity
+  double angularVelocity;
+  // This is the boolean indicating whether the robot can move forward.
+  bool clearAhead;
+  // This is the minimum distance reading allowed before turning starts.
+  float collisionDist;
+  // This is linear velocity when path is clear
+  double maxLinVel;
+  // This is the angular velocity when path is not clear.
+  double maxAngVel;
 
  public:
-    /**
-    *  @brief   This is the constructor for the Movement Class
-    *  @param	  None
-    *  @return	None
-    */
-    Movement();
+  /**
+  *  @brief   This is the constructor for the Movement Class
+  *  @param	  aColDist Minimum collision distance
+  *  @param	  aLinVel Maximum linear velocity
+  *  @param	  angVel Maximum angular velocity
+  *  @return	None
+  */
+  Movement(const double &aColDist = 0.55, const double &aLinVel = 0.5,
+           const double &angVel = 1);
 
-    /**
-    *  @brief   This is the destructor for the Movement Class
-    *  @param	  None
-    *  @return	None
-    */
-    virtual ~Movement();
+  /**
+  *  @brief   This is the destructor for the Movement Class
+  *  @param	  None
+  *  @return	None
+  */
+  virtual ~Movement();
 
-    /**
-    *  @brief   This function sets the linear velocity of the turtlebot
-    *  @param	  lv linear velocity as float
-    *  @return	None
-    */
-    void setLinearVelocity(float);
+  /**
+  *  @brief    Uses the turtlebot sensor data to determine whether something is 
+  *   in front of the robot. Sets the clearAhead variable accordingly.
+  *  @param	  aDist float of minimum distance observed from laser scan
+  *  @return	None
+  */
+  void updateMinDist(float);
 
-    /**
-    *  @brief   This function sets the angular velocity of the turtlebot
-    *  @param	  av angular velocity as float
-    *  @return	None
-    */
-    void setAngularVelocity(float);
+  /**
+  *  @brief   Checks the clearAhead boolean and updates the velocities
+  *   accordingly. (Straight if clear ahead. Turning if obstacle in front.)
+  *  @param	  None
+  *  @return	pair of doubles for linear and angular velocities
+  */
+  std::pair<double, double> computeVelocities();
 
-    /**
-    *  @brief   This function sets the objectSeen member
-    *  @param	  os boolean
-    *  @return	None
-    */
-    void setObjectSeen(bool);
-
-    /**
-    *  @brief   This function retrieves the linear velocity
-    *  @param	  None
-    *  @return	float of linear velocity
-    */
-    float getLinearVelocity();
-
-    /**
-    *  @brief   This function retrieves the angular velocity
-    *  @param	  None
-    *  @return	float of angular velocity
-    */
-    float getAngularVelocity();
-
-    /**
-    *  @brief   This function checks the objectSeen member flag
-    *  @param	  None
-    *  @return	boolean for objectSeen
-    */
-    bool checkVisuals();
+  /**
+  *  @brief   Returns whether or not the robot can move forward. This function 
+  *   was added so unit testing could take place on the updateMinDist function.
+  *  @param	  None
+  *  @return	boolean of clearAhead status
+  */
+  bool getClearAhead();
 };
 
 #endif  // INCLUDE_MOVEMENT_HPP_

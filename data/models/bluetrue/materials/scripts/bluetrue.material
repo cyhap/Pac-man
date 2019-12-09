@@ -1,0 +1,13 @@
+material bluetrue/Diffuse
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture trueblue.png
+      }
+    }
+  }
+}

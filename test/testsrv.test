@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+  <node pkg="pacman" type="srvTest" name="mytestserver" />
+  <test pkg="pacman" type="myTest" test-name="myTest" />
+</launch>
+
+

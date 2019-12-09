@@ -1,0 +1,28 @@
+./src/mytestserver.cpp:38:  Is this a non-const reference? If so, make const or use a pointer: pacman::NavPose::Request &req  [runtime/references] [2]
+./src/mytestserver.cpp:39:  Is this a non-const reference? If so, make const or use a pointer: pacman::NavPose::Response &res  [runtime/references] [2]
+./src/NavigationNode.cpp:53:  Is this a non-const reference? If so, make const or use a pointer: pacman::NavPose::Request &req  [runtime/references] [2]
+./src/NavigationNode.cpp:54:  Is this a non-const reference? If so, make const or use a pointer: pacman::NavPose::Response &res  [runtime/references] [2]
+Done processing ./include/ImageProcessing.hpp
+Done processing ./include/ObjectList.hpp
+Done processing ./include/Object.hpp
+Done processing ./include/Movement.hpp
+Done processing ./include/GoodObject.hpp
+Done processing ./include/BadObject.hpp
+Done processing ./include/Navigator.hpp
+Done processing ./src/mytestserver.cpp
+Done processing ./src/Movement.cpp
+Done processing ./src/NavigationNode.cpp
+Done processing ./src/GoodObject.cpp
+Done processing ./src/ObjectList.cpp
+Done processing ./src/Navigator.cpp
+Done processing ./src/main.cpp
+Done processing ./src/BadObject.cpp
+Done processing ./src/IdentificationNode.cpp
+Done processing ./src/ObjectListNode.cpp
+Done processing ./src/ImageProcessing.cpp
+Done processing ./test/ObjectListTest.cpp
+Done processing ./test/MovementTest.cpp
+Done processing ./test/ObjectTest.cpp
+Done processing ./test/ImageProcessingTest.cpp
+Done processing ./test/myTest.cpp
+Total errors found: 4

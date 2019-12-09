@@ -32,40 +32,40 @@
   * @brief This Class provides functionality to control the turtlebot's movements.
   */
 
+#include <stdlib.h>
+
 #include "Movement.hpp"
 
-Movement::Movement() {
-  linearVelocity = 0.0;
-  angularVelocity = 0.0;
-  objectSeen = false;
+Movement::Movement(const double &aColDist, const double &aLinVel,
+                   const double &angVel)
+    : clearAhead(false),
+      collisionDist(aColDist),
+      maxLinVel(aLinVel),
+      maxAngVel(angVel) {
 }
 
 Movement::~Movement() {
 }
 
-void Movement::setLinearVelocity(float lv) {
-  linearVelocity = lv;  // Setting the linear velocity to the input
-  return;
+void Movement::updateMinDist(float aDist) {
+  clearAhead = true;
+  if (aDist <= collisionDist) {
+    clearAhead = false;
+  }
 }
 
-void Movement::setAngularVelocity(float av) {
-  angularVelocity = av;  // Setting the angular velocity to the input
-  return;
+std::pair<double, double> Movement::computeVelocities() {
+  if (clearAhead) {
+    linearVelocity = maxLinVel;
+    angularVelocity = 0;
+  } else {
+    linearVelocity = 0;
+    angularVelocity = maxAngVel;
+  }
+  return std::make_pair(linearVelocity, angularVelocity);
 }
 
-void Movement::setObjectSeen(bool os) {
-  objectSeen = os;  // Setting the object seen to the input
-  return;
+bool Movement::getClearAhead() {
+  return clearAhead;
 }
 
-float Movement::getLinearVelocity() {
-  return linearVelocity;  // Returning linear velocity
-}
-
-float Movement::getAngularVelocity() {
-  return angularVelocity;  // Returning angular velocity
-}
-
-bool Movement::checkVisuals() {
-  return objectSeen;  // Returning object seen
-}

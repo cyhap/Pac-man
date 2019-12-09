@@ -1,0 +1,99 @@
+\href{https://travis-ci.org/cyhap/pacman}{\texttt{ }} \href{https://coveralls.io/github/cyhap/pacman?branch=master}{\texttt{ }}
+
+Codename\+: Pac-\/man\hypertarget{md__c_1__users_ethan__desktop__doxygen__environment_pacman-phase3c__r_e_a_d_m_e_autotoc_md1}{}\doxysection{Project Overview}\label{md__c_1__users_ethan__desktop__doxygen__environment_pacman-phase3c__r_e_a_d_m_e_autotoc_md1}
+This final project for \textquotesingle{}E\+N\+P\+M808X\+: Software Development for Robotics\textquotesingle{} encompasses an autonomous robot product idea and follows high-\/quality software engineering practices and agile development utilized to build a simulated robotic system and demo using R\+OS and Gazebo. For our software design project, we are developing a collection robot. This robot will act vaguely similar to the arcade game character, Pac-\/man (which is also what we have used for the codename of our project), moving around a defined enclosed map, though in this case, autonomously, and collecting specific objects while ignoring others. The operating scenario for our design is one of the assembly rooms at the fictional A\+C\+ME Robotics headquarters. The robot will maneuver its way through the design space, which will contain permanent objects like tables and walls with which it will have to avoid colliding. The source of the problem for which we have created a solution is that A\+C\+ME has many employees that drop items on the floor throughout the day. Some of these items are potentially hazardous to the workflow (think banana peels), while others are important tools that have been placed there on purpose (think tools). Our collection robot will search the space, utilizing localization techniques and image processing to find and collect the waste objects, while ignoring other objects and avoiding all obstacles. We have currently completed 2 phases of this project.\hypertarget{md__c_1__users_ethan__desktop__doxygen__environment_pacman-phase3c__r_e_a_d_m_e_autotoc_md2}{}\doxysection{Personnel}\label{md__c_1__users_ethan__desktop__doxygen__environment_pacman-phase3c__r_e_a_d_m_e_autotoc_md2}
+
+\begin{DoxyItemize}
+\item Corbyn Yhap Corbyn is aquiring his Masters in Engineering for Robotics at the University of Maryland, College Park. Both prior to returning to school to obtain his Masters, and concurrently, Corbyn works as an Software Engineer in Industry.
+\item Ethan Quist Ethan is aquiring his Masters in Engineering for Robotics at the University of Maryland, College Park. Prior to returning to school to obtain his Masters, Ethan worked as an Engineer in Industry.
+\item Ari Kupferberg Ari is aquiring his Masters in Engineering for Robotics at the University of Maryland, College Park, where he also works as a full-\/time Teaching Assistant for a joint graduate/undergraduate Medical Robotics course.
+\end{DoxyItemize}\hypertarget{md__c_1__users_ethan__desktop__doxygen__environment_pacman-phase3c__r_e_a_d_m_e_autotoc_md3}{}\doxysection{Licensing}\label{md__c_1__users_ethan__desktop__doxygen__environment_pacman-phase3c__r_e_a_d_m_e_autotoc_md3}
+This software operates with a 3-\/clause B\+SD 2.\+0 license and can be found inside the file L\+I\+C\+E\+N\+SE.\hypertarget{md__c_1__users_ethan__desktop__doxygen__environment_pacman-phase3c__r_e_a_d_m_e_autotoc_md4}{}\doxysection{Assumptions/\+Dependencies}\label{md__c_1__users_ethan__desktop__doxygen__environment_pacman-phase3c__r_e_a_d_m_e_autotoc_md4}
+The code assumes you are using {\itshape Ros Kinetic}.
+
+The package builds using {\itshape catkin}.
+
+This package relies on the following dependencies that must be installed\+:
+\begin{DoxyItemize}
+\item roscpp
+\item geometry\+\_\+msgs
+\item std\+\_\+msgs
+\item sensor\+\_\+msgs
+\item kobuki\+\_\+msgs
+\item cv\+\_\+bridge
+\item image\+\_\+transport
+\end{DoxyItemize}
+
+The following programs/packages are used and must be installed\+:
+\begin{DoxyItemize}
+\item Gazebo
+\item Turtlebot\+\_\+\+Gazebo
+\end{DoxyItemize}
+
+Our demonstration runs on Gazebo 7.\+16.\+0, issues may occur if using an older version of gazebo In order to update gazebo follow the code below\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{sudo sh -\/c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-\/stable `lsb\_release -\/cs` main" > /etc/apt/sources.list.d/gazebo-\/stable.list'}
+\DoxyCodeLine{}
+\DoxyCodeLine{wget http://packages.osrfoundation.org/gazebo.key -\/O -\/ | sudo apt-\/key add -\/}
+\DoxyCodeLine{}
+\DoxyCodeLine{sudo apt-\/get update}
+\DoxyCodeLine{}
+\DoxyCodeLine{sudo apt-\/get install gazebo7 -\/y}
+\end{DoxyCode}
+\hypertarget{md__c_1__users_ethan__desktop__doxygen__environment_pacman-phase3c__r_e_a_d_m_e_autotoc_md5}{}\doxysection{Download Package}\label{md__c_1__users_ethan__desktop__doxygen__environment_pacman-phase3c__r_e_a_d_m_e_autotoc_md5}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cd <your catkin workspace>/src}
+\DoxyCodeLine{git clone https://github.com/cyhap/pacman.git}
+\end{DoxyCode}
+\hypertarget{md__c_1__users_ethan__desktop__doxygen__environment_pacman-phase3c__r_e_a_d_m_e_autotoc_md6}{}\doxysection{Build}\label{md__c_1__users_ethan__desktop__doxygen__environment_pacman-phase3c__r_e_a_d_m_e_autotoc_md6}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cd <your catkin workspace>}
+\DoxyCodeLine{catkin\_make}
+\DoxyCodeLine{source devel/setup.bash}
+\end{DoxyCode}
+\hypertarget{md__c_1__users_ethan__desktop__doxygen__environment_pacman-phase3c__r_e_a_d_m_e_autotoc_md7}{}\doxysection{Test}\label{md__c_1__users_ethan__desktop__doxygen__environment_pacman-phase3c__r_e_a_d_m_e_autotoc_md7}
+At this point, launch files have not yet been implemented. Thus, \textquotesingle{}roscore\textquotesingle{} must be used to initiate the R\+OS master. Open two terminals\+:
+
+Terminal 1\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{roscore}
+\end{DoxyCode}
+ Terminal 2\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cd <your catkin workspace>}
+\DoxyCodeLine{catkin\_make run\_tests}
+\end{DoxyCode}
+\hypertarget{md__c_1__users_ethan__desktop__doxygen__environment_pacman-phase3c__r_e_a_d_m_e_autotoc_md8}{}\doxysection{Run}\label{md__c_1__users_ethan__desktop__doxygen__environment_pacman-phase3c__r_e_a_d_m_e_autotoc_md8}
+After the respository has been downloaded with all listed dependancies above it can be run through the following code\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cd <your workspace>}
+\DoxyCodeLine{roslaunch pacman demo.launch}
+\end{DoxyCode}
+ This code will run and launch all necessary nodes to see the software working.
+
+A neat function to use to see the published mask images the software produces can be seen by running the following code in a separate terminal while the launch above is running\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{rqt\_image\_view}
+\end{DoxyCode}
+\hypertarget{md__c_1__users_ethan__desktop__doxygen__environment_pacman-phase3c__r_e_a_d_m_e_autotoc_md9}{}\doxysection{Demo}\label{md__c_1__users_ethan__desktop__doxygen__environment_pacman-phase3c__r_e_a_d_m_e_autotoc_md9}
+The demonstration of our software is run through the same launch file stated above. It will open up Gazebo and automatically start the nodes required to make the turtlebot collect the objects. Make sure the dependencies on the correct Gazebo version are followed. 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cd <your workspace>}
+\DoxyCodeLine{roslaunch pacman demo.launch}
+\end{DoxyCode}
+\hypertarget{md__c_1__users_ethan__desktop__doxygen__environment_pacman-phase3c__r_e_a_d_m_e_autotoc_md10}{}\doxysection{Rosbag and Logging}\label{md__c_1__users_ethan__desktop__doxygen__environment_pacman-phase3c__r_e_a_d_m_e_autotoc_md10}
+We have provided the option to use rosbag and record the messages passed between nodes in our software. To run our software with rosbag logging enabled run the following code\+: 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{cd <your workspace>}
+\DoxyCodeLine{roslaunch pacman demo.launch recordChatter:=1}
+\end{DoxyCode}
+\hypertarget{md__c_1__users_ethan__desktop__doxygen__environment_pacman-phase3c__r_e_a_d_m_e_autotoc_md11}{}\doxysection{Product Backlog / Worklog}\label{md__c_1__users_ethan__desktop__doxygen__environment_pacman-phase3c__r_e_a_d_m_e_autotoc_md11}
+The link below is for the A\+IP Workbook for our project\+: \href{https://drive.google.com/file/d/1Yul22CLmPJAjaOQzCEN-TskSz7LMM9vA/view?usp=sharing}{\texttt{ https\+://drive.\+google.\+com/file/d/1\+Yul22\+C\+Lm\+P\+J\+Aja\+O\+Qz\+C\+E\+N-\/\+Tsk\+Sz7\+L\+M\+M9v\+A/view?usp=sharing}}\hypertarget{md__c_1__users_ethan__desktop__doxygen__environment_pacman-phase3c__r_e_a_d_m_e_autotoc_md12}{}\doxysection{Sprint Planning and Review}\label{md__c_1__users_ethan__desktop__doxygen__environment_pacman-phase3c__r_e_a_d_m_e_autotoc_md12}
+Sprint 1 Planning and Review\+: \href{https://docs.google.com/document/d/1PFSHEmctJcphnvS_sIFLBwKtJKjMI6X8Y2TYh6Sgb3E/edit?usp=sharing}{\texttt{ https\+://docs.\+google.\+com/document/d/1\+P\+F\+S\+H\+Emct\+Jcphnv\+S\+\_\+s\+I\+F\+L\+Bw\+Kt\+J\+Kj\+M\+I6\+X8\+Y2\+T\+Yh6\+Sgb3\+E/edit?usp=sharing}}
+
+Sprint 2 Planning and Review\+: \href{https://docs.google.com/document/d/1PW3oNJy1oSttl2ZZlZhgE-w6Ei8aKcm3vlHW0Bm25Wg/edit?usp=sharing}{\texttt{ https\+://docs.\+google.\+com/document/d/1\+P\+W3o\+N\+Jy1o\+Sttl2\+Z\+Zl\+Zhg\+E-\/w6\+Ei8a\+Kcm3vl\+H\+W0\+Bm25\+Wg/edit?usp=sharing}}
+
+Sprint 3 Planning and Review\+: \href{https://docs.google.com/document/d/1YeXOjUnyZIUHrRWdbr8HYcAxKHh3Rp9Pjmb5Gm5eai4/edit?usp=sharing}{\texttt{ https\+://docs.\+google.\+com/document/d/1\+Ye\+X\+Oj\+Uny\+Z\+I\+U\+Hr\+R\+Wdbr8\+H\+Yc\+Ax\+K\+Hh3\+Rp9\+Pjmb5\+Gm5eai4/edit?usp=sharing}}\hypertarget{md__c_1__users_ethan__desktop__doxygen__environment_pacman-phase3c__r_e_a_d_m_e_autotoc_md13}{}\doxysection{Final Presentation}\label{md__c_1__users_ethan__desktop__doxygen__environment_pacman-phase3c__r_e_a_d_m_e_autotoc_md13}
+A link to our final presentation\+: \href{https://docs.google.com/presentation/d/1-ndrX1u3dt5uddjnWisbmw2-8t7fMI8LAkdIyzekoBo/edit?usp=sharing}{\texttt{ https\+://docs.\+google.\+com/presentation/d/1-\/ndr\+X1u3dt5uddjn\+Wisbmw2-\/8t7f\+M\+I8\+L\+Akd\+Iyzeko\+Bo/edit?usp=sharing}} 

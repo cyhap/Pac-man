@@ -34,7 +34,7 @@
 
 #include "ObjectList.hpp"
 #include "Object.hpp"
-#include "GoodObject.hpp"
+
 #include "ros/ros.h"
 #include "gtest/gtest.h"
 
@@ -43,15 +43,28 @@ TEST(ObjectList, addObject) {
   ObjectList objList;
 
   Object::Pose locData;
-  locData.x = 1.00;
-  locData.y = 1.00;
-  locData.z = 1.00;
-  locData.roll = 1.00;
-  locData.pitch = 1.00;
-  locData.yaw = 1.00;
+  objList.addObjectFound(locData);
 
-  ASSERT_EQ(objList.addObjectFound(locData), 1);
+  ASSERT_EQ(objList.getSize(), 1);
 }
+
+TEST(ObjectList, objcallback) {
+  ObjectList objList;
+
+  geometry_msgs::Point objPose;
+  objPose.x = 1.00;
+  objPose.y = 2.00;
+  objPose.z = 3.00;
+  geometry_msgs::Point::ConstPtr objPointer(new geometry_msgs::Point(objPose));
+  objList.objsCallback(objPointer);
+
+  std::vector<Object::Pose> list = objList.getObjectList();
+
+  EXPECT_EQ(list[0].x, 1.00);
+  EXPECT_EQ(list[0].y, 2.00);
+  EXPECT_EQ(list[0].z, 3.00);
+}
+
 
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv) {

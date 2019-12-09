@@ -35,7 +35,26 @@
 #include "Object.hpp"
 #include "GoodObject.hpp"
 
+GoodObject::GoodObject(Object::Pose loc)
+: location{ loc }, collect{ true } {
+}
+
 GoodObject::~GoodObject() {}
+
+Object::Pose GoodObject::getPose() {
+  return location;
+}
+
+std::vector<double> GoodObject::getXYZ() {
+  // Initialize vector
+  std::vector<double> xyz;
+  // Place x y z coordinates in vector
+  xyz.emplace_back(location.x);
+  xyz.emplace_back(location.y);
+  xyz.emplace_back(location.z);
+  // return xyz vector
+  return xyz;
+}
 
 bool GoodObject::checkCollect() {
   return collect;

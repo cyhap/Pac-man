@@ -29,7 +29,7 @@
   * @copyright 2019 Ari Kupferberg
   * @author Ari Kupfeberg
   * @date 11/24/2019
-  * @brief This Class is the Base Class for the Object Classes.
+  * @brief This Pure Virtual Class is the Base Interface for the Object Classes.
   */
 
 #ifndef INCLUDE_OBJECT_HPP_
@@ -39,40 +39,43 @@
 
 class Object {
  public:
-    struct Pose {
-        double x = 0.00;
-        double y = 0.00;
-        double z = 0.00;
-        double roll = 0.00;
-        double pitch = 0.00;
-        double yaw = 0.00;
-    };
+  // Struct of 6DOF object pose
+  struct Pose {
+      double x = 0.00;
+      double y = 0.00;
+      double z = 0.00;
+      double roll = 0.00;
+      double pitch = 0.00;
+      double yaw = 0.00;
+  };
 
-    /**
-    *  @brief   This is the Constructor for the Object Class, with initializer list
-    *  @param	  ind index of Object
-    *  @param	  loc Pose location of Object
-    *  @return	None
-    */
-    Object(int ind, Object::Pose loc) : index{ ind }, location{ loc } {}
+  /**
+  *  @brief   This is the destructor for the Object Class
+  *  @param	  None
+  *  @return	None
+  */
+  virtual ~Object() {}
 
-    /**
-    *  @brief   This is a function to get the Pose of the Object
-    *  @param	  None
-    *  @return	None
-    */
-    Pose getPose();
+  /**
+  *  @brief   This is a virtual function to get the Pose of the Object
+  *  @param	  None
+  *  @return	location 6DOF object Pose
+  */
+  virtual Pose getPose() = 0;
 
-    /**
-    *  @brief   This is a function to get the XYZ location of the Object
-    *  @param	  None
-    *  @return	None
-    */
-    std::vector<double> getXYZ();
+  /**
+  *  @brief   This is a virtual function to get the XYZ location of the Object
+  *  @param	  None
+  *  @return	xyz vector of x,y,z coordinates
+  */
+  virtual std::vector<double> getXYZ() = 0;
 
- private:
-    int index;  ///< index value of Object
-    Pose location;  ///< 6-DOF location of Object as Pose
+  /**
+  *  @brief   This is a virtual function to check the collect status of the Object
+  *  @param	  None
+  *  @return	boolean
+  */
+  virtual bool checkCollect() = 0;
 };
 
 #endif  // INCLUDE_OBJECT_HPP_

@@ -1,0 +1,13 @@
+material blueghost/Diffuse
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture ghost2.png
+      }
+    }
+  }
+}

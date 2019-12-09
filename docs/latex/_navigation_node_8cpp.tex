@@ -1,0 +1,81 @@
+\hypertarget{_navigation_node_8cpp}{}\doxysection{C\+:/\+Users/ethan/\+Desktop/\+Doxygen Environment/pacman-\/phase3c/src/\+Navigation\+Node.cpp File Reference}
+\label{_navigation_node_8cpp}\index{C:/Users/ethan/Desktop/Doxygen Environment/pacman-\/phase3c/src/NavigationNode.cpp@{C:/Users/ethan/Desktop/Doxygen Environment/pacman-\/phase3c/src/NavigationNode.cpp}}
+
+
+This is the R\+OS Node that will handle the interaction with the Navigation Stack.  
+
+
+{\ttfamily \#include \char`\"{}pacman/\+Nav\+Pose.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}ros/ros.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}move\+\_\+base\+\_\+msgs/\+Move\+Base\+Action.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}actionlib/client/simple\+\_\+action\+\_\+client.\+h\char`\"{}}\newline
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{_navigation_node_8cpp_a21e20cc0b6656ae897b3cbb969b93241}\label{_navigation_node_8cpp_a21e20cc0b6656ae897b3cbb969b93241}} 
+typedef actionlib\+::\+Simple\+Action\+Client$<$ move\+\_\+base\+\_\+msgs\+::\+Move\+Base\+Action $>$ {\bfseries Move\+Base\+Client}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{_navigation_node_8cpp_a8defef0221d04dff6a2656bc08caa91c}{nav}} (pacman\+::\+Nav\+Pose\+::\+Request \&req, pacman\+::\+Nav\+Pose\+::\+Response \&res)
+\begin{DoxyCompactList}\small\item\em Server Function for Nav Stack Goal Pose. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{_navigation_node_8cpp_a3c04138a5bfe5d72780bb7e82a18e627}{main}} (int argc, char $\ast$$\ast$argv)
+\begin{DoxyCompactList}\small\item\em This is the main function. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This is the R\+OS Node that will handle the interaction with the Navigation Stack. 
+
+\begin{DoxyCopyright}{Copyright}
+2019 Ari Kupferberg 
+\end{DoxyCopyright}
+\begin{DoxyAuthor}{Author}
+Ari Kupferberg 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+12/3/2019 
+\end{DoxyDate}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{_navigation_node_8cpp_a3c04138a5bfe5d72780bb7e82a18e627}\label{_navigation_node_8cpp_a3c04138a5bfe5d72780bb7e82a18e627}} 
+\index{NavigationNode.cpp@{NavigationNode.cpp}!main@{main}}
+\index{main@{main}!NavigationNode.cpp@{NavigationNode.cpp}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$$\ast$}]{argv }\end{DoxyParamCaption})}
+
+
+
+This is the main function. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em argc} & for R\+OS \\
+\hline
+{\em argv} & for R\+OS \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+0 Exit status 
+\end{DoxyReturn}
+\mbox{\Hypertarget{_navigation_node_8cpp_a8defef0221d04dff6a2656bc08caa91c}\label{_navigation_node_8cpp_a8defef0221d04dff6a2656bc08caa91c}} 
+\index{NavigationNode.cpp@{NavigationNode.cpp}!nav@{nav}}
+\index{nav@{nav}!NavigationNode.cpp@{NavigationNode.cpp}}
+\doxysubsubsection{\texorpdfstring{nav()}{nav()}}
+{\footnotesize\ttfamily bool nav (\begin{DoxyParamCaption}\item[{pacman\+::\+Nav\+Pose\+::\+Request \&}]{req,  }\item[{pacman\+::\+Nav\+Pose\+::\+Response \&}]{res }\end{DoxyParamCaption})}
+
+
+
+Server Function for Nav Stack Goal Pose. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Service} & Request Type variable passed by reference \\
+\hline
+{\em Service} & Response Type variable passed by reference \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+boolean true 
+\end{DoxyReturn}

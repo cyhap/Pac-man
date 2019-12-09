@@ -32,19 +32,29 @@
   * @brief This Class defines the functions that process RGB and Depth sensor
   *        data together.
  */
+#include <math.h>
 
-#include "ImageProcessing.hpp"
+#include <memory>
+
 #include "opencv2/imgcodecs.hpp"
 #include "opencv2/imgproc.hpp"
+#include "pcl/point_cloud.h"
+#include "pcl/point_types.h"
 
+#include "ImageProcessing.hpp"
 #include "GoodObject.hpp"
 #include "BadObject.hpp"
 
 ImageProcessing::ImageProcessing()
     :
-    rgbImg(),
-    rectDepthImg() {
-  // Fixme [Yhap] Consider what default images should be used if any at all.
+    rgbImg(
+        new cv::Mat(500, 500, CV_8UC3, cv::Scalar(255, 255, 255))),
+    rectPntCld(),
+    lowGood(80, 80, 80),
+    lowBad(0, 80, 80),
+    highGood(135, 255, 0),
+    highBad(150, 255, 255),
+    pixelForPose(false) {
 }
 
 ImageProcessing::~ImageProcessing() {
@@ -54,51 +64,70 @@ std::vector<std::shared_ptr<Object> > ImageProcessing::process() {
   // Create the return variable.
   std::vector<std::shared_ptr<Object> > tReturn;
 
-  // Define the  BGR Masks used to detect blocks
-  // Green Block
-  cv::Scalar lowGreen(0, 200, 0);
-  cv::Scalar highGreen(0, 255, 0);
-  // Red Block
-  cv::Scalar lowRed(0, 0, 200);
-  cv::Scalar highRed(0, 0, 255);
-
-  cv::Mat blurImg, greenThresh, redThresh;
+  cv::Mat blurImg, goodThresh, badThresh;
 
   // Blur the Image
   int kernelSize = 3;
-  cv::blur(rgbImg, blurImg, cv::Size(kernelSize, kernelSize));
+  cv::blur(*rgbImg, blurImg, cv::Size(kernelSize, kernelSize));
 
-  cv::inRange(blurImg, lowGreen, highGreen, greenThresh);
-  cv::inRange(blurImg, lowRed, highRed, redThresh);
+  goodThresh = applyGoodMask(blurImg);
+  badThresh = applyBadMask(blurImg);
 
-  // Retrieve Poses for Good Objects
-  std::vector<Object::Pose> goodPoses = processMask(greenThresh);
-  // Retrieve Poses for Bad Objects
-  std::vector<Object::Pose> badPoses = processMask(redThresh);
+  // Only perform processing if there is data to process.
+  // The pixel data replaces the pointcloud requriement.
+  // Otherwise return an empty list.
+  if (rgbImg && (rectPntCld || pixelForPose)) {
+    // Retrieve Poses for Good Objects
+    std::vector<Object::Pose> goodPoses = processMask(goodThresh);
+    // Retrieve Poses for Bad Objects
+    std::vector<Object::Pose> badPoses = processMask(badThresh);
 
-  // Create Good Objects with the goodPoses
-  for (const auto &tPose : goodPoses) {
-    std::shared_ptr<Object> tAdd(new GoodObject(0, tPose));
-    tReturn.push_back(tAdd);
-  }
-  // Create Bad Objects with the badPoses
-  for (const auto &tPose : badPoses) {
-    std::shared_ptr<Object> tAdd(new BadObject(0, tPose));
-    tReturn.push_back(tAdd);
+    // Create Good Objects with the goodPoses
+    for (const auto &tPose : goodPoses) {
+      std::shared_ptr<Object> tAdd(new GoodObject(tPose));
+      tReturn.emplace_back(tAdd);
+    }
+    // Create Bad Objects with the badPoses
+    for (const auto &tPose : badPoses) {
+      std::shared_ptr<Object> tAdd(new BadObject(tPose));
+      tReturn.emplace_back(tAdd);
+    }
   }
 
   return tReturn;
+}
+cv::Mat ImageProcessing::applyGoodMask(const cv::Mat &aImg) {
+  // Allocate Memory for processing
+  cv::Mat hsvImg, goodThresh;
+
+  // Transform the colors into HSV
+  cv::cvtColor(aImg, hsvImg, CV_BGR2HSV);
+
+  cv::inRange(hsvImg, lowGood, highGood, goodThresh);
+  return goodThresh;
+}
+
+cv::Mat ImageProcessing::applyBadMask(const cv::Mat &aImg) {
+  // Allocate Memory for processing
+  cv::Mat hsvImg, badThresh;
+
+  // Transform the colors into HSV
+  cv::cvtColor(aImg, hsvImg, CV_BGR2HSV);
+
+  cv::inRange(hsvImg, lowBad, highBad, badThresh);
+  return badThresh;
 }
 
 std::vector<Object::Pose> ImageProcessing::processMask(
     const cv::Mat &aImage) {
   // Declare the return type
   std::vector<Object::Pose> tReturn;
+
   // Find the contours in the image
   std::vector<std::vector<cv::Point> > contours;
   std::vector<cv::Vec4i> hierarchy;
   cv::findContours(aImage, contours, hierarchy, cv::RETR_TREE,
-                   cv::CHAIN_APPROX_SIMPLE);
+                   cv::CHAIN_APPROX_SIMPLE, cv::Point(0, 0));
   // Extract the moments from the contours
   std::vector<cv::Moments> mu(contours.size());
   auto momentIter = mu.begin();
@@ -107,38 +136,81 @@ std::vector<Object::Pose> ImageProcessing::processMask(
     momentIter++;
   }
 
-  std::vector<cv::Point2i> pixels(mu.size());
-  auto pixelIter = pixels.begin();
+  std::vector<cv::Point2i> pixels;
   // Extract the Centroid from the Moments
   for (const auto &tMoment : mu) {
-    *pixelIter = cv::Point2i(tMoment.m10 / tMoment.m00,
-                             tMoment.m01 / tMoment.m00);
-    pixelIter++;
+    // Ignore m00 == 0 Moments (Cant compute center)
+    if (tMoment.m00 > 1200) {
+      pixels.emplace_back(
+          cv::Point2i(tMoment.m10 / tMoment.m00, tMoment.m01 / tMoment.m00));
+    }
   }
 
-  // Obtain the corresponding depth at these points
+  // Obtain the corresponding XYZ Point
   for (const auto &tPixel : pixels) {
     Object::Pose tPose;
-    tPose.z = rectDepthImg.at<float>(tPixel.x, tPixel.y);
-    // Add that Pose to the list of poses.
-    tReturn.push_back(tPose);
+    // Use the pixel location instead of the point cloud.
+    if (pixelForPose) {
+      tPose.x = tPixel.x;
+      tPose.y = tPixel.y;
+      // Add that Pose to the list of poses.
+      tReturn.push_back(tPose);
+    } else {
+      tPose = extractPose(tPixel.x, tPixel.y);
+      // Check whether the depth sensor got an accurate (Non-NAN) reading.
+      if (!std::isnan(tPose.x)) {
+        // Add that Pose to the list of poses.
+        tReturn.push_back(tPose);
+      }
+    }
   }
   return tReturn;
 }
 
-bool ImageProcessing::setRgbImg(const cv::Mat &aRgbImg) {
+bool ImageProcessing::setRgbImg(std::shared_ptr<const cv::Mat> aRgbImg) {
   bool validRGB = false;
-  if (aRgbImg.depth() == CV_8UC3) {
+  if (aRgbImg && aRgbImg->type() == CV_8UC3) {
     validRGB = true;
     rgbImg = aRgbImg;
   }
   return validRGB;
 }
-bool ImageProcessing::setDptImg(const cv::Mat &aDepthImg) {
+bool ImageProcessing::setPntCld(
+    std::shared_ptr<const pcl::PointCloud<pcl::PointXYZ> > aPntCld) {
   bool validDpt = false;
-  if (aDepthImg.depth() == CV_32FC1) {
+  // Check the Point cloud has no Nans And is Organized
+  if (aPntCld && aPntCld->height > 1) {
     validDpt = true;
-    rectDepthImg = aDepthImg;
+    rectPntCld = aPntCld;
   }
   return validDpt;
+}
+void ImageProcessing::setGoodObjectMask(const cv::Scalar &aLow,
+                                        const cv::Scalar &aHigh) {
+  lowGood = aLow;
+  highGood = aHigh;
+}
+
+void ImageProcessing::setBadObjectMask(const cv::Scalar &aLow,
+                                       const cv::Scalar &aHigh) {
+  lowBad = aLow;
+  highBad = aHigh;
+}
+void ImageProcessing::setPixelForPose(bool aUsePixel) {
+  pixelForPose = aUsePixel;
+}
+
+Object::Pose ImageProcessing::extractPose(int x, int y) {
+  Object::Pose tReturn;
+  if (rectPntCld) {
+    pcl::PointXYZ tPnt = rectPntCld->at(x, y);
+
+    tReturn.x = tPnt.x;
+    tReturn.y = tPnt.y;
+    tReturn.z = tPnt.z;
+
+  } else {
+    // This should never happen.
+  }
+  return tReturn;
 }

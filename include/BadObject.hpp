@@ -35,36 +35,53 @@
 #ifndef INCLUDE_BADOBJECT_HPP_
 #define INCLUDE_BADOBJECT_HPP_
 
+#include <vector>
+
 #include "Object.hpp"
 
 class BadObject: public Object {
  private:
-    bool collect;  ///< Boolean to identify if Object should be collected
+  // 6-DOF location of Object as Pose
+  Object::Pose location;
+  // Boolean to identify if Object should be collected
+  bool collect;
 
  public:
-    /**
-    *  @brief   This is the constructor for the BadObject Class, with initializer list
-    *  @param	  ind index of Object
-    *  @param	  loc Pose location of Object
-    *  @return	None
-    */
-    BadObject(int ind, Object::Pose loc)
-    : Object{ ind, loc }, collect{ false } {
-    }
+  /**
+  *  @brief   This is the constructor for the BadObject Class, with initializer list
+  *  @param	  ind index of Object
+  *  @param	  loc Pose location of Object
+  *  @return	None
+  */
+  explicit BadObject(Object::Pose);
 
-    /**
-    *  @brief   This is the destructor for the BadObject Class
-    *  @param	  None
-    *  @return	None
-    */
-    ~BadObject();
+  /**
+  *  @brief   This is the destructor for the BadObject Class
+  *  @param	  None
+  *  @return	None
+  */
+  virtual ~BadObject();
 
-    /**
-    *  @brief   This is an override function to check the collect status of the BadObject
-    *  @param	  None
-    *  @return	None
-    */
-    virtual bool checkCollect();
+  /**
+  *  @brief   This is an override function to get the Pose of the BadObject
+  *  @param	  None
+  *  @return	location 6DOF object Pose
+  */
+  virtual Pose getPose();
+
+  /**
+  *  @brief   This is an override function to get the XYZ location of the BadObject
+  *  @param	  None
+  *  @return	xyz vector of x,y,z coordinates
+  */
+  virtual std::vector<double> getXYZ();
+
+  /**
+  *  @brief   This is an override function to check the collect status of the BadObject
+  *  @param	  None
+  *  @return	boolean
+  */
+  virtual bool checkCollect();
 };
 
 #endif  // INCLUDE_BADOBJECT_HPP_

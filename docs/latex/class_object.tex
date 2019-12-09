@@ -1,0 +1,119 @@
+\hypertarget{class_object}{}\doxysection{Object Class Reference}
+\label{class_object}\index{Object@{Object}}
+Inheritance diagram for Object\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_object}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_object_1_1_pose}{Pose}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual \mbox{\hyperlink{class_object_aa3e791419d84c4c346ef9499513b8e00}{$\sim$\+Object}} ()
+\begin{DoxyCompactList}\small\item\em This is the destructor for the \mbox{\hyperlink{class_object}{Object}} Class. \end{DoxyCompactList}\item 
+virtual \mbox{\hyperlink{struct_object_1_1_pose}{Pose}} \mbox{\hyperlink{class_object_a87440436427f58847f85c0897e2587a8}{get\+Pose}} ()=0
+\begin{DoxyCompactList}\small\item\em This is a virtual function to get the \mbox{\hyperlink{struct_object_1_1_pose}{Pose}} of the \mbox{\hyperlink{class_object}{Object}}. \end{DoxyCompactList}\item 
+virtual std\+::vector$<$ double $>$ \mbox{\hyperlink{class_object_af69abc36880c429498e02d6aabec1714}{get\+X\+YZ}} ()=0
+\begin{DoxyCompactList}\small\item\em This is a virtual function to get the X\+YZ location of the \mbox{\hyperlink{class_object}{Object}}. \end{DoxyCompactList}\item 
+virtual bool \mbox{\hyperlink{class_object_ae36ca5d66faee96566b4514ce8d0dc79}{check\+Collect}} ()=0
+\begin{DoxyCompactList}\small\item\em This is a virtual function to check the collect status of the \mbox{\hyperlink{class_object}{Object}}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_object_aa3e791419d84c4c346ef9499513b8e00}\label{class_object_aa3e791419d84c4c346ef9499513b8e00}} 
+\index{Object@{Object}!````~Object@{$\sim$Object}}
+\index{````~Object@{$\sim$Object}!Object@{Object}}
+\doxysubsubsection{\texorpdfstring{$\sim$Object()}{~Object()}}
+{\footnotesize\ttfamily virtual Object\+::$\sim$\+Object (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+This is the destructor for the \mbox{\hyperlink{class_object}{Object}} Class. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em None} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+None 
+\end{DoxyReturn}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_object_ae36ca5d66faee96566b4514ce8d0dc79}\label{class_object_ae36ca5d66faee96566b4514ce8d0dc79}} 
+\index{Object@{Object}!checkCollect@{checkCollect}}
+\index{checkCollect@{checkCollect}!Object@{Object}}
+\doxysubsubsection{\texorpdfstring{checkCollect()}{checkCollect()}}
+{\footnotesize\ttfamily virtual bool Object\+::check\+Collect (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+This is a virtual function to check the collect status of the \mbox{\hyperlink{class_object}{Object}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em None} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+boolean 
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_bad_object_adfddc907f7267c3461b0c3eeb255aff5}{Bad\+Object}}, and \mbox{\hyperlink{class_good_object_a56151634b1495a27b4423d77d0b875df}{Good\+Object}}.
+
+\mbox{\Hypertarget{class_object_a87440436427f58847f85c0897e2587a8}\label{class_object_a87440436427f58847f85c0897e2587a8}} 
+\index{Object@{Object}!getPose@{getPose}}
+\index{getPose@{getPose}!Object@{Object}}
+\doxysubsubsection{\texorpdfstring{getPose()}{getPose()}}
+{\footnotesize\ttfamily virtual \mbox{\hyperlink{struct_object_1_1_pose}{Pose}} Object\+::get\+Pose (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+This is a virtual function to get the \mbox{\hyperlink{struct_object_1_1_pose}{Pose}} of the \mbox{\hyperlink{class_object}{Object}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em None} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+location 6D\+OF object \mbox{\hyperlink{struct_object_1_1_pose}{Pose}} 
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_bad_object_a921fa86247a7a674d321ce94802a1128}{Bad\+Object}}, and \mbox{\hyperlink{class_good_object_a8e0c208291e824fa3a4f03ec7e2c1b88}{Good\+Object}}.
+
+\mbox{\Hypertarget{class_object_af69abc36880c429498e02d6aabec1714}\label{class_object_af69abc36880c429498e02d6aabec1714}} 
+\index{Object@{Object}!getXYZ@{getXYZ}}
+\index{getXYZ@{getXYZ}!Object@{Object}}
+\doxysubsubsection{\texorpdfstring{getXYZ()}{getXYZ()}}
+{\footnotesize\ttfamily virtual std\+::vector$<$double$>$ Object\+::get\+X\+YZ (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+This is a virtual function to get the X\+YZ location of the \mbox{\hyperlink{class_object}{Object}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em None} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+xyz vector of x,y,z coordinates 
+\end{DoxyReturn}
+
+
+Implemented in \mbox{\hyperlink{class_bad_object_a0add2fdf2fd0089b44e626398fd0a040}{Bad\+Object}}, and \mbox{\hyperlink{class_good_object_a2b2f1390956af3a88899744aba97772a}{Good\+Object}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/ethan/\+Desktop/\+Doxygen Environment/pacman-\/phase3c/include/\mbox{\hyperlink{_object_8hpp}{Object.\+hpp}}\end{DoxyCompactItemize}
