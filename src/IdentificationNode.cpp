@@ -106,26 +106,15 @@ class Identification {
     // Blur the Image
     int kernelSize = 3;
     cv::blur(cv_ptr->image, blurImg, cv::Size(kernelSize, kernelSize));
-    //Transform the colors into HSV
-    cv::cvtColor(blurImg, hsvImg, CV_BGR2HSV);
-
-    // Mask for the Strawberry
-    cv::Scalar lowGood(0, 80, 80);
-    cv::Scalar highGood(50, 255, 255);
-    // Mask for the Ghost
-    cv::Scalar lowBad(45, 80, 80);
-    cv::Scalar highBad(75, 255, 255);
-
-    cv::inRange(hsvImg, lowGood, highGood, goodThresh);
-    cv::inRange(hsvImg, lowBad, highBad, badThresh);
 
     output.header = aImg->header;
     output.encoding = sensor_msgs::image_encodings::MONO8;
-    output.image = goodThresh;
+    output.image = eyes.applyGoodMask(blurImg);
 
     output2.header = aImg->header;
     output2.encoding = sensor_msgs::image_encodings::MONO8;
-    output2.image = badThresh;
+    output2.image = eyes.applyBadMask(blurImg);
+
     ROS_INFO_STREAM(
         "Size" << cv_ptr->image.cols << "x" << cv_ptr->image.rows);
 
