@@ -87,38 +87,18 @@ void Navigator::laserScanCallback(const sensor_msgs::LaserScan::ConstPtr& msg) {
 }
 
 void Navigator::imgCallback(const pacman::VecPoses::ConstPtr& vecPoses) {
-  if (allowImgCallback) {
-    allowImgCallback = false;
-
-    // Service cleint to get Turtlebot orientation
-    gazebo_msgs::GetModelState anglesrv;
-
-    //  -- Find the closest pose from the vector input
-    double minMag = 100;
-    for (auto indpose : vecPoses->poses) {
-      // Grab x,y,z coordinates of current pose
-      double xpos = indpose.x;
-      double ypos = indpose.y;
-      double zpos = indpose.z;
-      
-      // Obtain magnitude from pose to base
-      double mag = sqrt(pow(xpos, 2) + pow(ypos, 2) + pow(zpos, 2));
-      if (mag < minMag) {
-        minMag = mag;
-        closestPose = indpose;
-        // Call service for orientation of base
-        anglesrv.request.model_name = "mobile_base";
-        if (clientGetPos_.call(anglesrv))
-          closestPose.theta = anglesrv.response.pose.orientation.z;
-        else
-          ROS_ERROR_STREAM("Failed to get model state service");
-      }
+  //  -- Find the closest pose from the vector input
+  double minY = 0;
+  for (auto indpose : vecPoses->poses) {
+    // Grab y coordinate of current pose
+    double ypos = indpose.y;
+    // Check y value of pose
+    if (ypos > minY) {
+      // reset minY to current Y
+      minY = ypos;
+      // set current pose to closest
+      closestPose = indpose;
     }
-    ROS_WARN_STREAM("Sending Pose to Navigation stack");
-    sendGoal = true;
-  } else {
-    ROS_WARN_STREAM("Navigation stack is runnning");
-    sendGoal = false;
   }
 }
 
@@ -142,49 +122,68 @@ void Navigator::goalDelete() {
   }
 }
 
+//void Mover::deleteObject() {
+// 
+//  //ROS_INFO_STREAM("bump!");
+
+//  if ( closestObject != "none" && deleteOkay) {
+//    //calling delete service call     
+//    gazebo_msgs::DeleteModel dmsrv;
+//    dmsrv.request.model_name = closestObject;
+//    if (clientDelObj_.call(dmsrv)) {
+//      //calls in background
+//      closestObject = "none";
+//    }
+//  }
+
+//}
+
 void Navigator::closestCallback(const gazebo_msgs::ModelStates msg) {
-  float closest_dist = 1000.0;  // arbitrary large number
+  float closestDist = 1000.0;
   int closest = 0;
-  float dist;
-  int lent;
-  float x, y, x1, y1, x2, y2;
 
-  // Finding turtle position
-  gazebo_msgs::GetModelState getsrv;
-  getsrv.request.model_name = "mobile_base";
-  if (clientGetPos_.call(getsrv)) {
-    x1 = getsrv.response.pose.position.x;
-    y1 = getsrv.response.pose.position.y;
-    ROS_INFO_STREAM("Position of turtlebot: " << x1 << " " << y1);
+  // Get the position of the Turtlebot
+  gazebo_msgs::GetModelState srvPos;
+
+  double x1, y1;
+  srvPos.request.model_name = "mobile_base";
+  if (clientGetPos_.call(srvPos)) {
+    x1 = srvPos.response.pose.position.x;
+    y1 = srvPos.response.pose.position.y;
   } else {
-    ROS_ERROR_STREAM("Failed to call get model state service");
-    x1 = 8.0;  // some number
-    y1 = 8.0;  // some number
+    ROS_ERROR_STREAM("Failed to obtain Turtlebot position");
+    x1 = 0;
+    y1 = 0;
   }
 
-  // Find object nearest to turtlebot
-  lent = msg.pose.size();
-  for (int i = 0; i < lent; i++) {
-    x2 = msg.pose[i].position.x;
-    y2 = msg.pose[i].position.y;
-    x = x1 - x2;
-    y = y1 - y2;
-    dist = sqrt(x * x + y * y);
-    if (dist < closest_dist) {
-      if (msg.name[i] == "mobile_base") {
-        // Skip mobile_base
-      } else {
-        if (msg.name[i] == "ground_plane") {
-          // Skip ground plane
-        } else {
-          closest_dist = dist;
-          closest = i;
-        }
-      }
-    }
-  }
-
-  ROS_INFO_STREAM("node: " << closest << ", name: " << msg.name[closest]);
-  closestObject = msg.name[closest];
+  // Find the object nearest to the Turtlebot
+  
+//  auto msgName = msg.name.begin();
+//  for (auto element : msg.pose) {
+//    double x2 = element.position.x;
+//    double y2 = element.position.y;
+//    double x = x1-x2;  // distance in x
+//    double y = y1-y2;  // distance in y
+//    double dist = sqrt(pow(x, 2) + pow(y, 2));
+//    if (dist < 1) {
+//      if (dist < closestDist) {
+//        if (*msgName == "mobile_base"){  //skip mobile_base
+//        } else {
+//          if(msg.name[i] == "ground_plane"){  //skip ground plane
+//          } else {
+//            std::string wallstr("wall");
+//            std::size_t found = msg.name[i].find(wallstr);
+//            if(found!=std::string::npos){
+//              // skip grey walls
+//            } else {
+//              closest_dist = dist;
+//              closest = i;
+//              closestObject = msg.name[closest]; 
+//            }
+//          }
+//        }
+//        msgName++;
+//      }
+//    }
 }
 

@@ -50,6 +50,8 @@
 #include "geometry_msgs/Twist.h"
 #include "sensor_msgs/LaserScan.h"
 
+
+
 /**
 *  @brief   This is the main function
 *  @param	  argc for ROS
@@ -72,54 +74,62 @@ int main(int argc, char **argv) {
 
   // Publish on the topic required to move turtlebot
   // This will be remmapped in the launch file.
-  auto pub = nm.advertise <geometry_msgs::Twist> ("/cmd_vel_mux/input/navi",
-                                                                        1000);
-  auto lsrSub = nm.subscribe("/scan", 1000, &Navigator::laserScanCallback, &navigator);
-  auto imgSub = nm.subscribe("imgPoses", 1000, &Navigator::imgCallback, &navigator);
+  auto pub = nm.advertise <geometry_msgs::Twist> ("/cmd_vel_mux/input/navi", 
+    1000);
+  auto lsrSub = nm.subscribe("/scan", 1000, &Navigator::laserScanCallback, 
+    &navigator);
+  auto imgSub = nm.subscribe("imgPoses", 1000, &Navigator::imgCallback, 
+    &navigator);
 
-  ros::ServiceClient client = nm.serviceClient<pacman::NavPose>("navpose");
+//  ros::ServiceClient client = nm.serviceClient<pacman::NavPose>("navpose");
 
   // Publish at 10 Hz.
   ros::Rate loop_rate(10.0);
 
+  // Set center width range of image
+  double midImgLeft = 300;
+  double midImgright = 340;
+
+  geometry_msgs::Twist velMsg;
+
   while (ros::ok()) {
-    // Use the Navigation Stack status to decide movement
-    if (!navigator.checkVisuals()) {  // Returns navigation stack flag
-      // Allow image callback to look for new objects
-      navigator.allowImgCallback = true;
-
-      // Set the turtlebot velocities from the laser scanner callback.
-      geometry_msgs::Twist velMsg;
-      std::pair<double, double> output = navigator.movement->computeVelocities();
-      ROS_WARN_STREAM("Vels: " << output.first << "," << output.second);
-      velMsg.linear.x = output.first;
-      velMsg.angular.z = output.second;
-
-      pub.publish(velMsg);
-    }
-    if (navigator.sendGoal) {
-      navigator.sendGoal = false;
-      pacman::ObjPose navPose;
-      navPose.x = navigator.closestPose.x;
-      navPose.y = navigator.closestPose.y;
-      navPose.z = navigator.closestPose.z;
-      ROS_WARN_STREAM("[" << navPose.x << "," << navPose.y
-                                             << "," << navPose.z << "]");
-
-      //  Send Goal Pose to Navigation Stack
-      pacman::NavPose srv;
-      srv.request.pose = navPose;
-      if (client.call(srv)) {
-        ROS_INFO_STREAM("Success! :) - " << srv.response.str);
+    // Check for obstacles from the laser scanner callback.
+    bool pathclear = navigator.movement->getClearAhead();
+    if (pathclear) {
+      ROS_WARN_STREAM("Path is clear!");
+      double xVal = navigator.closestPose.x;
+      if (xVal > midImgright) {  // Object on the right
+        // Turn right
+        ROS_WARN_STREAM("Rigth Turn: [0,1]");
+        velMsg.linear.x = 0.00;
+        velMsg.angular.z = 1.00;
+      } else if (xVal < midImgLeft) {  // Object on the left
+        // Turn left
+        ROS_WARN_STREAM("Left Turn: [0,-1]");
+        velMsg.linear.x = 0.00;
+        velMsg.angular.z = -1.00;
+      } else {  // Object centered
+        // Go straight
+        ROS_WARN_STREAM("Straight Ahead: [1,0]");
+        velMsg.linear.x = 1.00;
+        velMsg.angular.z = 0.00;
+      }
+    } else {  // Object blocking path
+      // --check if good or bad
+      // --navigator functionality
+      if (true) {  // Is a good object
+        // --delete object!!
       } else {
-        ROS_ERROR_STREAM("Failed... :(");
+        ROS_WARN_STREAM("Object in path! Turning right");
+        velMsg.linear.x = 0.00;
+        velMsg.angular.z = 1.00;
       }
     }
+    pub.publish(velMsg);
 
     ros::spinOnce();
 
     loop_rate.sleep();
   }
-
   return 0;
 }
