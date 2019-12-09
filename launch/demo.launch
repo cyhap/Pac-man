@@ -2,7 +2,7 @@
 <launch>
 
   <include file="$(find turtlebot_gazebo)/launch/turtlebot_world.launch" >
-    <arg name="world_file" value="$(find pacman)/data/worlds/red_and_green.world" />
+    <arg name="world_file" value="$(find pacman)/data/worlds/true_colors.world" />
   </include>  
   <include file="$(find pacman)/launch/bootPointCloudNodelet.launch"/>
   
