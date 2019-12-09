@@ -60,10 +60,6 @@ add_dependencies(movement pacman_generate_messages_cpp)
 add_executable(objectlist src/ObjectListNode.cpp src/ObjectList.cpp)
 target_link_libraries(objectlist ${catkin_LIBRARIES})
 
-add_executable(pubpose src/pubpose.cpp)
-target_link_libraries(pubpose ${catkin_LIBRARIES})
-add_dependencies(pubpose pacman_generate_messages_cpp)
-
 add_executable(identification src/IdentificationNode.cpp src/GoodObject.cpp src/BadObject.cpp src/ImageProcessing.cpp)
 target_link_libraries(identification ${catkin_LIBRARIES})
 add_dependencies(identification pacman_generate_messages_cpp)
