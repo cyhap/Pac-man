@@ -69,14 +69,13 @@ bool nav(pacman::NavPose::Request &req,
   goal.target_pose.pose.orientation.w = 1.0;
 
   ROS_INFO("Sending goal");
-  ac.sendGoal(goal);
+  ac.sendGoalAndWait(goal, ros::Duration(20.0));
 
-  ac.waitForResult();
   if (ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
     ROS_INFO("Hooray, the base moved forward");
   else
     ROS_INFO("The base failed to move forward for some reason");
-  res.str = "Received Goal Pose";
+  res.str = "Arrived at Goal Pose";
   ROS_INFO_STREAM(res.str);
 
   return true;

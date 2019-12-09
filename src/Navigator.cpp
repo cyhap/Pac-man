@@ -123,16 +123,13 @@ void Navigator::imgCallback(const pacman::VecPoses::ConstPtr& vecPoses) {
 }
 
 bool Navigator::checkVisuals() {
-  // Wait for the action server to come up
-  while (!aclient.waitForServer(ros::Duration(5.0))) {
-    ROS_INFO("Waiting for the move_base action server to come up");
-  }
   // Check State of Navigation Stack
-  if (aclient.getState().isDone())
-    navStackStatus = false;
-  else
-    navStackStatus = true;
-  ROS_INFO_STREAM("Checked Visuals, output: " << navStackStatus);
+//  if (aclient.getState().isDone())
+//    navStackStatus = false;
+//  else
+//    navStackStatus = true;
+  navStackStatus = false;
+//  ROS_INFO_STREAM("Checked Visuals, output: " << navStackStatus);
   return navStackStatus;
 }
 
