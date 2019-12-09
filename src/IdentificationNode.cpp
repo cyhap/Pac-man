@@ -53,9 +53,14 @@
 class Identification {
  public:
   ImageProcessing eyes;
+  // Publish The Masked Image Output of Identified Objects
+  image_transport::Publisher goodMaskPub;
+  image_transport::Publisher badMaskPub;
   Identification()
       :
-      eyes() {
+      eyes(),
+      goodMaskPub(),
+      badMaskPub() {
   }
   /**
    *  @brief   This Callback function ... DOES SOMETHING
@@ -94,6 +99,37 @@ class Identification {
       return;
     }
 
+    cv_bridge::CvImage output, output2;
+    // Allocate Memory for processing
+    cv::Mat hsvImg, blurImg, goodThresh, badThresh;
+
+    // Blur the Image
+    int kernelSize = 3;
+    cv::blur(cv_ptr->image, blurImg, cv::Size(kernelSize, kernelSize));
+    //Transform the colors into HSV
+    cv::cvtColor(blurImg, hsvImg, CV_BGR2HSV);
+
+    // Mask for the Strawberry
+    cv::Scalar lowGood(0, 80, 80);
+    cv::Scalar highGood(50, 255, 255);
+    // Mask for the Ghost
+    cv::Scalar lowBad(0, 80, 80);
+    cv::Scalar highBad(150, 255, 255);
+
+    cv::inRange(hsvImg, lowGood, highGood, goodThresh);
+    cv::inRange(hsvImg, lowBad, highBad, badThresh);
+
+    output.header = aImg->header;
+    output.encoding = sensor_msgs::image_encodings::MONO8;
+    output.image = goodThresh;
+
+    output2.header = aImg->header;
+    output2.encoding = sensor_msgs::image_encodings::MONO8;
+    output2.image = badThresh;
+
+    goodMaskPub.publish(output.toImageMsg());
+    badMaskPub.publish(output2.toImageMsg());
+
     // Convert the image to a shared pointer
     // May need to make a new pointer above to prevent the ros pointer from
     // going out of scope instead...
@@ -130,8 +166,8 @@ int main(int argc, char **argv) {
   cv::Scalar lowGood(0, 80, 80);
   cv::Scalar highGood(50, 255, 255);
   // Mask for the Ghost
-  cv::Scalar lowBad(0, 250, 0);
-  cv::Scalar highBad(0, 255, 0);
+  cv::Scalar lowBad(0, 80, 80);
+  cv::Scalar highBad(150, 255, 255);
 
   identifier.eyes.setGoodObjectMask(lowGood, highGood);
   identifier.eyes.setBadObjectMask(lowBad, highBad);
@@ -152,6 +188,10 @@ int main(int argc, char **argv) {
   // Publisher for Good Object Poses obtained from Image Processing
   ros::Publisher objpub = nh.advertise<pacman::VecPoses>("imgPoses", 1000);
 
+  identifier.goodMaskPub = imTrans.advertise("/goodObjMask/image_raw", 1);
+  identifier.badMaskPub = imTrans.advertise("/badObjMask/image_raw", 1);
+
+
   // Publish at 10 Hz.
   ros::Rate loop_rate(10.0);
 
@@ -159,6 +199,8 @@ int main(int argc, char **argv) {
     // Process the Images and Extract Objects
     ROS_INFO_STREAM("Making the process Call");
     std::vector<std::shared_ptr<Object> > tObjs = identifier.eyes.process();
+
+
     ROS_INFO_STREAM("Call successful.");
     pacman::VecPoses output;
 
