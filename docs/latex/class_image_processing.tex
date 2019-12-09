@@ -1,0 +1,290 @@
+\hypertarget{class_image_processing}{}\doxysection{Image\+Processing Class Reference}
+\label{class_image_processing}\index{ImageProcessing@{ImageProcessing}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_image_processing_a0090ffe36a912d6df5d7a1f507f6252e}{Image\+Processing}} ()
+\begin{DoxyCompactList}\small\item\em Image Processing Constructor. Initializes with Green Mask for good objects and a Red Mask for bad objects. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_image_processing_a1d4bd00ec1862112552c663034cebabc}{$\sim$\+Image\+Processing}} ()
+\begin{DoxyCompactList}\small\item\em Image Processing Destructor. \end{DoxyCompactList}\item 
+std\+::vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_object}{Object}} $>$ $>$ \mbox{\hyperlink{class_image_processing_a5e92f7852eae14178dc7ea9d74401dac}{process}} ()
+\begin{DoxyCompactList}\small\item\em process Use this to perform the image processing and pose extraction. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_image_processing_a882f01b6e1b8bbefc2c9fa0cfc155e83}{set\+Rgb\+Img}} (std\+::shared\+\_\+ptr$<$ const cv\+::\+Mat $>$)
+\begin{DoxyCompactList}\small\item\em set\+Rgb\+Img Set the R\+GB Image Used for Processing \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_image_processing_a7aa34f41ae88a8417509dd119ba5519e}{set\+Pnt\+Cld}} (std\+::shared\+\_\+ptr$<$ const pcl\+::\+Point\+Cloud$<$ pcl\+::\+Point\+X\+YZ $>$ $>$)
+\begin{DoxyCompactList}\small\item\em set\+Pnt\+Cld Set the Point Cloud Used for Processing \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_image_processing_af1a4c52369eef0048ab88b9721849e82}{set\+Good\+Object\+Mask}} (const cv\+::\+Scalar \&, const cv\+::\+Scalar \&)
+\begin{DoxyCompactList}\small\item\em set\+Good\+Object\+Mask Update the Mask Used to Identify Good Objects \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_image_processing_a9fd34270e08755e33fcf4f0e9df572b7}{set\+Bad\+Object\+Mask}} (const cv\+::\+Scalar \&, const cv\+::\+Scalar \&)
+\begin{DoxyCompactList}\small\item\em set\+Bad\+Object\+Mask Update the Mask Used to Identify Bad Objects \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_image_processing_a7948909609e70bcdfdb964f70791a773}{set\+Pixel\+For\+Pose}} (bool)
+\begin{DoxyCompactList}\small\item\em set\+Pixel\+For\+Pose Choose whether the Poses returned in objects are pixel locations or computed poses \end{DoxyCompactList}\item 
+cv\+::\+Mat \mbox{\hyperlink{class_image_processing_ad2490c658885ff3c41d7a0122dadc746}{apply\+Good\+Mask}} (const cv\+::\+Mat \&)
+\begin{DoxyCompactList}\small\item\em apply\+Good\+Mask Apply the thresholds corresponding to good objects. \end{DoxyCompactList}\item 
+cv\+::\+Mat \mbox{\hyperlink{class_image_processing_a9ffff2ef54d04cebd2f0a2b16a6ed493}{apply\+Bad\+Mask}} (const cv\+::\+Mat \&)
+\begin{DoxyCompactList}\small\item\em apply\+Bad\+Mask Apply the thresholds corresponding to bad objects. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ \mbox{\hyperlink{struct_object_1_1_pose}{Object\+::\+Pose}} $>$ \mbox{\hyperlink{class_image_processing_a7ba0ea9fee08af585f5623d823eac6d8}{process\+Mask}} (const cv\+::\+Mat \&)
+\begin{DoxyCompactList}\small\item\em process\+Mask helper function to identify object centers in the masked image. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_object_1_1_pose}{Object\+::\+Pose}} \mbox{\hyperlink{class_image_processing_a52cc626a268928d603a8862283971f18}{extract\+Pose}} (int, int)
+\begin{DoxyCompactList}\small\item\em extract\+Pose Use the pixel index to extract a Pose from a point cloud \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_image_processing_af4f3dc970ae724f4144f8995e423d43a}\label{class_image_processing_af4f3dc970ae724f4144f8995e423d43a}} 
+std\+::shared\+\_\+ptr$<$ const cv\+::\+Mat $>$ {\bfseries rgb\+Img}
+\item 
+\mbox{\Hypertarget{class_image_processing_acd0e04dcc05275993b262684eaf017ed}\label{class_image_processing_acd0e04dcc05275993b262684eaf017ed}} 
+std\+::shared\+\_\+ptr$<$ const pcl\+::\+Point\+Cloud$<$ pcl\+::\+Point\+X\+YZ $>$ $>$ {\bfseries rect\+Pnt\+Cld}
+\item 
+\mbox{\Hypertarget{class_image_processing_ab48434fbd6e6d3847435353a27ed9768}\label{class_image_processing_ab48434fbd6e6d3847435353a27ed9768}} 
+cv\+::\+Scalar {\bfseries low\+Good}
+\item 
+\mbox{\Hypertarget{class_image_processing_a68c9688e4594fcd522a9ef66c87ab53e}\label{class_image_processing_a68c9688e4594fcd522a9ef66c87ab53e}} 
+cv\+::\+Scalar {\bfseries low\+Bad}
+\item 
+\mbox{\Hypertarget{class_image_processing_a98daa19576804001f2ea72df680bb962}\label{class_image_processing_a98daa19576804001f2ea72df680bb962}} 
+cv\+::\+Scalar {\bfseries high\+Good}
+\item 
+\mbox{\Hypertarget{class_image_processing_a25b5226fb521bd80790606c5183075e9}\label{class_image_processing_a25b5226fb521bd80790606c5183075e9}} 
+cv\+::\+Scalar {\bfseries high\+Bad}
+\item 
+\mbox{\Hypertarget{class_image_processing_af07b1ea77cf5d2a7a5c8901c02d785e3}\label{class_image_processing_af07b1ea77cf5d2a7a5c8901c02d785e3}} 
+bool {\bfseries pixel\+For\+Pose}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_image_processing_a0090ffe36a912d6df5d7a1f507f6252e}\label{class_image_processing_a0090ffe36a912d6df5d7a1f507f6252e}} 
+\index{ImageProcessing@{ImageProcessing}!ImageProcessing@{ImageProcessing}}
+\index{ImageProcessing@{ImageProcessing}!ImageProcessing@{ImageProcessing}}
+\doxysubsubsection{\texorpdfstring{ImageProcessing()}{ImageProcessing()}}
+{\footnotesize\ttfamily Image\+Processing\+::\+Image\+Processing (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Image Processing Constructor. Initializes with Green Mask for good objects and a Red Mask for bad objects. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em None} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+None 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_image_processing_a1d4bd00ec1862112552c663034cebabc}\label{class_image_processing_a1d4bd00ec1862112552c663034cebabc}} 
+\index{ImageProcessing@{ImageProcessing}!````~ImageProcessing@{$\sim$ImageProcessing}}
+\index{````~ImageProcessing@{$\sim$ImageProcessing}!ImageProcessing@{ImageProcessing}}
+\doxysubsubsection{\texorpdfstring{$\sim$ImageProcessing()}{~ImageProcessing()}}
+{\footnotesize\ttfamily Image\+Processing\+::$\sim$\+Image\+Processing (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Image Processing Destructor. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em None} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+None 
+\end{DoxyReturn}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_image_processing_a9ffff2ef54d04cebd2f0a2b16a6ed493}\label{class_image_processing_a9ffff2ef54d04cebd2f0a2b16a6ed493}} 
+\index{ImageProcessing@{ImageProcessing}!applyBadMask@{applyBadMask}}
+\index{applyBadMask@{applyBadMask}!ImageProcessing@{ImageProcessing}}
+\doxysubsubsection{\texorpdfstring{applyBadMask()}{applyBadMask()}}
+{\footnotesize\ttfamily cv\+::\+Mat Image\+Processing\+::apply\+Bad\+Mask (\begin{DoxyParamCaption}\item[{const cv\+::\+Mat \&}]{a\+Img }\end{DoxyParamCaption})}
+
+
+
+apply\+Bad\+Mask Apply the thresholds corresponding to bad objects. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em const} & cv\+::\+Mat\& Image to Mask \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+cv\+::mat The Masked Image 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_image_processing_ad2490c658885ff3c41d7a0122dadc746}\label{class_image_processing_ad2490c658885ff3c41d7a0122dadc746}} 
+\index{ImageProcessing@{ImageProcessing}!applyGoodMask@{applyGoodMask}}
+\index{applyGoodMask@{applyGoodMask}!ImageProcessing@{ImageProcessing}}
+\doxysubsubsection{\texorpdfstring{applyGoodMask()}{applyGoodMask()}}
+{\footnotesize\ttfamily cv\+::\+Mat Image\+Processing\+::apply\+Good\+Mask (\begin{DoxyParamCaption}\item[{const cv\+::\+Mat \&}]{a\+Img }\end{DoxyParamCaption})}
+
+
+
+apply\+Good\+Mask Apply the thresholds corresponding to good objects. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em const} & cv\+::\+Mat\& Image to Mask \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+cv\+::mat The Masked Image 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_image_processing_a52cc626a268928d603a8862283971f18}\label{class_image_processing_a52cc626a268928d603a8862283971f18}} 
+\index{ImageProcessing@{ImageProcessing}!extractPose@{extractPose}}
+\index{extractPose@{extractPose}!ImageProcessing@{ImageProcessing}}
+\doxysubsubsection{\texorpdfstring{extractPose()}{extractPose()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_object_1_1_pose}{Object\+::\+Pose}} Image\+Processing\+::extract\+Pose (\begin{DoxyParamCaption}\item[{int}]{x,  }\item[{int}]{y }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+extract\+Pose Use the pixel index to extract a Pose from a point cloud 
+
+
+\begin{DoxyParams}{Parameters}
+{\em int} & x position in image \\
+\hline
+{\em int} & y position in image \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{\hyperlink{struct_object_1_1_pose}{Object\+::\+Pose}} Pose with corresponding X\+YZ positions from the point cloud. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_image_processing_a5e92f7852eae14178dc7ea9d74401dac}\label{class_image_processing_a5e92f7852eae14178dc7ea9d74401dac}} 
+\index{ImageProcessing@{ImageProcessing}!process@{process}}
+\index{process@{process}!ImageProcessing@{ImageProcessing}}
+\doxysubsubsection{\texorpdfstring{process()}{process()}}
+{\footnotesize\ttfamily std\+::vector$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_object}{Object}} $>$ $>$ Image\+Processing\+::process (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+process Use this to perform the image processing and pose extraction. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em None.} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::vector$<$std\+::shared\+\_\+ptr$<$\+Object$>$ $>$ A vector of all objects (good and bad) found within the image. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_image_processing_a7ba0ea9fee08af585f5623d823eac6d8}\label{class_image_processing_a7ba0ea9fee08af585f5623d823eac6d8}} 
+\index{ImageProcessing@{ImageProcessing}!processMask@{processMask}}
+\index{processMask@{processMask}!ImageProcessing@{ImageProcessing}}
+\doxysubsubsection{\texorpdfstring{processMask()}{processMask()}}
+{\footnotesize\ttfamily std\+::vector$<$ \mbox{\hyperlink{struct_object_1_1_pose}{Object\+::\+Pose}} $>$ Image\+Processing\+::process\+Mask (\begin{DoxyParamCaption}\item[{const cv\+::\+Mat \&}]{a\+Image }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+process\+Mask helper function to identify object centers in the masked image. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em const} & cv\+::\+Mat \& The Masked Image. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+std\+::vector$<$\+Object\+::\+Pose$>$ A vector of poses corresponding to object centers. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_image_processing_a9fd34270e08755e33fcf4f0e9df572b7}\label{class_image_processing_a9fd34270e08755e33fcf4f0e9df572b7}} 
+\index{ImageProcessing@{ImageProcessing}!setBadObjectMask@{setBadObjectMask}}
+\index{setBadObjectMask@{setBadObjectMask}!ImageProcessing@{ImageProcessing}}
+\doxysubsubsection{\texorpdfstring{setBadObjectMask()}{setBadObjectMask()}}
+{\footnotesize\ttfamily void Image\+Processing\+::set\+Bad\+Object\+Mask (\begin{DoxyParamCaption}\item[{const cv\+::\+Scalar \&}]{a\+Low,  }\item[{const cv\+::\+Scalar \&}]{a\+High }\end{DoxyParamCaption})}
+
+
+
+set\+Bad\+Object\+Mask Update the Mask Used to Identify Bad Objects 
+
+
+\begin{DoxyParams}{Parameters}
+{\em const} & cv\+::\+Scalar\& Lower Threshold of the Mask in B\+GR \\
+\hline
+{\em const} & cv\+::\+Scalar\& Upper Threshold of the Mask in B\+GR \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+None. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_image_processing_af1a4c52369eef0048ab88b9721849e82}\label{class_image_processing_af1a4c52369eef0048ab88b9721849e82}} 
+\index{ImageProcessing@{ImageProcessing}!setGoodObjectMask@{setGoodObjectMask}}
+\index{setGoodObjectMask@{setGoodObjectMask}!ImageProcessing@{ImageProcessing}}
+\doxysubsubsection{\texorpdfstring{setGoodObjectMask()}{setGoodObjectMask()}}
+{\footnotesize\ttfamily void Image\+Processing\+::set\+Good\+Object\+Mask (\begin{DoxyParamCaption}\item[{const cv\+::\+Scalar \&}]{a\+Low,  }\item[{const cv\+::\+Scalar \&}]{a\+High }\end{DoxyParamCaption})}
+
+
+
+set\+Good\+Object\+Mask Update the Mask Used to Identify Good Objects 
+
+
+\begin{DoxyParams}{Parameters}
+{\em const} & cv\+::\+Scalar\& Lower Threshold of the Mask in B\+GR \\
+\hline
+{\em const} & cv\+::\+Scalar\& Upper Threshold of the Mask in B\+GR \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+None. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_image_processing_a7948909609e70bcdfdb964f70791a773}\label{class_image_processing_a7948909609e70bcdfdb964f70791a773}} 
+\index{ImageProcessing@{ImageProcessing}!setPixelForPose@{setPixelForPose}}
+\index{setPixelForPose@{setPixelForPose}!ImageProcessing@{ImageProcessing}}
+\doxysubsubsection{\texorpdfstring{setPixelForPose()}{setPixelForPose()}}
+{\footnotesize\ttfamily void Image\+Processing\+::set\+Pixel\+For\+Pose (\begin{DoxyParamCaption}\item[{bool}]{a\+Use\+Pixel }\end{DoxyParamCaption})}
+
+
+
+set\+Pixel\+For\+Pose Choose whether the Poses returned in objects are pixel locations or computed poses 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bool} & true indicating you want the pixel location \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+None. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_image_processing_a7aa34f41ae88a8417509dd119ba5519e}\label{class_image_processing_a7aa34f41ae88a8417509dd119ba5519e}} 
+\index{ImageProcessing@{ImageProcessing}!setPntCld@{setPntCld}}
+\index{setPntCld@{setPntCld}!ImageProcessing@{ImageProcessing}}
+\doxysubsubsection{\texorpdfstring{setPntCld()}{setPntCld()}}
+{\footnotesize\ttfamily bool Image\+Processing\+::set\+Pnt\+Cld (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ const pcl\+::\+Point\+Cloud$<$ pcl\+::\+Point\+X\+YZ $>$ $>$}]{a\+Pnt\+Cld }\end{DoxyParamCaption})}
+
+
+
+set\+Pnt\+Cld Set the Point Cloud Used for Processing 
+
+
+\begin{DoxyParams}{Parameters}
+{\em std\+::shared\+\_\+ptr$<$const} & pcl\+::\+Point\+Cloud$<$pcl\+::\+Point\+X\+Y\+Z$>$ $>$ Pointer to the Point cloud that should be processed. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool Whether or not the point cloud submitted was accepted for processing 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_image_processing_a882f01b6e1b8bbefc2c9fa0cfc155e83}\label{class_image_processing_a882f01b6e1b8bbefc2c9fa0cfc155e83}} 
+\index{ImageProcessing@{ImageProcessing}!setRgbImg@{setRgbImg}}
+\index{setRgbImg@{setRgbImg}!ImageProcessing@{ImageProcessing}}
+\doxysubsubsection{\texorpdfstring{setRgbImg()}{setRgbImg()}}
+{\footnotesize\ttfamily bool Image\+Processing\+::set\+Rgb\+Img (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ const cv\+::\+Mat $>$}]{a\+Rgb\+Img }\end{DoxyParamCaption})}
+
+
+
+set\+Rgb\+Img Set the R\+GB Image Used for Processing 
+
+
+\begin{DoxyParams}{Parameters}
+{\em std\+::shared\+\_\+ptr$<$const} & cv\+::\+Mat$>$ Pointer to the Image that should be processed. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+bool Whether or not the image submitted was accepted for processing 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/ethan/\+Desktop/\+Doxygen Environment/pacman-\/phase3c/include/\mbox{\hyperlink{_image_processing_8hpp}{Image\+Processing.\+hpp}}\item 
+C\+:/\+Users/ethan/\+Desktop/\+Doxygen Environment/pacman-\/phase3c/src/\mbox{\hyperlink{_image_processing_8cpp}{Image\+Processing.\+cpp}}\end{DoxyCompactItemize}

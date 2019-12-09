@@ -1,0 +1,152 @@
+\hypertarget{class_object_list}{}\doxysection{Object\+List Class Reference}
+\label{class_object_list}\index{ObjectList@{ObjectList}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_object_list_ac22dc46c3b92c27106561eeb030329a2}{Object\+List}} ()
+\begin{DoxyCompactList}\small\item\em This is the constructor for the \mbox{\hyperlink{class_object_list}{Object\+List}} Class. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_object_list_ac8d809647b3ac18b2369e827c3d56c19}{$\sim$\+Object\+List}} ()
+\begin{DoxyCompactList}\small\item\em This is the destructor for the \mbox{\hyperlink{class_object_list}{Object\+List}} Class. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_object_list_a8afd70c8ea2644e3f0eb4cf510a8f2a1}{add\+Object\+Found}} (\mbox{\hyperlink{struct_object_1_1_pose}{Object\+::\+Pose}})
+\begin{DoxyCompactList}\small\item\em This is a function for adding an object to the list. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_object_list_a7127b5a1d50ff430f302bebabd4519a1}{objs\+Callback}} (const geometry\+\_\+msgs\+::\+Point\+::\+Const\+Ptr \&)
+\begin{DoxyCompactList}\small\item\em This is the callback function for updating the object list. \end{DoxyCompactList}\item 
+std\+::vector$<$ \mbox{\hyperlink{struct_object_1_1_pose}{Object\+::\+Pose}} $>$ \mbox{\hyperlink{class_object_list_a15a3e8c5208f994ea57e46f99d4be995}{get\+Object\+List}} ()
+\begin{DoxyCompactList}\small\item\em This is a function to get the list of objects. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{class_object_list_a15b38861578197fbd6c38cc04088b6bd}{get\+Size}} ()
+\begin{DoxyCompactList}\small\item\em This is a function to get the number of objects. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_object_list_af8868745c6684abc3984e40b0addee51}\label{class_object_list_af8868745c6684abc3984e40b0addee51}} 
+bool {\bfseries object\+Flag}
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_object_list_a66fdecbffa2e3b6a18be9730a1268bba}\label{class_object_list_a66fdecbffa2e3b6a18be9730a1268bba}} 
+std\+::vector$<$ \mbox{\hyperlink{struct_object_1_1_pose}{Object\+::\+Pose}} $>$ {\bfseries objects\+Found}
+\item 
+\mbox{\Hypertarget{class_object_list_a2b5bec68234ac1c75a96ab527608e61e}\label{class_object_list_a2b5bec68234ac1c75a96ab527608e61e}} 
+int {\bfseries number\+Of\+Objects}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_object_list_ac22dc46c3b92c27106561eeb030329a2}\label{class_object_list_ac22dc46c3b92c27106561eeb030329a2}} 
+\index{ObjectList@{ObjectList}!ObjectList@{ObjectList}}
+\index{ObjectList@{ObjectList}!ObjectList@{ObjectList}}
+\doxysubsubsection{\texorpdfstring{ObjectList()}{ObjectList()}}
+{\footnotesize\ttfamily Object\+List\+::\+Object\+List (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+This is the constructor for the \mbox{\hyperlink{class_object_list}{Object\+List}} Class. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em None} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+None 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_object_list_ac8d809647b3ac18b2369e827c3d56c19}\label{class_object_list_ac8d809647b3ac18b2369e827c3d56c19}} 
+\index{ObjectList@{ObjectList}!````~ObjectList@{$\sim$ObjectList}}
+\index{````~ObjectList@{$\sim$ObjectList}!ObjectList@{ObjectList}}
+\doxysubsubsection{\texorpdfstring{$\sim$ObjectList()}{~ObjectList()}}
+{\footnotesize\ttfamily Object\+List\+::$\sim$\+Object\+List (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+This is the destructor for the \mbox{\hyperlink{class_object_list}{Object\+List}} Class. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em None} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+None 
+\end{DoxyReturn}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_object_list_a8afd70c8ea2644e3f0eb4cf510a8f2a1}\label{class_object_list_a8afd70c8ea2644e3f0eb4cf510a8f2a1}} 
+\index{ObjectList@{ObjectList}!addObjectFound@{addObjectFound}}
+\index{addObjectFound@{addObjectFound}!ObjectList@{ObjectList}}
+\doxysubsubsection{\texorpdfstring{addObjectFound()}{addObjectFound()}}
+{\footnotesize\ttfamily void Object\+List\+::add\+Object\+Found (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_object_1_1_pose}{Object\+::\+Pose}}}]{objpose }\end{DoxyParamCaption})}
+
+
+
+This is a function for adding an object to the list. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em obj} & Pointer to an object found \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The number of objects in the list 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_object_list_a15a3e8c5208f994ea57e46f99d4be995}\label{class_object_list_a15a3e8c5208f994ea57e46f99d4be995}} 
+\index{ObjectList@{ObjectList}!getObjectList@{getObjectList}}
+\index{getObjectList@{getObjectList}!ObjectList@{ObjectList}}
+\doxysubsubsection{\texorpdfstring{getObjectList()}{getObjectList()}}
+{\footnotesize\ttfamily std\+::vector$<$ \mbox{\hyperlink{struct_object_1_1_pose}{Object\+::\+Pose}} $>$ Object\+List\+::get\+Object\+List (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+This is a function to get the list of objects. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em None} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The vector of objects 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_object_list_a15b38861578197fbd6c38cc04088b6bd}\label{class_object_list_a15b38861578197fbd6c38cc04088b6bd}} 
+\index{ObjectList@{ObjectList}!getSize@{getSize}}
+\index{getSize@{getSize}!ObjectList@{ObjectList}}
+\doxysubsubsection{\texorpdfstring{getSize()}{getSize()}}
+{\footnotesize\ttfamily int Object\+List\+::get\+Size (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+This is a function to get the number of objects. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em None} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The number of objects 
+\end{DoxyReturn}
+\mbox{\Hypertarget{class_object_list_a7127b5a1d50ff430f302bebabd4519a1}\label{class_object_list_a7127b5a1d50ff430f302bebabd4519a1}} 
+\index{ObjectList@{ObjectList}!objsCallback@{objsCallback}}
+\index{objsCallback@{objsCallback}!ObjectList@{ObjectList}}
+\doxysubsubsection{\texorpdfstring{objsCallback()}{objsCallback()}}
+{\footnotesize\ttfamily void Object\+List\+::objs\+Callback (\begin{DoxyParamCaption}\item[{const geometry\+\_\+msgs\+::\+Point\+::\+Const\+Ptr \&}]{obj }\end{DoxyParamCaption})}
+
+
+
+This is the callback function for updating the object list. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em obj} & Pointer to the object found \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+None 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/ethan/\+Desktop/\+Doxygen Environment/pacman-\/phase3c/include/\mbox{\hyperlink{_object_list_8hpp}{Object\+List.\+hpp}}\item 
+C\+:/\+Users/ethan/\+Desktop/\+Doxygen Environment/pacman-\/phase3c/src/\mbox{\hyperlink{_object_list_8cpp}{Object\+List.\+cpp}}\end{DoxyCompactItemize}
