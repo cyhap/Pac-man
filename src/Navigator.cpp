@@ -91,7 +91,7 @@ void Navigator::imgCallback(const pacman::VecPoses::ConstPtr& vecPoses) {
   //  -- Find the closest pose from the vector input
   double minY = 0;
   for (const auto &indpose : vecPoses->poses) {
-    if (indpose.collect) {
+    if (!indpose.collect) {
       // Grab y coordinate of current pose
       double ypos = indpose.y;
       // Check y value of pose
@@ -118,7 +118,6 @@ bool Navigator::checkVisuals() {
 
 void Navigator::closestCallback(const gazebo_msgs::ModelStates msg) {
   float closestDist = 1000.0;
-  int closest = 0;
 
   // Get the position of the Turtlebot
   gazebo_msgs::GetModelState srvPos;
@@ -146,23 +145,21 @@ void Navigator::closestCallback(const gazebo_msgs::ModelStates msg) {
 
     double dist = sqrt(pow(x, 2) + pow(y, 2));
 
-    if (dist < 1) {
-      if (dist < closestDist) {
-        if (*msgName == "mobile_base" || *msgName == "ground_plane") {
-          //skip "mobile_base" or "ground_plane"
+    if (dist < 1 && dist < closestDist) {
+      if (*msgName == "mobile_base" || *msgName == "ground_plane") {
+        //skip "mobile_base" or "ground_plane"
+      } else {
+        // Check if it's a wall
+        std::string wallstr("wall");
+        std::size_t found = msgName->find(wallstr);
+        if (found != std::string::npos) {
+          // skip grey walls
         } else {
-          // Check if it's a wall
-          std::string wallstr("wall");
-          std::size_t found = msgName->find(wallstr);
-          if (found != std::string::npos) {
-            // skip grey walls
-          } else {
-            closestDist = dist;
-            closestObject = *msgName;
-          }
+          closestDist = dist;
+          closestObject = *msgName;
         }
-        msgName++;
       }
+      msgName++;
     }
   }
 }
