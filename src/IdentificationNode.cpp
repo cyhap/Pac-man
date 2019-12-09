@@ -48,8 +48,6 @@
 #include "pcl/point_cloud.h"
 #include "pcl/point_types.h"
 
-#include <iostream>
-
 class Identification {
  public:
   ImageProcessing eyes;
@@ -127,7 +125,9 @@ class Identification {
     // going out of scope instead...
     std::shared_ptr<cv::Mat> pic(new cv::Mat(cv_ptr->image));
     // Consider using above than below
-    //std::shared_ptr<const cv::Mat> pic(&cv_ptr->image);
+    // FIXME [Yhap] Using this ros' boost shared pointer will free
+    // and then we would also try to free hence we use above
+    // std::shared_ptr<const cv::Mat> pic(&cv_ptr->image);
     if (eyes.setRgbImg(pic)) {
       ROS_INFO_STREAM("RGB Image set successful.");
     }

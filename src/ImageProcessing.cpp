@@ -32,16 +32,16 @@
   * @brief This Class defines the functions that process RGB and Depth sensor
   *        data together.
  */
-
-#include <memory>
 #include <math.h>
 
-#include "ImageProcessing.hpp"
+#include <memory>
+
 #include "opencv2/imgcodecs.hpp"
 #include "opencv2/imgproc.hpp"
 #include "pcl/point_cloud.h"
 #include "pcl/point_types.h"
 
+#include "ImageProcessing.hpp"
 #include "GoodObject.hpp"
 #include "BadObject.hpp"
 
@@ -99,7 +99,7 @@ cv::Mat ImageProcessing::applyGoodMask(const cv::Mat &aImg) {
   // Allocate Memory for processing
   cv::Mat hsvImg, goodThresh;
 
-  //Transform the colors into HSV
+  // Transform the colors into HSV
   cv::cvtColor(aImg, hsvImg, CV_BGR2HSV);
 
   cv::inRange(hsvImg, lowGood, highGood, goodThresh);
@@ -110,7 +110,7 @@ cv::Mat ImageProcessing::applyBadMask(const cv::Mat &aImg) {
   // Allocate Memory for processing
   cv::Mat hsvImg, badThresh;
 
-  //Transform the colors into HSV
+  // Transform the colors into HSV
   cv::cvtColor(aImg, hsvImg, CV_BGR2HSV);
 
   cv::inRange(hsvImg, lowBad, highBad, badThresh);
@@ -138,7 +138,6 @@ std::vector<Object::Pose> ImageProcessing::processMask(
   std::vector<cv::Point2i> pixels;
   // Extract the Centroid from the Moments
   for (const auto &tMoment : mu) {
-
     // Ignore m00 == 0 Moments (Cant compute center)
     if (tMoment.m00 > 1200) {
       pixels.emplace_back(

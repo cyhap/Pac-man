@@ -32,6 +32,7 @@
   * @brief This TEST file is for testing the methods in the Image Processing
   *        class
   */
+#include <stdlib.h>
 
 #include "ImageProcessing.hpp"
 #include "GoodObject.hpp"
@@ -90,11 +91,12 @@ TEST(ImageProcessing, setPntCldFunction) {
   cloud->height = tImgSize;
   cloud->is_dense = true;
   cloud->points.resize(cloud->width * cloud->height);
-
+  // Create a seed so that rand_r will be thread safe.
+  unsigned int seed = 42;
   for (std::size_t i = 0; i < cloud->points.size(); ++i) {
-    cloud->points[i].x = 1024 * rand() / (RAND_MAX + 1.0f);
-    cloud->points[i].y = 1024 * rand() / (RAND_MAX + 1.0f);
-    cloud->points[i].z = 1024 * rand() / (RAND_MAX + 1.0f);
+    cloud->points[i].x = 1024 * rand_r(&seed) / (RAND_MAX + 1.0f);
+    cloud->points[i].y = 1024 * rand_r(&seed) / (RAND_MAX + 1.0f);
+    cloud->points[i].z = 1024 * rand_r(&seed) / (RAND_MAX + 1.0f);
   }
 
   // Create an Image Processing instance.
@@ -143,11 +145,12 @@ TEST(ImageProcessing, CenteredGreenBlock) {
   cloud->height = tImgSize;
   cloud->is_dense = true;
   cloud->points.resize(cloud->width * cloud->height);
-
+  // Create a seed so that rand_r will be thread safe.
+  unsigned int seed = 42;
   for (std::size_t i = 0; i < cloud->points.size(); ++i) {
-    cloud->points[i].x = 1024 * rand() / (RAND_MAX + 1.0f);
-    cloud->points[i].y = 1024 * rand() / (RAND_MAX + 1.0f);
-    cloud->points[i].z = 1024 * rand() / (RAND_MAX + 1.0f);
+    cloud->points[i].x = 1024 * rand_r(&seed) / (RAND_MAX + 1.0f);
+    cloud->points[i].y = 1024 * rand_r(&seed) / (RAND_MAX + 1.0f);
+    cloud->points[i].z = 1024 * rand_r(&seed) / (RAND_MAX + 1.0f);
   }
 
   // Update the data corresponding to the block to be the expected Point.
@@ -215,11 +218,12 @@ TEST(ImageProcessing, MultipleGreenBlocks) {
   cloud->height = tImgSize;
   cloud->is_dense = true;
   cloud->points.resize(cloud->width * cloud->height);
-
+  // Create a seed so that rand_r will be thread safe.
+  unsigned int seed = 42;
   for (std::size_t i = 0; i < cloud->points.size(); ++i) {
-    cloud->points[i].x = 1024 * rand() / (RAND_MAX + 1.0f);
-    cloud->points[i].y = 1024 * rand() / (RAND_MAX + 1.0f);
-    cloud->points[i].z = 1024 * rand() / (RAND_MAX + 1.0f);
+    cloud->points[i].x = 1024 * rand_r(&seed) / (RAND_MAX + 1.0f);
+    cloud->points[i].y = 1024 * rand_r(&seed) / (RAND_MAX + 1.0f);
+    cloud->points[i].z = 1024 * rand_r(&seed) / (RAND_MAX + 1.0f);
   }
   // Note the points are irrelevant for this test.
 
@@ -284,10 +288,12 @@ TEST(ImageProcessing, MultipleMultiColoredBlocks) {
   cloud->is_dense = true;
   cloud->points.resize(cloud->width * cloud->height);
 
+  // Create a seed so that rand_r will be thread safe.
+  unsigned int seed = 42;
   for (std::size_t i = 0; i < cloud->points.size(); ++i) {
-    cloud->points[i].x = 1024 * rand() / (RAND_MAX + 1.0f);
-    cloud->points[i].y = 1024 * rand() / (RAND_MAX + 1.0f);
-    cloud->points[i].z = 1024 * rand() / (RAND_MAX + 1.0f);
+    cloud->points[i].x = 1024 * rand_r(&seed) / (RAND_MAX + 1.0f);
+    cloud->points[i].y = 1024 * rand_r(&seed) / (RAND_MAX + 1.0f);
+    cloud->points[i].z = 1024 * rand_r(&seed) / (RAND_MAX + 1.0f);
   }
   // Note the points are irrelevant for this test.
 
