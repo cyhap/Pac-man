@@ -153,8 +153,8 @@ int main(int argc, char **argv) {
   cv::Scalar lowGood(0, 80, 80);
   cv::Scalar highGood(50, 255, 255);
   // Mask for the Ghost
-  cv::Scalar lowBad(45, 80, 80);
-  cv::Scalar highBad(75, 255, 255);
+  cv::Scalar lowBad(80, 80, 80);
+  cv::Scalar highBad(255, 255, 255);
 
   identifier.eyes.setGoodObjectMask(lowGood, highGood);
   identifier.eyes.setBadObjectMask(lowBad, highBad);
@@ -186,11 +186,11 @@ int main(int argc, char **argv) {
 
   while (ros::ok()) {
     // Process the Images and Extract Objects
-    ROS_INFO_STREAM("Making the process Call");
+    // ROS_INFO_STREAM("Making the process Call");
     std::vector<std::shared_ptr<Object> > tObjs = identifier.eyes.process();
 
 
-    ROS_INFO_STREAM("Call successful.");
+    // ROS_INFO_STREAM("Call successful.");
     pacman::VecPoses output;
 
     // Parse Out Good Objects to Publish on a Topic
