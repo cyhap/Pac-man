@@ -113,6 +113,20 @@ class ImageProcessing {
    */
   void setPixelForPose(bool);
 
+  /**
+   *  @brief  applyGoodMask Apply the thresholds corresponding to good objects.
+   *  @param  const cv::Mat& Image to Mask
+   *  @return cv::mat The Masked Image
+   */
+  cv::Mat applyGoodMask(const cv::Mat&);
+
+  /**
+   *  @brief  applyBadMask Apply the thresholds corresponding to bad objects.
+   *  @param  const cv::Mat& Image to Mask
+   *  @return cv::mat The Masked Image
+   */
+  cv::Mat applyBadMask(const cv::Mat&);
+
  private:
   std::shared_ptr<const cv::Mat> rgbImg;
   std::shared_ptr<const pcl::PointCloud<pcl::PointXYZ> > rectPntCld;

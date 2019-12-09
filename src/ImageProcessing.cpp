@@ -64,22 +64,18 @@ std::vector<std::shared_ptr<Object> > ImageProcessing::process() {
   // Create the return variable.
   std::vector<std::shared_ptr<Object> > tReturn;
 
+  cv::Mat blurImg, goodThresh, badThresh;
+
+  // Blur the Image
+  int kernelSize = 3;
+  cv::blur(*rgbImg, blurImg, cv::Size(kernelSize, kernelSize));
+
+  goodThresh = applyGoodMask(blurImg);
+  badThresh = applyBadMask(blurImg);
+
   // Only perform processing if there is data to process.
   // Otherwise return an empty list.
   if (rgbImg && rectPntCld) {
-
-    // Allocate Memory for processing
-    cv::Mat hsvImg, blurImg, goodThresh, badThresh;
-
-    // Blur the Image
-    int kernelSize = 3;
-    cv::blur(*rgbImg, blurImg, cv::Size(kernelSize, kernelSize));
-    //Transform the colors into HSV
-    cv::cvtColor(blurImg, hsvImg, CV_BGR2HSV);
-
-    cv::inRange(hsvImg, lowGood, highGood, goodThresh);
-    cv::inRange(hsvImg, lowBad, highBad, badThresh);
-
     // Retrieve Poses for Good Objects
     std::vector<Object::Pose> goodPoses = processMask(goodThresh);
     // Retrieve Poses for Bad Objects
@@ -98,6 +94,27 @@ std::vector<std::shared_ptr<Object> > ImageProcessing::process() {
   }
 
   return tReturn;
+}
+cv::Mat ImageProcessing::applyGoodMask(const cv::Mat &aImg) {
+  // Allocate Memory for processing
+  cv::Mat hsvImg, goodThresh;
+
+  //Transform the colors into HSV
+  cv::cvtColor(aImg, hsvImg, CV_BGR2HSV);
+
+  cv::inRange(hsvImg, lowGood, highGood, goodThresh);
+  return goodThresh;
+}
+
+cv::Mat ImageProcessing::applyBadMask(const cv::Mat &aImg) {
+  // Allocate Memory for processing
+  cv::Mat hsvImg, badThresh;
+
+  //Transform the colors into HSV
+  cv::cvtColor(aImg, hsvImg, CV_BGR2HSV);
+
+  cv::inRange(hsvImg, lowBad, highBad, badThresh);
+  return badThresh;
 }
 
 std::vector<Object::Pose> ImageProcessing::processMask(
