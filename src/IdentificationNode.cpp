@@ -68,7 +68,7 @@ class Identification {
 
   void pntCldCallback(const sensor_msgs::PointCloud2 &aPtCloud) {
     // Determine what to do here.
-    ROS_INFO_STREAM("Point Cloud Call back Successful.");
+    // ROS_INFO_STREAM("Point Cloud Call back Successful.");
 
     std::shared_ptr<pcl::PointCloud<pcl::PointXYZ> > tConvPntCld(
         new pcl::PointCloud<pcl::PointXYZ>);
@@ -85,7 +85,7 @@ class Identification {
    *  @return  None
    */
   void rgbImgCallback(const sensor_msgs::ImageConstPtr &aImg) {
-    ROS_INFO_STREAM("RGB Image Call back Successful.");
+    // ROS_INFO_STREAM("RGB Image Call back Successful.");
 
     // Convert ROS Message into a cv::Mat for ImageProcessing Class.
 
@@ -113,9 +113,6 @@ class Identification {
     output2.encoding = sensor_msgs::image_encodings::MONO8;
     output2.image = eyes.applyBadMask(blurImg);
 
-    ROS_INFO_STREAM(
-        "Size" << cv_ptr->image.cols << "x" << cv_ptr->image.rows);
-
 
     goodMaskPub.publish(output.toImageMsg());
     badMaskPub.publish(output2.toImageMsg());
@@ -129,7 +126,7 @@ class Identification {
     // and then we would also try to free hence we use above
     // std::shared_ptr<const cv::Mat> pic(&cv_ptr->image);
     if (eyes.setRgbImg(pic)) {
-      ROS_INFO_STREAM("RGB Image set successful.");
+      // ROS_INFO_STREAM("RGB Image set successful.");
     }
   }
 };

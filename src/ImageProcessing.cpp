@@ -74,8 +74,9 @@ std::vector<std::shared_ptr<Object> > ImageProcessing::process() {
   badThresh = applyBadMask(blurImg);
 
   // Only perform processing if there is data to process.
+  // The pixel data replaces the pointcloud requriement.
   // Otherwise return an empty list.
-  if (rgbImg && rectPntCld) {
+  if (rgbImg && (rectPntCld || pixelForPose)) {
     // Retrieve Poses for Good Objects
     std::vector<Object::Pose> goodPoses = processMask(goodThresh);
     // Retrieve Poses for Bad Objects

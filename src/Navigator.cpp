@@ -90,15 +90,17 @@ void Navigator::laserScanCallback(const sensor_msgs::LaserScan::ConstPtr& msg) {
 void Navigator::imgCallback(const pacman::VecPoses::ConstPtr& vecPoses) {
   //  -- Find the closest pose from the vector input
   double minY = 0;
-  for (const auto& indpose : vecPoses->poses) {
-    // Grab y coordinate of current pose
-    double ypos = indpose.y;
-    // Check y value of pose
-    if (ypos > minY) {
-      // reset minY to current Y
-      minY = ypos;
-      // set current pose to closest
-      closestPose = indpose;
+  for (const auto &indpose : vecPoses->poses) {
+    if (indpose.collect) {
+      // Grab y coordinate of current pose
+      double ypos = indpose.y;
+      // Check y value of pose
+      if (ypos > minY) {
+        // reset minY to current Y
+        minY = ypos;
+        // set current pose to closest
+        closestPose = indpose;
+      }
     }
   }
 }
@@ -167,7 +169,7 @@ void Navigator::closestCallback(const gazebo_msgs::ModelStates msg) {
 
 void Navigator::deleteObject() {
   if ( closestObject != "none" && deleteOkay) {
-    // Make the delete service call     
+    // Make the delete service call
     gazebo_msgs::DeleteModel dmsrv;
     dmsrv.request.model_name = closestObject;
     if (clientDelObj_.call(dmsrv)) {

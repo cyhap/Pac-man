@@ -74,11 +74,11 @@ int main(int argc, char **argv) {
 
   // Publish on the topic required to move turtlebot
   // This will be remmapped in the launch file.
-  auto pub = nm.advertise <geometry_msgs::Twist> ("/cmd_vel_mux/input/navi", 
+  auto pub = nm.advertise<geometry_msgs::Twist>("/cmd_vel",
     1000);
-  auto lsrSub = nm.subscribe("/scan", 1000, &Navigator::laserScanCallback, 
+  auto lsrSub = nm.subscribe("/scan", 1000, &Navigator::laserScanCallback,
     &navigator);
-  auto imgSub = nm.subscribe("imgPoses", 1000, &Navigator::imgCallback, 
+  auto imgSub = nm.subscribe("imgPoses", 1000, &Navigator::imgCallback,
     &navigator);
 
 //  ros::ServiceClient client = nm.serviceClient<pacman::NavPose>("navpose");
@@ -87,8 +87,8 @@ int main(int argc, char **argv) {
   ros::Rate loop_rate(10.0);
 
   // Set center width range of image
-  double midImgLeft = 300;
-  double midImgright = 340;
+  double midImgLeft = 240;
+  double midImgright = 400;
 
   geometry_msgs::Twist velMsg;
 
@@ -101,13 +101,13 @@ int main(int argc, char **argv) {
       if (xVal > midImgright) {  // Object on the right
         // Turn right
         ROS_WARN_STREAM("Rigth Turn: [0,1]");
-        velMsg.linear.x = 0.00;
-        velMsg.angular.z = 1.00;
+        velMsg.linear.x = 0.25;
+        velMsg.angular.z = 0.50;
       } else if (xVal < midImgLeft) {  // Object on the left
         // Turn left
         ROS_WARN_STREAM("Left Turn: [0,-1]");
-        velMsg.linear.x = 0.00;
-        velMsg.angular.z = -1.00;
+        velMsg.linear.x = 0.25;
+        velMsg.angular.z = -0.50;
       } else {  // Object centered
         // Go straight
         ROS_WARN_STREAM("Straight Ahead: [1,0]");
