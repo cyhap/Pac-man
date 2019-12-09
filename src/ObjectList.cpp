@@ -33,7 +33,6 @@
   */
 
 #include <vector>
-//#include "ros/ros.h"
 
 #include "ObjectList.hpp"
 #include "Object.hpp"

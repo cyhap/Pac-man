@@ -43,6 +43,7 @@
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction>
                                                           MoveBaseClient;
 
+// Cpplint Error though Accepted ROS Methodology.
 /**
 *  @brief   Server Function for Nav Stack Goal Pose
 *  @param	  Service Request Type variable passed by reference

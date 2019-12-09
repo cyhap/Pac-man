@@ -49,8 +49,8 @@ TEST(ObjectList, addObject) {
 }
 
 TEST(ObjectList, objcallback) {
-   ObjectList objList;
- 
+  ObjectList objList;
+
   geometry_msgs::Point objPose;
   objPose.x = 1.00;
   objPose.y = 2.00;
@@ -60,9 +60,9 @@ TEST(ObjectList, objcallback) {
 
   std::vector<Object::Pose> list = objList.getObjectList();
 
-  EXPECT_EQ(list[0].x,1.00);
-  EXPECT_EQ(list[0].y,2.00);
-  EXPECT_EQ(list[0].z,3.00);
+  EXPECT_EQ(list[0].x, 1.00);
+  EXPECT_EQ(list[0].y, 2.00);
+  EXPECT_EQ(list[0].z, 3.00);
 }
 
 

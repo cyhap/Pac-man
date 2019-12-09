@@ -34,6 +34,7 @@
 #include "pacman/NavPose.h"
 #include "ros/ros.h"
 
+// Cpplint Error though Accepted ROS Methodology.
 bool nav(pacman::NavPose::Request &req,
           pacman::NavPose::Response &res) {
   double x = req.pose.x;

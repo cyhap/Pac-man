@@ -84,12 +84,12 @@ class ObjectList {
     *  @return	The vector of objects
     */
     std::vector<Object::Pose> getObjectList();
- 
+
     /**
     *  @brief   This is a function to get the number of objects
     *  @param	  None
     *  @return	The number of objects
-    */   
+    */
     int getSize();
 };
 
