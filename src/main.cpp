@@ -85,47 +85,15 @@ int main(int argc, char **argv) {
   // Publish at 10 Hz.
   ros::Rate loop_rate(10.0);
 
-  // Set center width range of image
-  double midImgLeft = 240;
-  double midImgright = 400;
-
   geometry_msgs::Twist velMsg;
+  int turns = 0;
 
   while (ros::ok()) {
     // Check for obstacles from the laser scanner callback.
     bool pathclear = navigator.movement->getClearAhead();
-    if (pathclear) {
-      ROS_WARN_STREAM("Path is clear!");
-      double xVal = navigator.closestPose.x;
-      if (xVal > midImgright) {  // Object on the right
-        // Turn right
-        ROS_WARN_STREAM("Rigth Turn: [0.1,-0.5]");
-        velMsg.linear.x = 0.1;
-        velMsg.angular.z = -0.50;
-      } else if (xVal < midImgLeft) {  // Object on the left
-        // Turn left
-        ROS_WARN_STREAM("Left Turn: [0.1,0.5]");
-        velMsg.linear.x = 0.1;
-        velMsg.angular.z = 0.50;
-      } else {  // Object centered
-        // Go straight
-        ROS_WARN_STREAM("Straight Ahead: [0.5,0]");
-        velMsg.linear.x = 0.50;
-        velMsg.angular.z = 0.00;
-      }
-    } else {  // Object blocking path
-      if (navigator.closestPose.collect) {  // Is a good object
-        navigator.setDelete();
-        navigator.deleteObject();
-      } else {
-        navigator.resetDelete();
-        ROS_WARN_STREAM("Object in path! Turning right");
-        velMsg.linear.x = 0.00;
-        velMsg.angular.z = -0.50;
-      }
-    }
+    velMsg = navigator.navigate(pathclear, turns);
     pub.publish(velMsg);
-    
+
     navigator.closestPose.x = 320;
     navigator.closestPose.y = 240;
     navigator.closestPose.collect = false;

@@ -39,6 +39,7 @@
 #include <stdlib.h>
 
 #include <memory>
+#include <string>
 #include <vector>
 #include <algorithm>
 
@@ -135,9 +136,18 @@ class Navigator {
   */
   void resetDelete();
 
+  /**
+  *  @brief   Function to navigate the world
+  *  @param   None
+  *  @return  None
+  */
+  geometry_msgs::Twist navigate(bool, int&);
+
  private:
   // Node handler for class
   ros::NodeHandle n_;
+  // Publisher for collected object poses
+  ros::Publisher colObjPose_;
   // subscriber for model states topic
   ros::Subscriber subClosestObj_;
   // client handle for deleting the object
@@ -148,6 +158,8 @@ class Navigator {
   std::string closestObject;
   // flag to allow deletion of object
   bool deleteOkay;
+  // variable for publishing velocities
+  geometry_msgs::Twist vels;
   // Set up the action client with it set to spin a thread by default
   MoveBaseClient aclient;
 };

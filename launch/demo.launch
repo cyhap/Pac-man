@@ -3,8 +3,7 @@
 
   <include file="$(find turtlebot_gazebo)/launch/turtlebot_world.launch" >
     <arg name="world_file" value="$(find pacman)/data/worlds/pacworld.world" />
-  </include>  
-  <include file="$(find pacman)/launch/bootPointCloudNodelet.launch"/>
+  </include>
   
   <!-- node to throttle model states topic -->
   <node name="model_state_throttler" 
@@ -29,10 +28,12 @@
     output = "screen"
   />
   
-  
-  <!--
-      output = "screen"
-    launch-prefix = "gnome-terminal DASH DASH command"
-  -->
+  <node
+    name = "objectlist"
+    pkg = "pacman"
+    type = "objectlist"
+    output = "screen"
+    launch-prefix = "gnome-terminal --command"
+  />
 
 </launch>

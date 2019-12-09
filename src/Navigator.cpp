@@ -61,7 +61,7 @@
 Navigator::Navigator()
   : navStackStatus{ false }, allowImgCallback{ true } , sendGoal{ false } ,
           aclient("move_base", true) {
-  //THIS IS A CUSTOM THROTTLE TOPIC, DONT FORGET TO ADD IT TO LAUNCH
+  // THIS IS A CUSTOM THROTTLE TOPIC, DONT FORGET TO ADD IT TO LAUNCH
   subClosestObj_ = n_.subscribe("/my_model_states", 1000,
     &Navigator::closestCallback, this);
 
@@ -72,6 +72,9 @@ Navigator::Navigator()
   // Service client from get model state
   clientGetPos_ = n_.serviceClient<gazebo_msgs::GetModelState>
     ("/gazebo/get_model_state");
+
+  // Publisher for collected objects
+  colObjPose_ = n_.advertise<geometry_msgs::Point>("listobjects", 1000);
 
   closestObject = "none";
   deleteOkay = false;
@@ -152,17 +155,17 @@ void Navigator::closestCallback(const gazebo_msgs::ModelStates msg) {
           } else {
             std::string wallstr("wall");
             std::string ghostStr("blue");
-            std::size_t found = msg.name[i].find(wallstr);
-            if (found != std::string::npos) {
+            std::size_t found1 = msg.name[i].find(wallstr);
+            if (found1 != std::string::npos) {
               // skip grey walls
             } else {
               auto found2 = msg.name[i].find(ghostStr);
               if (found2 != ghostStr.npos) {
-
+              // skip blue ghosts
               } else {
-              closestDist = dist;
-              closest = i;
-              closestObject = msg.name[closest];  // found closest
+                closestDist = dist;
+                closest = i;
+                closestObject = msg.name[closest];  // found closest
               }
             }
           }
@@ -170,44 +173,29 @@ void Navigator::closestCallback(const gazebo_msgs::ModelStates msg) {
       }
     }
   }
-//  auto msgName = msg.name.begin();
-//  int i = 0;
-//  for (const auto& element : msg.pose) {
-//    double x2 = element.position.x;
-//    double y2 = element.position.y;
-
-//    double x = x1-x2;  // distance in x
-//    double y = y1-y2;  // distance in y
-
-//    double dist = sqrt(pow(x, 2) + pow(y, 2));
-//    if (dist < 1.5 && dist < closestDist) {
-//      if (msg.name[i] == "mobile_base" || msg.name[i] == "ground_plane") {
-//        //skip "mobile_base" or "ground_plane"
-//      } else {
-//        // Check if it's a wall
-//        std::string wallstr("wall");
-//        std::size_t found = msg.name[i].find(wallstr);
-//        if (found != std::string::npos) {
-//          // skip grey walls
-//        } else {
-//          closestDist = dist;
-//          closestObject = msg.name[i];
-//        }
-//      }
-//      i++;
-//    }
-//  }
   ROS_INFO_STREAM(closestObject);
 }
 
 void Navigator::deleteObject() {
-  if ( closestObject != "none" && deleteOkay) {
+  if (closestObject != "none" && deleteOkay) {
     // Make the delete service call
     gazebo_msgs::DeleteModel dmsrv;
     dmsrv.request.model_name = closestObject;
+
     if (clientDelObj_.call(dmsrv)) {
       // Object succesfully deleted
+      ROS_INFO_STREAM("Object deleted");
       closestObject = "none";
+      // send pose to objectlist
+      // Publish at 10 Hz.
+      ros::Rate loop_rate(10.0);
+      // Get the position of the Turtlebot
+      gazebo_msgs::GetModelState turtlePos;
+      turtlePos.request.model_name = "mobile_base";
+      clientGetPos_.call(turtlePos);
+      geometry_msgs::Point obj = turtlePos.response.pose.position;
+      // Publish pose
+      colObjPose_.publish(obj);
     }
   }
 }
@@ -222,3 +210,46 @@ void Navigator::resetDelete() {
   ROS_INFO_STREAM("Do not delete this collision item");
 }
 
+geometry_msgs::Twist Navigator::navigate(bool clear_, int &turns) {
+  // Set center width range of image
+  double midImgLeft = 280;
+  double midImgright = 360;
+
+  if (clear_) {
+    ROS_WARN_STREAM("Path is clear!");
+    double xVal = closestPose.x;
+    if (xVal > midImgright) {  // Object on the right
+      // Turn right
+      ROS_WARN_STREAM("Rigth Turn: [0.1,-0.5]");
+      vels.linear.x = 0.1;
+      vels.angular.z = -0.50;
+    } else if (xVal < midImgLeft) {  // Object on the left
+      // Turn left
+      ROS_WARN_STREAM("Left Turn: [0.1,0.5]");
+      vels.linear.x = 0.1;
+      vels.angular.z = 0.50;
+    } else {  // Object centered
+      // Go straight
+      ROS_WARN_STREAM("Straight Ahead: [0.5,0]");
+      vels.linear.x = 0.50;
+      vels.angular.z = 0.00;
+    }
+  } else {  // Object blocking path
+    if (closestPose.collect) {  // Is a good object
+      setDelete();
+      deleteObject();
+    } else {
+      resetDelete();
+      ROS_WARN_STREAM("Object in path! Turning right");
+      vels.linear.x = 0.00;
+      if (turns < 30)
+        vels.angular.z = -0.50;
+      else
+         vels.angular.z = 0.50;
+      ++turns;
+      if (turns >= 60)
+        turns = 0;
+    }
+  }
+  return vels;
+}
