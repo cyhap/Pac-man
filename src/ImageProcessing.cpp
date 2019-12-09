@@ -45,8 +45,6 @@
 #include "GoodObject.hpp"
 #include "BadObject.hpp"
 
-#include <iostream> //REMOVE
-
 ImageProcessing::ImageProcessing()
     :
     rgbImg(
@@ -55,7 +53,8 @@ ImageProcessing::ImageProcessing()
     lowGood(80, 80, 80),
     lowBad(0, 80, 80),
     highGood(135, 255, 0),
-    highBad(150, 255, 255) {
+    highBad(150, 255, 255),
+    pixelForPose(false) {
 }
 
 ImageProcessing::~ImageProcessing() {
@@ -69,36 +68,21 @@ std::vector<std::shared_ptr<Object> > ImageProcessing::process() {
   // Otherwise return an empty list.
   if (rgbImg && rectPntCld) {
 
-    if (rgbImg) {
-      std::cout << "Still Valid Here 1" << std::endl;
-    }
-
     // Allocate Memory for processing
     cv::Mat hsvImg, blurImg, goodThresh, badThresh;
 
-    if (rgbImg) {
-      std::cout << "Still Valid Here 2" << std::endl;
-    }
     // Blur the Image
     int kernelSize = 3;
-    if (rgbImg) {
-      std::cout << "Still Valid Here 3" << std::endl;
-    }
-    std::cout << "Begin Processing..." << std::endl;
     cv::blur(*rgbImg, blurImg, cv::Size(kernelSize, kernelSize));
     //Transform the colors into HSV
     cv::cvtColor(blurImg, hsvImg, CV_BGR2HSV);
-
-    std::cout << "First Pointer Used" << std::endl;
 
     cv::inRange(hsvImg, lowGood, highGood, goodThresh);
     cv::inRange(hsvImg, lowBad, highBad, badThresh);
 
     // Retrieve Poses for Good Objects
-    std::cout << "Processing good mask." << std::endl;
     std::vector<Object::Pose> goodPoses = processMask(goodThresh);
     // Retrieve Poses for Bad Objects
-    std::cout << "Processing bad mask." << std::endl;
     std::vector<Object::Pose> badPoses = processMask(badThresh);
 
     // Create Good Objects with the goodPoses
@@ -127,16 +111,12 @@ std::vector<Object::Pose> ImageProcessing::processMask(
   cv::findContours(aImage, contours, hierarchy, cv::RETR_TREE,
                    cv::CHAIN_APPROX_SIMPLE, cv::Point(0, 0));
   // Extract the moments from the contours
-  std::cout << "Begin Processing Moments." << std::endl;
-
   std::vector<cv::Moments> mu(contours.size());
-
   auto momentIter = mu.begin();
   for (const auto &tContour : contours) {
     *momentIter = cv::moments(tContour, false);
     momentIter++;
   }
-  std::cout << "Begin Processing Centroids." << std::endl;
 
   std::vector<cv::Point2i> pixels;
   // Extract the Centroid from the Moments
@@ -144,29 +124,29 @@ std::vector<Object::Pose> ImageProcessing::processMask(
 
     // Ignore m00 == 0 Moments (Cant compute center)
     if (tMoment.m00 > 1200) {
-      std::cout << "Moment 10: " << tMoment.m10 << std::endl;
-      std::cout << "Moment 00: " << tMoment.m00 << std::endl;
-      std::cout << "Moment 01: " << tMoment.m01 << std::endl;
       pixels.emplace_back(
           cv::Point2i(tMoment.m10 / tMoment.m00, tMoment.m01 / tMoment.m00));
-      std::cout << "Inc Pixel" << std::endl;
     }
   }
-  if (pixels.size() > 0) {
-    std::cout << "Found " << pixels.size() << " Things in this mask."
-              << std::endl;
-  }
-  std::cout << "Begin Extracting Poses." << std::endl;
+
   // Obtain the corresponding XYZ Point
   for (const auto &tPixel : pixels) {
-    Object::Pose tPose = extractPose(tPixel.x, tPixel.y);
-    // Check whether the depth sensor got an accurate (Non-NAN) reading.
-    if (!std::isnan(tPose.x)) {
+    Object::Pose tPose;
+    // Use the pixel location instead of the point cloud.
+    if (pixelForPose) {
+      tPose.x = tPixel.x;
+      tPose.y = tPixel.y;
       // Add that Pose to the list of poses.
       tReturn.push_back(tPose);
+    } else {
+      tPose = extractPose(tPixel.x, tPixel.y);
+      // Check whether the depth sensor got an accurate (Non-NAN) reading.
+      if (!std::isnan(tPose.x)) {
+        // Add that Pose to the list of poses.
+        tReturn.push_back(tPose);
+      }
     }
   }
-  std::cout << "Complete Mask Processing." << std::endl;
   return tReturn;
 }
 
@@ -186,17 +166,6 @@ bool ImageProcessing::setPntCld(
     validDpt = true;
     rectPntCld = aPntCld;
   }
-  else {
-
-    std::cout << "Setting of Point Cloud was attempted but failed."
-              << std::endl;
-    if (aPntCld->height <= 1) {
-      std::cout << "Unorganized Point Cloud" << std::endl;
-    }
-    if (!aPntCld->is_dense) {
-      std::cout << "Non Dense Point Cloud" << std::endl;
-    }
-  }
   return validDpt;
 }
 void ImageProcessing::setGoodObjectMask(const cv::Scalar &aLow,
@@ -210,18 +179,13 @@ void ImageProcessing::setBadObjectMask(const cv::Scalar &aLow,
   lowBad = aLow;
   highBad = aHigh;
 }
+void ImageProcessing::setPixelForPose(bool aUsePixel) {
+  pixelForPose = aUsePixel;
+}
 
 Object::Pose ImageProcessing::extractPose(int x, int y) {
   Object::Pose tReturn;
   if (rectPntCld) {
-    if (rectPntCld->height <= 1) {
-      std::cout << "Unorganized Point Cloud" << std::endl;
-    }
-    if (!rectPntCld->is_dense) {
-      std::cout << "Non Dense Point Cloud" << std::endl;
-    }
-
-    std::cout << "The X,Y Chosen: (" << x << ", " << y << ")" << std::endl;
     pcl::PointXYZ tPnt = rectPntCld->at(x, y);
 
     tReturn.x = tPnt.x;

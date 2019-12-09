@@ -105,6 +105,14 @@ class ImageProcessing {
    */
   void setBadObjectMask(const cv::Scalar&, const cv::Scalar&);
 
+  /**
+   *  @brief  setPixelForPose Choose whether the Poses returned in objects
+   *          are pixel locations or computed poses
+   *  @param  bool true indicating you want the pixel location
+   *  @return None.
+   */
+  void setPixelForPose(bool);
+
  private:
   std::shared_ptr<const cv::Mat> rgbImg;
   std::shared_ptr<const pcl::PointCloud<pcl::PointXYZ> > rectPntCld;
@@ -112,6 +120,7 @@ class ImageProcessing {
   cv::Scalar lowBad;
   cv::Scalar highGood;
   cv::Scalar highBad;
+  bool pixelForPose;
 
 
   /**

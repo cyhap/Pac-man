@@ -126,6 +126,9 @@ class Identification {
     output2.header = aImg->header;
     output2.encoding = sensor_msgs::image_encodings::MONO8;
     output2.image = badThresh;
+    ROS_INFO_STREAM(
+        "Size" << cv_ptr->image.cols << "x" << cv_ptr->image.rows);
+
 
     goodMaskPub.publish(output.toImageMsg());
     badMaskPub.publish(output2.toImageMsg());
@@ -133,13 +136,11 @@ class Identification {
     // Convert the image to a shared pointer
     // May need to make a new pointer above to prevent the ros pointer from
     // going out of scope instead...
-    ROS_INFO_STREAM("Converting to Shared Pointer");
     std::shared_ptr<cv::Mat> pic(new cv::Mat(cv_ptr->image));
-    ROS_INFO_STREAM("Conversion successful.");
     // Consider using above than below
     //std::shared_ptr<const cv::Mat> pic(&cv_ptr->image);
     if (eyes.setRgbImg(pic)) {
-      ROS_INFO_STREAM("Setting successful.");
+      ROS_INFO_STREAM("RGB Image set successful.");
     }
   }
 };
@@ -171,6 +172,8 @@ int main(int argc, char **argv) {
 
   identifier.eyes.setGoodObjectMask(lowGood, highGood);
   identifier.eyes.setBadObjectMask(lowBad, highBad);
+  // For this application we will use the pixel location instead.
+  identifier.eyes.setPixelForPose(true);
 
   // Create the Proper Subscribers.
   image_transport::ImageTransport imTrans(nh);
@@ -220,16 +223,14 @@ int main(int argc, char **argv) {
         // Learn how to send this bad object to the Map!!!
       }
     }
-    ROS_INFO_STREAM("Publishing Objects");
-
     // Publish the list of Good Objects.
-    objpub.publish(output);
-    ROS_INFO_STREAM("Publishing Done");
+    // Verify there is something to publish
+    if (output.poses.size()) {
+      objpub.publish(output);
+    }
 
     ros::spinOnce();
-    ROS_INFO_STREAM("SpinOnce Called");
     loop_rate.sleep();
-    ROS_INFO_STREAM("Done Sleeping");
   }
   return 0;
 }
