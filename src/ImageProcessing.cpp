@@ -52,10 +52,10 @@ ImageProcessing::ImageProcessing()
     rgbImg(
         new cv::Mat(500, 500, CV_8UC3, cv::Scalar(255, 255, 255))),
     rectPntCld(),
-    lowGood(0, 200, 0),
-    lowBad(0, 0, 200),
-    highGood(0, 255, 0),
-    highBad(0, 0, 255) {
+    lowGood(80, 80, 80),
+    lowBad(0, 80, 80),
+    highGood(135, 255, 0),
+    highBad(150, 255, 255) {
 }
 
 ImageProcessing::~ImageProcessing() {
@@ -74,9 +74,7 @@ std::vector<std::shared_ptr<Object> > ImageProcessing::process() {
     }
 
     // Allocate Memory for processing
-    cv::Mat blurImg(rgbImg->rows, rgbImg->cols, rgbImg->type());
-    cv::Mat goodThresh(rgbImg->rows, rgbImg->cols, rgbImg->type());
-    cv::Mat badThresh(rgbImg->rows, rgbImg->cols, rgbImg->type());
+    cv::Mat hsvImg, blurImg, goodThresh, badThresh;
 
     if (rgbImg) {
       std::cout << "Still Valid Here 2" << std::endl;
@@ -88,10 +86,13 @@ std::vector<std::shared_ptr<Object> > ImageProcessing::process() {
     }
     std::cout << "Begin Processing..." << std::endl;
     cv::blur(*rgbImg, blurImg, cv::Size(kernelSize, kernelSize));
+    //Transform the colors into HSV
+    cv::cvtColor(blurImg, hsvImg, CV_BGR2HSV);
+
     std::cout << "First Pointer Used" << std::endl;
 
-    cv::inRange(blurImg, lowGood, highGood, goodThresh);
-    cv::inRange(blurImg, lowBad, highBad, badThresh);
+    cv::inRange(hsvImg, lowGood, highGood, goodThresh);
+    cv::inRange(hsvImg, lowBad, highBad, badThresh);
 
     // Retrieve Poses for Good Objects
     std::cout << "Processing good mask." << std::endl;

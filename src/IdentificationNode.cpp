@@ -127,8 +127,8 @@ int main(int argc, char **argv) {
 
   // Update the Masks we want for Good and Bad Objects
   // Mask for the Strawberry
-  cv::Scalar lowGood(0, 0, 250);
-  cv::Scalar highGood(0, 0, 255);
+  cv::Scalar lowGood(0, 80, 80);
+  cv::Scalar highGood(50, 255, 255);
   // Mask for the Ghost
   cv::Scalar lowBad(0, 250, 0);
   cv::Scalar highBad(0, 255, 0);
